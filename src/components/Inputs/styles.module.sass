@@ -1,0 +1,58 @@
+@import 'utils/styles/colors'
+@import 'utils/styles/mixins'
+
+
+.input
+    position: relative
+    display: flex
+    width: 100%
+    span
+        position: absolute
+        left: 8px
+        top: 3px
+        z-index: 2
+        display: inline-block
+        font: 
+            size: 10px
+            weight: 600
+        text-transform: uppercase
+        letter-spacing: 2px
+        color: $MEDIUM_GRAY
+        padding: 4px
+        background: $WHITE
+
+    input
+        flex: 1
+        width: 100%
+        position: relative
+
+        &[type='text'],
+        &[type='password'],
+        &[type='email'],
+            +borderRadius
+            display: block
+            width: auto
+            margin: 12px 6px
+            padding: 12px
+            border: 1px solid $MEDIUM_GRAY
+
+
+.inputCheckbox
+    span
+        position: relative
+        top: -4px
+        display: inline-block
+        margin:
+            left: 5px
+        font:
+            size: 10px
+            weight: 700
+        text-transform: uppercase
+        color: $MEDIUM_BLACK
+        letter-spacing: 2px
+
+
+
+.wrapper
+    display: flex
+    

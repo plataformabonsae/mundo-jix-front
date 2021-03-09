@@ -1,0 +1,47 @@
+@import 'utils/styles/colors'
+@import 'utils/styles/mixins'
+
+.tab
+    +borderRadius
+    position: relative
+    z-index: 2
+    display: inline-block
+    font:
+        size: 14px
+        weight: 700
+    color: $MEDIUM_BLACK
+    text-decoration: none
+    padding: 12px
+        bottom: 13px
+    grid:
+        area: t
+
+    &:nth-child(2)
+        grid:
+            area: b
+
+.active
+    background: #FBFBFB
+    border: 1px solid $LIGHT_GRAY
+    border:
+        bottom: 0
+            right-radius: 0
+            left-radius: 0
+
+.content
+    +borderRadius
+    margin:
+        top: -1px
+    border: 1px solid $LIGHT_GRAY
+    border:
+        top: 
+            right-radius: 0
+            left-radius: 0
+    background: #FBFBFB
+    grid:
+        area: c
+
+.wrapper
+    display: grid
+    grid:
+        template: "t b" "c c"

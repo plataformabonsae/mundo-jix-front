@@ -1,0 +1,10 @@
+{
+    "talento": {
+        "name": "Talento",
+        "desc": "Participe de desafios, ganhe insígnias e se conecte com empresas para conseguir uma oportunidade de emprego!"
+    },
+    "empresa": {
+        "name": "Empresa",
+        "desc": "Crie desafios e busque talentos para trabalharem em sua empresa. Avalie projetos e saiba mais sobre os candidatos antes investir."
+    }
+}

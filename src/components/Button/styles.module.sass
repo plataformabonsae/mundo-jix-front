@@ -1,0 +1,103 @@
+@import 'utils/styles/colors'
+
+
+.button
+    position: relative
+    display: inline-block
+    font:
+        size: 16px
+        weight: 700
+    min-width: 180px
+    padding: 8px 12px
+    border-radius: 4000px
+    color: white
+    border: 1px solid transparent
+    text-decoration: none
+
+.primary
+    background: $LIGHT_BLACK
+    border: 1px solid $LIGHT_BLACK
+
+.secondary
+    background: $DARK_BLUE
+    border: 1px solid $DARK_BLUE
+
+.outlineWhite
+    background: transparent
+    border: 1px solid white
+
+
+.google
+    @extend .button
+    background: #EA4335
+    // border: 1px solid $DARK_BLUE
+   
+    &::before 
+        content: ''
+        position: absolute
+        left: 12px
+        top: 50%
+        transform: translateY(-50%)
+        display: inline-block
+        background:
+            image: url(/assets/components/Button/google.svg)
+            size: cover
+        height: 18px
+        width: 18px
+
+.facebook
+   @extend .button
+   background: #3B5998
+   
+   &::before 
+        content: ''
+        position: absolute
+        left: 12px
+        top: 50%
+        transform: translateY(-50%)
+        display: inline-block
+        background:
+            image: url(/assets/components/Button/facebook.svg)
+            size: contain
+            repeat: no-repeat
+        height: 18px
+        width: 18px
+
+.linkedin
+   @extend .button
+   background: #007AB9
+   
+   &::before 
+        content: ''
+        position: absolute
+        left: 12px
+        top: 50%
+        transform: translateY(-50%)
+        display: inline-block
+        background:
+            image: url(/assets/components/Button/linkedin.svg)
+            size: contain
+            repeat: no-repeat
+        height: 18px
+        width: 18px
+
+.email
+   @extend .button
+   color: $DARK_GRAY
+   background: transparent
+   border: 1px solid $DARK_GRAY
+   
+   &::before 
+        content: ''
+        position: absolute
+        left: 12px
+        top: 50%
+        transform: translateY(-50%)
+        display: inline-block
+        background:
+            image: url(/assets/components/Button/email.svg)
+            size: contain
+            repeat: no-repeat
+            position: center
+        height: 18px
+        width: 18px

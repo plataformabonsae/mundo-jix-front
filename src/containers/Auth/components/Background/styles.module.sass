@@ -1,0 +1,45 @@
+
+    
+.content
+    position: relative
+    z-index: -1
+    display: flex
+    align-items: flex-end
+    min-height: 100vh
+
+.wrapper
+    position: fixed
+    bottom: 0
+    max-width: 400px
+    padding: 50px
+        bottom: 80px
+    color: white
+
+.right
+    @extend .content
+    margin: 
+        left: -50px
+    padding:
+        left: 50px
+    text-align: right
+    background:
+        image: url('/assets/auth/right.png')
+        size: cover
+
+.left
+    @extend .content
+    margin: 
+        right: -50px
+    padding:
+        right: 50px
+    text-align: left
+    background:
+        image: url('/assets/auth/left.png')
+        size: cover
+
+.full
+    @extend .content
+    background:
+        image: url('/assets/auth/full.png')
+        size: cover
+

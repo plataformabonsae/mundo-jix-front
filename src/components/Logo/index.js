@@ -18,4 +18,6 @@ const Logo = ({ title, desc, color }) => (
     </div>
 )
 
-export default Logo
+export { 
+    Logo
+}

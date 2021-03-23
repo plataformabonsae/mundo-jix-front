@@ -12,3 +12,27 @@
     border-radius: 12px
     color: $MEDIUM_BLACK
     text-align: left
+
+
+    &TabItem
+        position: relative
+        display: inline-block
+        padding: 12px
+        text-decoration: none
+        color: $DARK_GRAY
+
+        &__active
+            position: relative
+            color: $MEDIUM_BLACK
+            font:
+                weight: bold
+
+            &::after          
+                content: ''
+                position: absolute
+                left: 0
+                bottom: 0
+                display: inline-block
+                height: 3px
+                width: 100%
+                background: $MEDIUM_BLACK

@@ -3,13 +3,17 @@
 
 
 .input
-    position: relative
+    flex: 50%
     display: flex
+    flex-wrap: wrap
+    position: relative
     width: 100%
-    span
+    box-sizing: border-box
+    padding: 12px 6px
+    .name
         position: absolute
-        left: 8px
-        top: 3px
+        left: 8px + 6px
+        top: -7px + 12px
         z-index: 2
         display: inline-block
         font: 
@@ -18,24 +22,43 @@
         text-transform: uppercase
         letter-spacing: 2px
         color: $MEDIUM_GRAY
-        padding: 4px
+        padding: 0 4px
         background: $WHITE
 
-    input
-        flex: 1
-        width: 100%
-        position: relative
+    input,
+    textarea
+        resize: none
+        // flex: 1
+        // width: 100%
+        // position: relative
 
         &[type='text'],
         &[type='password'],
         &[type='email'],
+        &[type='textarea'],
             +borderRadius
             display: block
-            width: auto
-            margin: 12px 6px
+            width: 100%
             padding: 12px
             border: 1px solid $MEDIUM_GRAY
+            &:active,
+            &:focus
+                border: 1px solid $MEDIUM_GRAY
 
+
+    .error
+        color: $ERROR
+        font:
+            size: 12px
+
+.required
+    span
+        color: $ERROR
+    input
+        &[type='text'],
+        &[type='password'],
+        &[type='email'],
+            border: 1px solid $ERROR
 
 .inputCheckbox
     cursor: pointer
@@ -56,4 +79,59 @@
 
 .wrapper
     display: flex
+    flex-wrap: wrap
+    // justify-content: center
+    box-sizing: border-box
+    padding: 0
+    border: none
+
+.PhotoUpload
+    text-align: center
+    margin: 12px 0
+    button
+        display: inline-flex
+        justify-content: center
+        align-items: center
+        flex-direction: column
+        height: 150px
+        width: 150px
+        background: $LIGHT_GRAY
+        border-radius: 100%
+        border: none
+        img
+            display: block
+        span
+
+
     
+.addGroup
+    cursor: pointer
+    width: 100%
+    text-align: left
+    background: none
+    border: none
+    color: $INFORMATION
+    margin:
+        bottom: 12px
+    span
+        display: inline-block
+        width: 12px
+        height: 12px
+        font:
+            size: 12px
+        line-height: 12px
+        margin:
+            right: 6px
+        border: 1px solid $INFORMATION
+            radius: 1px
+        text-align: center
+
+.removeGroup
+    margin-top: -12px
+    cursor: pointer
+    width: 100%
+    text-align: right
+    background: none
+    border: none
+    text-decoration: underline
+    color: $DARK_GRAY

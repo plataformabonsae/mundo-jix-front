@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { Input, InputWrapper } from 'components/Inputs'
+import { Input, InputGroup } from 'components/Inputs'
 import Button from 'components/Button'
 import Copyright from 'components/Copyright'
-import Logo from 'components/Logo'
+import { Logo } from 'components/Logo'
 
 
 // import Typography from 'utils/styles/Typography.module.sass'
@@ -21,7 +21,7 @@ const Email = ({ title, desc, type }) => {
                 title={ title }
                 desc={ desc }/>
 
-            <InputWrapper>
+            <InputGroup>
                 <Input
                     type="text"
                     placeholder="Digite seu nome">
@@ -32,17 +32,17 @@ const Email = ({ title, desc, type }) => {
                     placeholder="Digite seu sobrenome">
                     Sobrenome
                 </Input>
-            </InputWrapper>
+            </InputGroup>
 
-            <InputWrapper>
+            <InputGroup>
                 <Input
                     type="email"
                     placeholder="Digite seu nome">
                     e-mail
                 </Input>
-            </InputWrapper>
+            </InputGroup>
 
-            <InputWrapper>
+            <InputGroup>
                 <Input
                     type="password"
                     placeholder="Digite uma senha">
@@ -53,7 +53,7 @@ const Email = ({ title, desc, type }) => {
                     placeholder="Repita a senha">
                     Confirmar senha
                 </Input>
-            </InputWrapper>
+            </InputGroup>
 
             <Button
                 Tag={ Link }

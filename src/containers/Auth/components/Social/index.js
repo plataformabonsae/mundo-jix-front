@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { TabSelect, TabContent, TabWrapper } from 'components/Tabs'
 import Button from 'components/Button'
 import Copyright from 'components/Copyright'
-import Logo from 'components/Logo'
+import { Logo } from 'components/Logo'
 
 
 // import Typography from 'utils/styles/Typography.module.sass'

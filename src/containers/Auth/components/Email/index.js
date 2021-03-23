@@ -44,7 +44,7 @@ const Email = ({ title, desc, type }) => {
                 </Checkbox>
                 <span className={ styles.subSpan }>
                     Esqueceu sua senha? 
-                    <Link to={`/auth/${type}/forgot`}>
+                    <Link to={`/join/${type}/recover`}>
                         Clique aqui
                     </Link>
                 </span>

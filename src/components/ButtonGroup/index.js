@@ -2,8 +2,8 @@ import React from 'react'
 
 import styles from './styles.module.sass'
 
-const ButtonGroup = ({ children }) => (
-    <div className={ styles.buttons }>
+const ButtonGroup = ({ children, style, className }) => (
+    <div className={ styles.buttons } style={style}>
         { children }
     </div>
 )

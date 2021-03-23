@@ -12,6 +12,7 @@ import Photo from 'assets/components/Input/PhotoUpload.svg'
 
 // TODO
 // 1 - Mascaras https://codesandbox.io/s/react-hook-form-gv5su?file=/src/App.js:149-457
+// 2 - Mudar a posição dos elementos isMulti do Select
 
 const InputGroup = ({ children, name, key }) => (
     <fieldset name={name} key={key} className={ styles.wrapper }>
@@ -38,6 +39,15 @@ const RemoveGroup = ({children, text, onClick}) => {
             className={ styles.removeGroup }>{ text ? text : 'Remover' }</button>
     )
 }
+
+const InputFile = ({ children, file }) => (
+    <div className={ styles.upload }>
+        <button type="button">
+            Escolher arquivo
+        </button>
+        Nenhum arquivo selecionado
+    </div>
+)
 
 const Input = React.forwardRef(({name, value, placeholder, type, onChange, children, checked, errors, errorMessage }, ref) => (
     <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
@@ -68,10 +78,11 @@ const Textarea = React.forwardRef(({name, rows, value, placeholder, type, onChan
     </label>
 ))
 
-const SelectInput = React.forwardRef(({name, value, placeholder, type, onChange, children, control, errors, errorMessage, options }, ref) => (
+const SelectInput = React.forwardRef(({name, value, placeholder, type, onChange, children, control, errors, errorMessage, options, isMulti }, ref) => (
     <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
         <span className={ styles.name }>{ children }</span>
         <Controller
+            isMulti
             name={ name }
             control={control}
             options={ options }
@@ -221,5 +232,6 @@ export {
     SelectInput,
     Checkbox,
     InputWithMask,
-    PhotoUpload
+    PhotoUpload,
+    InputFile
 }

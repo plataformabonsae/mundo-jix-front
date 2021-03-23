@@ -9,10 +9,10 @@ import logoWhite from 'assets/logo/logo_white.svg'
 const Logo = ({ title, desc, color }) => (
     <div className={ styles.logo }>
         <img src={ color === 'white' ? logoWhite : logoColor } alt='Mundo Jix' />
-        <p>
+        <p style={{ color: color }}>
             { title }
         </p>
-        <span>
+        <span style={{ color: color }}>
             { desc }
         </span>
     </div>

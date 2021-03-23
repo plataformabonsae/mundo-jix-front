@@ -3,7 +3,6 @@ import { useSpring, animated } from 'react-spring'
 
 import { Card } from 'components/Card'
 import { Checkbox } from 'components/Inputs'
-import { Logo } from 'components/Logo'
 import Button from 'components/Button'
 import { ButtonGroup } from 'components/ButtonGroup'
 
@@ -22,7 +21,6 @@ const Terms = ({ children, type }) => {
 
     return (
         <>   
-            <Logo color="white" />
 
             <Card>
                 { children }

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { Logo } from 'components/Logo'
 import { CardTabs, CardTabItem } from 'components/Card'
 
 import { Step1 } from './components/Step1'
@@ -15,22 +14,23 @@ const Form = ({ children, action, type }) => {
 
     return (
         <>
-            <Logo color="white" />
 
-            <CardTabs>
-                <CardTabItem 
-                    to={ `/join/${type}/1` }>
-                        Pessoal
-                </CardTabItem>
-                <CardTabItem 
-                    to={ `/join/${type}/2` }>
-                        Acadêmico
-                </CardTabItem>
-                <CardTabItem 
-                    to={ `/join/${type}/3` }>
-                        Profissional
-                </CardTabItem>
-            </CardTabs>
+            { type === 'talento' && (
+                <CardTabs>
+                    <CardTabItem 
+                        to={ `/join/${type}/1` }>
+                            Pessoal
+                    </CardTabItem>
+                    <CardTabItem 
+                        to={ `/join/${type}/2` }>
+                            Acadêmico
+                    </CardTabItem>
+                    <CardTabItem 
+                        to={ `/join/${type}/3` }>
+                            Profissional
+                    </CardTabItem>
+                </CardTabs>
+            ) }
 
             { action === 1 && ( <Step1 type={type} />) }
 

@@ -1,20 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
-import { cpf } from 'cpf-cnpj-validator'
 
 import { Card } from 'components/Card'
 import { Title } from 'components/Text'
 import { 
-    PhotoUpload, 
     InputGroup,
     Input,
     SelectInput,
     AddGroup,
+    InputFile,
+    Checkbox,
+    Textarea,
+    // AddGroup,
     // RemoveGroup,
     // InputWithMask,
-    Textarea
+    // Textarea
  } from 'components/Inputs'
+import { Text } from 'components/Text'
 import Button from 'components/Button'
 import { ButtonGroup } from 'components/ButtonGroup'
 
@@ -34,111 +37,229 @@ const Step3 = ({action, type}) => {
         history.push(`/`)
     }
 
-    const typeEscolar = [
-        { value: 'Médio', label: 'Médio' },
-        { value: 'Técnico', label: 'Profissional' },
-        { value: 'Superior', label: 'Superior' },
+    const typeSituacao = [
+        { value: 'Tenho emprego', label: 'Tenho emprego' },
+        { value: 'Sou freelancer', label: 'Sou freelancer' },
+        { value: 'Não tenho emprego', label: 'Não tenho emprego' },
     ]
 
-    const typeGrau = [
-        { value: 'Tecnólogo', label: 'Tecnólogo' },
-        { value: 'Graduação', label: 'Graduação' },
-        { value: 'Pós-graduação', label: 'Pós-graduação' },
-        { value: 'Mestrado', label: 'Mestrado' },
-        { value: 'Doutorado', label: 'Doutorado' },
+    const typeBusca = [
+        { value: 'Jovem aprendiz', label: 'Jovem aprendiz' },
+        { value: 'Estágio', label: 'Estágio' },
+        { value: 'PJ', label: 'PJ' },
+        { value: 'Trainee', label: 'Trainee' },
+        { value: 'CLT', label: 'CLT' },
+        { value: 'Empreender', label: 'Empreender' },
     ]
 
-    const typeStatus = [
-        { value: 'Completo', label: 'Completo' },
-        { value: 'Em andamento', label: 'Em andamento' },
-        { value: 'Incompleto', label: 'Incompleto' },
+    const typePortifolio = [
+        { value: 'Github', label: 'Github' },
+        { value: 'Site', label: 'Site' },
+        { value: 'Outro', label: 'Outro' },
+    ]
+
+    const typeSkill = [
+        { value: 'Programação', label: 'Programação' },
+        { value: 'Skill dois', label: 'Skill dois' },
+        { value: 'Skill três', label: 'Skill três' },
+        { value: 'Skill quatro', label: 'Skill quatro' },
+    ]
+
+    const typeLinks = [
+        { value: 'Youtube', label: 'Youtube' },
+        { value: 'Blog', label: 'Blog' },
+        { value: 'Outro', label: 'Outro' },
     ]
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
 
             <Card>
-                <Title style={{ marginBottom: 32 }}>Formação acadêmica</Title>
+                <Title style={{ marginBottom: 32 }}>Perspectivas</Title>
 
                 <InputGroup>
                     <SelectInput
                         ref={register({ required: true })}
-                        name={`escolaridade`} 
+                        name={`situacao-atual`} 
                         control={control}
                         errors={errors}
                         errorMessage="Selecione um tipo"
-                        placeholder="Selecione seu nível de escolaridade"
-                        options={ typeEscolar }>
-                        Nível de escolaridade
+                        placeholder="Selecione a situação atual"
+                        options={ typeSituacao }>
+                        Situação atual
                     </SelectInput>
                 </InputGroup>
 
                 <InputGroup>
                     <SelectInput
                         ref={register({ required: true })}
-                        name={`grau`} 
+                        name={`o-que-busca`} 
                         control={control}
                         errors={errors}
                         errorMessage="Selecione um tipo"
-                        placeholder="Selecione o grau de escolaridade"
-                        options={ typeGrau }>
-                        Grau
+                        placeholder="Selecione o que busca"
+                        options={ typeBusca }>
+                        O que busca?
                     </SelectInput>
                 </InputGroup>
+
+            </Card>
+
+            <Card>
+                <Title style={{ marginBottom: 32 }}>Skills</Title>
 
                 <InputGroup>
                     <SelectInput
                         ref={register({ required: true })}
-                        name={`status`} 
+                        name={`skills`} 
                         control={control}
+                        isMulti
                         errors={errors}
-                        errorMessage="Selecione um tipo"
-                        placeholder="Selecione o status atual"
-                        options={ typeStatus }>
-                        Grau
-                    </SelectInput>
+                        errorMessage="Digite pelo menos uma skill"
+                        placeholder="Digite sua skill"
+                        options={ typeSkill } />
                 </InputGroup>
+                
+            </Card>
+
+            <Card>
+                <Title style={{ marginBottom: 32 }}>Portfolio</Title>
 
                 <InputGroup>
                     <Input
+                        ref={register()}
+                        errors={errors}
+                        errorMessage="Máximo 20 caracteres"
+                        name="plataforma.link"
+                        placeholder="Colo aqui o link">
+                        Link
+                    </Input>
+                    <SelectInput
                         ref={register({ required: true })}
-                        name="instituicao"
+                        name={`plafatorma.url`} 
+                        control={control}
+                        errors={errors}
+                        errorMessage="Selecione pelo menos uma plataforma"
+                        placeholder="Selecione a plataforma"
+                        options={ typePortifolio }>
+                        Plataforma
+                    </SelectInput>
+
+                    <AddGroup text="Adicionar portfolio" />
+                </InputGroup>
+                
+            </Card>
+
+            <Card>
+                <Title style={{ marginBottom: 32 }}>Currículo</Title>
+
+                <InputGroup>
+                    <Text size={12} weight={'bold'}>
+                        Anexe seu currículo em PDF ou Doc:
+                    </Text>
+                    <InputFile
+                        ref={register({ required: true })}
+                        name={`curriculo`} 
+                        control={control}
+                        // errors={errors}
+                        // errorMessage="Selecione pelo menos uma plataforma"
+                        // placeholder="Selecione a plataforma"
+                        options={ typePortifolio }>
+                        {/* Plataforma */}
+                    </InputFile>
+                </InputGroup>
+                
+            </Card>
+
+            <Card>
+                <Title style={{ marginBottom: 32 }}>Portfolio</Title>
+
+                <InputGroup>
+                    <Input
+                        ref={register()}
+                        name="cargo"
                         errors={errors}
                         errorMessage="Campo necessário"
-                        placeholder="Digite a instituição">
-                        Instituição
+                        placeholder="Digite o cargo">
+                        Cargo
                     </Input>
                 </InputGroup>
 
                 <InputGroup>
                     <Input
-                        ref={register({ required: true })}
-                        name="instituicao"
+                        ref={register()}
+                        name="empresa.nome"
                         errors={errors}
                         errorMessage="Campo necessário"
-                        placeholder="Digite o curso">
-                        Curso
+                        placeholder="Digite o nome da empresa">
+                        Empresa
                     </Input>
                 </InputGroup>
 
                 <InputGroup>
                     <Input
-                        ref={register({ required: true })}
-                        name="instituicao"
+                        ref={register()}
+                        name="empresa.inicio"
                         errors={errors}
                         errorMessage="Campo necessário"
                         placeholder="__/__/____">
                         Início
                     </Input>
                     <Input
-                        ref={register({ required: true })}
-                        name="instituicao"
+                        ref={register()}
+                        name="empresa.termino"
                         errors={errors}
                         errorMessage="Campo necessário"
                         placeholder="__/__/____">
                         Término
                     </Input>
+                    <div style={{ width: '100%', textAlign: 'right' }}>
+                        <Checkbox>
+                            Meu Emprego atual
+                        </Checkbox>
+                    </div>
                 </InputGroup>
+
+                <InputGroup>
+                    <Textarea
+                        ref={register({ required: true, maxLength: 400 })}
+                        errors={errors}
+                        errorMessage="Máximo de 400 caracteres"
+                        name={ `atividades` }
+                        placeholder="Digite suas principais atividades">
+                        Principais atividades
+                    </Textarea>
+                </InputGroup>
+
+                <AddGroup text="Adicionar experiência" />
+            </Card>
+
+            <Card>
+                <Title style={{ marginBottom: 32 }}>Outros links</Title>
+
+                <InputGroup>
+                    <Input
+                        ref={register()}
+                        errors={errors}
+                        errorMessage="Máximo 20 caracteres"
+                        name="plataforma.link"
+                        placeholder="Cole aqui o link">
+                        Link
+                    </Input>
+                    <SelectInput
+                        ref={register({ required: true })}
+                        name={`plafatorma.url`} 
+                        control={control}
+                        errors={errors}
+                        errorMessage="Selecione pelo menos uma plataforma"
+                        placeholder="Selecione a plataforma"
+                        options={ typeLinks }>
+                        Plataforma
+                    </SelectInput>
+
+                    <AddGroup text="Adicionar link" />
+                </InputGroup>
+                
             </Card>
 
             <ButtonGroup>   

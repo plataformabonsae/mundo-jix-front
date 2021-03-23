@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
-import { cpf } from 'cpf-cnpj-validator'
+// import { cpf } from 'cpf-cnpj-validator'
 
 import { Card } from 'components/Card'
 import { Title } from 'components/Text'
 import { 
-    PhotoUpload, 
+    // PhotoUpload, 
     InputGroup,
     Input,
     SelectInput,
     AddGroup,
     // RemoveGroup,
     // InputWithMask,
-    Textarea
+    // Textarea
  } from 'components/Inputs'
 import Button from 'components/Button'
 import { ButtonGroup } from 'components/ButtonGroup'
@@ -139,6 +139,8 @@ const Step2 = ({action, type}) => {
                         Término
                     </Input>
                 </InputGroup>
+
+                <AddGroup text="Adicionar formação acadêmica" />
             </Card>
 
             <ButtonGroup>   

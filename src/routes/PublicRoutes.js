@@ -1,13 +1,16 @@
 import React from 'react';
-import { Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Router, Switch, Route, Redirect } from 'react-router-dom'
 
-import history from 'utils/history';
+import history from 'utils/history'
 
-import Auth from 'containers/Auth'
-import Join from 'containers/Join'
-import NotFound from 'containers/404'
+import { Menu } from 'components/Menu'
+import { Header } from 'components/Header'
 
+import Auth from 'containers/public/Auth'
+import Join from 'containers/public/Join'
+import NotFound from 'containers/public/404'
 
+import { Dashboard } from 'containers/private/Dashboard'
 
 const Routes = () => (
   <Router history={history}>
@@ -24,6 +27,13 @@ const Routes = () => (
       
       {/* notFound */}
       <Route path="/404" component={NotFound} />
+
+      {/* notFound */}
+      <Route path="/dashboard">
+        <Menu />
+        <Header name={'Gabriela Salomão Silveira'} />
+        <Dashboard></Dashboard>
+      </Route>
 
     </Switch>
   </Router>

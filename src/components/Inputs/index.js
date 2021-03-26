@@ -8,11 +8,20 @@ import { Text } from 'components/Text'
 import styles from './styles.module.sass'
 
 import Photo from 'assets/components/Input/PhotoUpload.svg'
+import search from 'assets/components/Input/search.svg'
 
 
 // TODO
 // 1 - Mascaras https://codesandbox.io/s/react-hook-form-gv5su?file=/src/App.js:149-457
 // 2 - Mudar a posição dos elementos isMulti do Select
+// 3 - search
+
+const Search = () => (
+    <button className={ styles.search }>
+        <img src={ search } alt={ search } />
+    </button>
+)
+
 
 const InputGroup = ({ children, name, key }) => (
     <fieldset name={name} key={key} className={ styles.wrapper }>
@@ -82,7 +91,7 @@ const SelectInput = React.forwardRef(({name, value, placeholder, type, onChange,
     <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
         <span className={ styles.name }>{ children }</span>
         <Controller
-            isMulti
+            isMulti={isMulti}
             name={ name }
             control={control}
             options={ options }
@@ -224,6 +233,7 @@ const PhotoUpload = React.forwardRef(({name, value, placeholder, onChange, onCli
 })
 
 export {
+    Search,
     InputGroup,
     AddGroup,
     RemoveGroup,

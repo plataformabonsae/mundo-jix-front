@@ -34,12 +34,12 @@ const Terms = ({ children, type }) => {
                 <ButtonGroup>   
                     <div className={ styles.mustConfirm }>Você prefere terminar o cadastro agora ou depois?</div>
                     <Button
-                        to="/"
-                    type="outlineWhite">
+                        to={`/dashboard/${type}`}
+                        type="outlineWhite">
                         Completar depois
                     </Button>
                     <Button
-                        to={`/join/${type}/1`}
+                        to={`/join/${type}/pessoal`}
                         type="secondary">
                         Completar agora
                     </Button>

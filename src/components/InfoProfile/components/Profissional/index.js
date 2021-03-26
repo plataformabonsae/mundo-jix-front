@@ -27,14 +27,15 @@ import { ButtonGroup } from 'components/ButtonGroup'
 // 2 - '' '' '' redes socias
 
 
-const Step3 = ({action, type}) => {
+const Profissional = ({action, type, noShadow}) => {
 
     const history = useHistory()
+    // const { pathname } = useLocation()
+
 
     const { register, errors, control, handleSubmit } = useForm()
     const onSubmit = (data) => {
-        console.log(JSON.stringify(data))
-        history.push(`/`)
+        history.push(`/dashboard/${type}`)
     }
 
     const typeSituacao = [
@@ -74,7 +75,7 @@ const Step3 = ({action, type}) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
 
-            <Card>
+            <Card noShadow={ noShadow }>
                 <Title style={{ marginBottom: 32 }}>Perspectivas</Title>
 
                 <InputGroup>
@@ -105,7 +106,7 @@ const Step3 = ({action, type}) => {
 
             </Card>
 
-            <Card>
+            <Card noShadow={ noShadow }>
                 <Title style={{ marginBottom: 32 }}>Skills</Title>
 
                 <InputGroup>
@@ -122,7 +123,7 @@ const Step3 = ({action, type}) => {
                 
             </Card>
 
-            <Card>
+            <Card noShadow={ noShadow }>
                 <Title style={{ marginBottom: 32 }}>Portfolio</Title>
 
                 <InputGroup>
@@ -150,7 +151,7 @@ const Step3 = ({action, type}) => {
                 
             </Card>
 
-            <Card>
+            <Card noShadow={ noShadow }>
                 <Title style={{ marginBottom: 32 }}>Currículo</Title>
 
                 <InputGroup>
@@ -171,7 +172,7 @@ const Step3 = ({action, type}) => {
                 
             </Card>
 
-            <Card>
+            <Card noShadow={ noShadow }>
                 <Title style={{ marginBottom: 32 }}>Portfolio</Title>
 
                 <InputGroup>
@@ -234,7 +235,7 @@ const Step3 = ({action, type}) => {
                 <AddGroup text="Adicionar experiência" />
             </Card>
 
-            <Card>
+            <Card noShadow={ noShadow }>
                 <Title style={{ marginBottom: 32 }}>Outros links</Title>
 
                 <InputGroup>
@@ -264,7 +265,7 @@ const Step3 = ({action, type}) => {
 
             <ButtonGroup>   
                 <Button
-                    to="/"
+                    to={`/dashboard/${type}`}
                 type="outlineWhite">
                     Salvar e sair
                 </Button>
@@ -280,5 +281,5 @@ const Step3 = ({action, type}) => {
 }
 
 export {
-    Step3
+    Profissional
 }

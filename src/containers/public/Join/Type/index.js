@@ -1,11 +1,11 @@
 import React from 'react'
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 import { Logo } from 'components/Logo'
 import Copyright from 'components/Copyright'
 
 import Background from '../components/Background'
-import { Layout } from '../components/Layout'
+import { Layout } from 'components/Layout'
 import Terms from '../components/Terms'
 import { Form } from '../components/Form'
 import { Recover } from '../components/Recover'
@@ -14,10 +14,9 @@ import content from 'utils/content/join.json'
 
 
 
-
 const Type = ({ action, type }) => {
 
-    let history = useHistory()
+    // let history = useHistory()
 
     const joinType = (action, type) => {
         if(action === 'terms') {
@@ -27,17 +26,17 @@ const Type = ({ action, type }) => {
             return <Recover action={action} type={type} />
         }
         else {
-            if(action === '1' || action === '2' || action === '3')
-                return <Form action={parseInt(action)} type={type} />
+            if(action === 'pessoal' || action === 'academico' || action === 'profissional')
+                return <Form action={ action } type={ type } />
             else {
-                history.push('/404')
+                return <div>{action}</div>
             }
         }
     }
 
     return (
         <Background>
-            <Layout>
+            <Layout center>
                 <Logo 
                     color="white"
                     title={`${action === 'recover' ? 'Recuperar senha' : ''}`}

@@ -2,6 +2,7 @@ import React, {
     // useState
     useEffect
  } from 'react'
+ import { useParams } from 'react-router-dom'
 // import { useSpring, animated } from 'react-spring'
 
 
@@ -22,11 +23,14 @@ import profile from '__tests__/assets/profile.png'
 // 1 - Animation on open e close aside
 // 2 - social
 
-const Menu = ({ active }) => {
+const Menu = ({ active, source }) => {
+
+    const { type } = useParams()
 
     useEffect(() => {
         const body = document.getElementsByTagName('body')[0]
         body.style.paddingLeft = `${18}vw`
+        return () => body.style.paddingLeft = 0
     }, [])
 
     // const [ isOpen, setIsOpen ] = useState(false)
@@ -48,13 +52,28 @@ const Menu = ({ active }) => {
                 name={ 'Gabriela Salomão Tasco Silveira' }
                 location={ 12 } />
 
-            <Points points={ 5234 } />
+            
 
-            <Button to={`/dashboard`} dashboard>Dashboard</Button>
-            <Button to={`/meus-desafios`} meusDesafios>Meus desafios</Button>
-            <Button to={`/desafios`} desafios>Desafios</Button>
-            <Button to={`/perfil`} perfil>Perfil</Button>
-            <Button to={`/logout`} sair>Sair</Button>
+            { type === 'talento' ? (
+                <>
+                    <Points points={ 5234 } />
+
+                    <Button to={`/dashboard/${type}`} dashboard>Dashboard</Button>
+                    <Button to={`/meus-desafios/${type}`} meusDesafios>Meus desafios</Button>
+                    <Button to={`/desafios/${type}`} desafios>Desafios</Button>
+                    <Button to={`/perfil/talento`} perfil>Perfil</Button>
+                    <Button to={`/auth/talento/login`} sair>Sair</Button>
+                </>
+            ) : (
+                <>
+                    <Button to={`/dashboard/${type}`} dashboard>Dashboard</Button>
+                    <Button to={`/meus-desafios/${type}`} meusDesafios>Meus desafios</Button>
+                    <Button to={`/perfil/${type}`} perfil>Perfil</Button>
+                    <Button to={`/auth/${type}/login`} sair>Sair</Button>
+                </>
+            ) }
+
+            
 
         </Aside>
     )

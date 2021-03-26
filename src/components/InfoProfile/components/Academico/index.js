@@ -1,6 +1,6 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 // import { cpf } from 'cpf-cnpj-validator'
 
 import { Card } from 'components/Card'
@@ -24,14 +24,17 @@ import { ButtonGroup } from 'components/ButtonGroup'
 // 2 - '' '' '' redes socias
 
 
-const Step2 = ({action, type}) => {
+const Academico = ({action, type, noShadow, advance, save, finalRoute}) => {
 
     const history = useHistory()
+    const { pathname } = useLocation()
 
     const { register, errors, control, handleSubmit } = useForm()
     const onSubmit = (data) => {
         console.log(JSON.stringify(data))
-        history.push(`/join/${type}/3`)
+        let array = pathname.split('/')
+        history.push(`/${array[1]}/${type}/profissional`)
+        console.log(array)
     }
 
     const typeEscolar = [
@@ -57,7 +60,8 @@ const Step2 = ({action, type}) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
 
-            <Card>
+            <Card 
+                noShadow={ noShadow }>
                 <Title style={{ marginBottom: 32 }}>Formação acadêmica</Title>
 
                 <InputGroup>
@@ -145,8 +149,8 @@ const Step2 = ({action, type}) => {
 
             <ButtonGroup>   
                 <Button
-                    to="/"
-                type="outlineWhite">
+                    to={`/dashboard/${type}`}
+                    type="outlineWhite">
                     Salvar e sair
                 </Button>
                 <Button
@@ -161,5 +165,5 @@ const Step2 = ({action, type}) => {
 }
 
 export {
-    Step2
+    Academico
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { TabSelect, TabContent, TabWrapper } from 'components/Tabs'
+import { TabBox, TabBoxContent, TabBoxWrapper } from 'components/Tabs'
 import Button from 'components/Button'
 import Copyright from 'components/Copyright'
 import { Logo } from 'components/Logo'
@@ -21,22 +21,22 @@ const Social = ({ title, desc, type }) => {
                 title={ title }
                 desc={ desc }/>
 
-            <TabWrapper>
-                <TabSelect
+            <TabBoxWrapper>
+                <TabBox
                     Tag={Link}
                     to="/auth/talento/login"
                     active={ type === 'talento' ? true : false }>
                     Talento
-                </TabSelect>
+                </TabBox>
 
-                <TabSelect
+                <TabBox
                     Tag={Link}
                     to="/auth/empresa/login"
                     active={ type === 'empresa' ? true : false }>
                     Empresa
-                </TabSelect>
+                </TabBox>
 
-                <TabContent>
+                <TabBoxContent>
                     <div className={ styles.buttons }>
                         <Button
                             Tag="a"
@@ -55,8 +55,8 @@ const Social = ({ title, desc, type }) => {
                             to={`/auth/${type}/email`} 
                             type="email">Entrar com E-mail</Button>
                     </div>
-                </TabContent>
-            </TabWrapper>
+                </TabBoxContent>
+            </TabBoxWrapper>
             
 
             <div className={ styles.subSpan } style={{ marginTop: 32 }}>

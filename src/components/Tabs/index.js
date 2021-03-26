@@ -1,19 +1,20 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 import styles from './styles.module.sass'
 
 
-const TabSelect = ({Tag = 'button', children, href = '/', onClick, active, to}) => (
+const TabBox = ({Tag = 'button', children, href = '/', onClick, active, to}) => (
     <Tag 
         to={ to }
         href={ href } 
         onClick={ onClick } 
-        className={` ${ styles.tab } ${ active ? styles.active : '' } `}>
+        className={` ${ styles.tab__rounded } ${ active ? styles.tab__rounded__active : '' } `}>
         { children }
     </Tag>
 )
 
-const TabContent = ({ children }) => {
+const TabBoxContent = ({ children }) => {
     
     return (
         <section className={ styles.content }>
@@ -22,14 +23,25 @@ const TabContent = ({ children }) => {
     )
 }
 
-const TabWrapper = ({ children }) => (
+const TabBoxWrapper = ({ children }) => (
     <section className={ styles.wrapper }>
         { children }
     </section>
 )
 
+const TabFlat = ({ children, to, Tag = NavLink, color = 'black' }) => (
+    <Tag 
+        activeClassName={ styles.tab__flat__active }
+        className={ `${styles.tab__flat} ${ color && styles[color]}` }
+        to={ to ? to : '/' }>
+        { children }
+    </Tag>
+)
+
+
 export {
-    TabSelect,
-    TabContent,
-    TabWrapper
+    TabBox,
+    TabBoxContent,
+    TabFlat,
+    TabBoxWrapper
 }

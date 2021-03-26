@@ -2,6 +2,7 @@
 
 
 .button
+    text-align: center
     position: relative
     display: inline-block
     font:
@@ -16,6 +17,10 @@
     cursor: pointer
     // color: $MEDIUM_BLACK
 
+    svg
+        margin:
+            left: 6px
+
 .primary
     background: $LIGHT_BLACK
     border: 1px solid $LIGHT_BLACK
@@ -23,6 +28,10 @@
 .secondary
     background: $DARK_BLUE
     border: 1px solid $DARK_BLUE
+
+.tertiary
+    background: $LIGHT_BLUE
+    border: 1px solid $LIGHT_BLUE
 
 .outlineWhite
     background: transparent
@@ -101,5 +110,22 @@
             size: contain
             repeat: no-repeat
             position: center
+        height: 18px
+        width: 18px
+
+.transparent
+    @extend .button
+    color: $INFORMATION
+    &::before 
+        content: ''
+        position: absolute
+        left: 12px
+        top: 50%
+        transform: translateY(-50%)
+        display: inline-block
+        background:
+            image: url(/assets/components/Button/linkedin.svg)
+            size: contain
+            repeat: no-repeat
         height: 18px
         width: 18px

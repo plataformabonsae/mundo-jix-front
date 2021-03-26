@@ -2,31 +2,65 @@
 @import 'utils/styles/mixins'
 
 .tab
-    +borderRadius
-    position: relative
-    z-index: 2
-    display: inline-block
-    font:
-        size: 14px
-        weight: 700
-    color: $MEDIUM_BLACK
-    text-decoration: none
-    padding: 12px
-        bottom: 13px
-    grid:
-        area: t
 
-    &:nth-child(2)
+    &__rounded
+        +borderRadius
+        position: relative
+        z-index: 2
+        display: inline-block
+        font:
+            size: 14px
+            weight: 700
+        color: $MEDIUM_BLACK
+        text-decoration: none
+        padding: 12px
+            bottom: 13px
         grid:
-            area: b
+            area: t
 
-.active
-    background: #FBFBFB
-    border: 1px solid $LIGHT_GRAY
-    border:
-        bottom: 0
-            right-radius: 0
-            left-radius: 0
+        &:nth-child(2)
+            grid:
+                area: b
+
+        &__active
+            background: #FBFBFB
+            border: 1px solid $LIGHT_GRAY
+            border:
+                bottom: 0
+                    right-radius: 0
+                    left-radius: 0
+
+    &__flat
+        position: relative
+        display: inline-block
+        padding: 12px
+        text-decoration: none
+        color: $DARK_GRAY
+        margin: 0 6px
+        
+
+        &__active
+            position: relative
+            margin: 0 6px
+            color: $MEDIUM_BLACK
+            font:
+                weight: bold
+
+            &::after          
+                content: ''
+                position: absolute
+                left: 0
+                bottom: 0
+                display: inline-block
+                height: 3px
+                width: 100%
+                background: $MEDIUM_BLACK
+
+.white
+    color: white
+
+    &::after
+        background: white
 
 .content
     +borderRadius

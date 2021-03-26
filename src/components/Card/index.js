@@ -1,5 +1,4 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
 
 import styles from './styles.module.sass'
 import * as color from 'utils/styles/Colors'
@@ -25,17 +24,7 @@ const CardTabs = ({ children }) => (
     </Card>
 )
 
-const CardTabItem = ({ children, to }) => (
-    <NavLink 
-        activeClassName={ styles.cardTabItem__active }
-        className={ styles.cardTabItem }
-        to={ to }>
-        { children }
-    </NavLink>
-)
-
 export { 
     Card,
     CardTabs,
-    CardTabItem
 }

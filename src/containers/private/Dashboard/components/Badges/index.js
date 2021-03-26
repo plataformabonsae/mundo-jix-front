@@ -37,7 +37,7 @@ const Badges = () => {
                         desc={'Complete seu cadastro.'}
                         maxValue={100}
                         currentValue={67}
-                        valueText={`${25}%`} />
+                        valueText={`${67}%`} />
                     <Chip 
                         insignia
                         title={'Top Cadastro'}

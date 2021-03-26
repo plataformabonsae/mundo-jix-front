@@ -22,6 +22,16 @@ const Header = ({ name, notifications, invites }) => {
     )
 }
 
+const SubHeader = ({ children }) => {
+
+    return (
+        <header className={ styles.subheader }>
+            { children }
+        </header>
+    )
+}
+
 export {
-    Header
+    Header,
+    SubHeader
 }

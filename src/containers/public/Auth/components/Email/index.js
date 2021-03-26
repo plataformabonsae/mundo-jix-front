@@ -51,9 +51,8 @@ const Email = ({ title, desc, type }) => {
             </div>
 
             <Button
-                tag="a"
                 type="primary"
-                href="/">
+                to={`/dashboard/${type}`}>
                 Entrar
             </Button>
 

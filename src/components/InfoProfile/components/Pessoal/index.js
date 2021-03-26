@@ -1,6 +1,6 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { cpf, cnpj } from 'cpf-cnpj-validator'
 
 import { Card } from 'components/Card'
@@ -25,14 +25,21 @@ import { ButtonGroup } from 'components/ButtonGroup'
 // 2 - '' '' '' redes socias
 
 
-const Step1 = ({action, type}) => {
+const Pessoal = ({action, type, noShadow, finalRoute, hasPassword}) => {
 
     const history = useHistory()
+    const { pathname } = useLocation()
 
     const { register, errors, control, handleSubmit } = useForm()
+    
     const onSubmit = (data) => {
-        console.log(JSON.stringify(data))
-        history.push(`/join/${type}/2`)
+        let array = pathname.split('/')
+        if( type === 'talento' ) {
+            history.push(`/${array[1]}/${type}/academico`)
+        } else {
+            history.push(`/dashboard/${type}`)
+        }
+        console.log(array)
     }
 
     // // Add More Tels
@@ -91,7 +98,8 @@ const Step1 = ({action, type}) => {
         return (
             <form onSubmit={handleSubmit(onSubmit)}>
     
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Dados pessoais</Title>
     
                     <PhotoUpload name="image" ref={register} />
@@ -134,9 +142,25 @@ const Step1 = ({action, type}) => {
                             Data de nascimento
                         </Input>
                     </InputGroup>
+                    { hasPassword ? (
+                        <InputGroup>
+                            <Input
+                                ref={register({ required: true })}
+                                type="password"
+                                name="password"
+                                errors={errors}
+                                errorMessage="Digite uma senha válida"
+                                placeholder="Digite a senha"
+                                >
+                                Senha
+                            </Input>
+                        </InputGroup>
+                    ) : null}
+                    
                 </Card>
     
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Contato</Title>
     
                     <InputGroup>
@@ -175,7 +199,8 @@ const Step1 = ({action, type}) => {
                     </InputGroup>
                 </Card>
     
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Redes sociais</Title>
     
                     <InputGroup>
@@ -202,7 +227,8 @@ const Step1 = ({action, type}) => {
                     </InputGroup>
                 </Card>
     
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Redes sociais</Title>
     
                     <InputGroup>
@@ -220,7 +246,7 @@ const Step1 = ({action, type}) => {
     
                 <ButtonGroup>   
                     <Button
-                        to="/"
+                        to={finalRoute ? finalRoute : `/dashboard/${type}`}
                     type="outlineWhite">
                         Salvar e sair
                     </Button>
@@ -237,7 +263,8 @@ const Step1 = ({action, type}) => {
         return (
             <form onSubmit={handleSubmit(onSubmit)}>
     
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Dados cadastrais</Title>
     
                     <PhotoUpload name="image" ref={register} />
@@ -252,6 +279,21 @@ const Step1 = ({action, type}) => {
                             Nome da empresa
                         </Input>
                     </InputGroup>
+
+                    { hasPassword ? (
+                        <InputGroup>
+                            <Input
+                                ref={register({ required: true })}
+                                type="password"
+                                name="password"
+                                errors={errors}
+                                errorMessage="Digite uma senha válida"
+                                placeholder="Digite a senha"
+                                >
+                                Senha
+                            </Input>
+                        </InputGroup>
+                    ) : null}
 
                     <InputGroup>
                         <Input
@@ -291,7 +333,8 @@ const Step1 = ({action, type}) => {
                     
                 </Card>
     
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Contato</Title>
     
                     <InputGroup>
@@ -330,7 +373,8 @@ const Step1 = ({action, type}) => {
                     </InputGroup>
                 </Card>
 
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Localização</Title>
 
                     <InputGroup>
@@ -420,7 +464,8 @@ const Step1 = ({action, type}) => {
                 </Card>
 
     
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Redes sociais</Title>
     
                     <InputGroup>
@@ -447,7 +492,8 @@ const Step1 = ({action, type}) => {
                     </InputGroup>
                 </Card>
     
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Biografia</Title>
     
                     <InputGroup>
@@ -462,7 +508,8 @@ const Step1 = ({action, type}) => {
                     </InputGroup>
                 </Card>
 
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Fotos da empresa</Title>
     
                     <InputGroup>
@@ -472,7 +519,8 @@ const Step1 = ({action, type}) => {
                     </InputGroup>
                 </Card>
 
-                <Card>
+                <Card
+                    noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Vídeo da empresa</Title>
 
 
@@ -505,8 +553,14 @@ const Step1 = ({action, type}) => {
             </form>
         )
     }
+    else {
+    return(    
+        <div className="f">
+            { type }
+        </div>)
+    }
 }
 
 export {
-    Step1
+    Pessoal
 }

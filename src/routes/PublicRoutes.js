@@ -3,14 +3,12 @@ import { Router, Switch, Route, Redirect } from 'react-router-dom'
 
 import history from 'utils/history'
 
-import { Menu } from 'components/Menu'
-import { Header } from 'components/Header'
-
 import Auth from 'containers/public/Auth'
 import Join from 'containers/public/Join'
-import NotFound from 'containers/public/404'
+// import NotFound from 'containers/public/404'
 
 import { Dashboard } from 'containers/private/Dashboard'
+import { Profile } from 'containers/private/Profile'
 
 const Routes = () => (
   <Router history={history}>
@@ -26,14 +24,15 @@ const Routes = () => (
       <Route path="/join/:type/:action" component={Join} />
       
       {/* notFound */}
-      <Route path="/404" component={NotFound} />
+      {/* <Route path="/404" component={NotFound} /> */}
+      <Redirect exact from="/404" to="/auth/talento/login" />
 
-      {/* notFound */}
-      <Route path="/dashboard">
-        <Menu />
-        <Header name={'Gabriela Salomão Silveira'} />
-        <Dashboard></Dashboard>
-      </Route>
+      {/* Dashboard */}
+      <Route path="/dashboard/:type" component={Dashboard} />
+
+      {/* Perfil */}
+      <Route path="/perfil/:type/:action" component={Profile} />
+      <Redirect from="/perfil/:type" to="/perfil/:type/pessoal" />
 
     </Switch>
   </Router>

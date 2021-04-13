@@ -11,7 +11,8 @@ import { Profissional } from './components/Profissional'
 const InfoProfile = ({ center, noShadow, children, hasPassword }) => {
 
     let history = useHistory()
-    let { action, type } = useParams()
+    let { action } = useParams()
+    const type = window.localStorage.getItem('usertype')
 
     const joinType = (action, type) => {
         if(action === 'pessoal') {

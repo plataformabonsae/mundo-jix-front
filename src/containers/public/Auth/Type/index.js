@@ -14,7 +14,7 @@ const Type = ({ action, type }) => {
             if(request === 'email') {
                 return <Email
                             type={ type }
-                            title={`Boas vindas ${ content.[type].name }!`}
+                            title={`Boas vindas ${ content?.[type].name }!`}
                             desc="Preencha com seus dados os campos abaixo."/>
         }   if(action === 'login') {
                 return <Social
@@ -24,7 +24,7 @@ const Type = ({ action, type }) => {
                 return <Signup
                             type={ type }
                             title={`Criar uma conta`}
-                            desc={`Boas vindas ${ content.[type].name }!`}/>  
+                            desc={`Boas vindas ${ content?.[type].name }!`}/>  
         }
     }
 
@@ -35,8 +35,8 @@ const Type = ({ action, type }) => {
                 <>
                     <Background 
                         position={`${ action !== 'signup' ? 'left' : 'right' }`}
-                        title={`${ content.[type].name }`}
-                        text={`${ content.[type].desc }`} />
+                        title={`${ content?.[type].name }`}
+                        text={`${ content?.[type].desc }`} />
                     <Card>
                         { authAction(action) }
                     </Card>
@@ -48,8 +48,8 @@ const Type = ({ action, type }) => {
                     </Card>
                     <Background 
                         position={`${ action !== 'signup' ? 'left' : 'right' }`}
-                        title={`${ content.[type].name }`}
-                        text={`${ content.[type].desc }`} />
+                        title={`${ content?.[type].name }`}
+                        text={`${ content?.[type].desc }`} />
                 </>
             
              ) }

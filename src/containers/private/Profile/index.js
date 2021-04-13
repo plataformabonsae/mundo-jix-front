@@ -1,24 +1,18 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
 
-import { Menu } from 'components/Menu'
 import { TabFlat } from 'components/Tabs'
-import { Header, SubHeader } from 'components/Header'
+import { SubHeader } from 'components/Header'
 import { Layout } from 'components/Layout'
 import { InfoProfile } from "components/InfoProfile"
-
-
 
 // import styles from './styles.module.sass'
 
 const Profile = () => {
 
-    let {  type } = useParams()
+    let type = window.localStorage.getItem(`usertype`)
 
     return (
         <>
-            <Menu />
-            <Header name={'Gabriela Salomão Silveira'} />
             
             { type === 'talento' && (
 

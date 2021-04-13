@@ -58,10 +58,11 @@ const InputFile = ({ children, file }) => (
     </div>
 )
 
-const Input = React.forwardRef(({name, value, placeholder, type, onChange, children, checked, errors, errorMessage }, ref) => (
-    <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
+const Input = React.forwardRef(({disabled, name, value, placeholder, type, onChange, children, checked, errors, errorMessage }, ref) => (
+    <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' }  ${ disabled ? styles.disabled : '' }`}>
         <span className={ styles.name }>{ children }</span>
         <input
+            disabled={ disabled }
             name={ name }
             type={ type ? type : 'text' }
             value={ value }

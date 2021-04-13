@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import styles from './styles.module.sass'
 
 
-const Button = ({ Tag = Link, type, link, to, href, target, onClick, onMouseOver, children, submit, transparent, arrow, style }) => {
+const Button = ({ Tag = Link, disabled, type, link, to, href, target, onClick, onMouseOver, children, submit, transparent, arrow, style }) => {
 
     return (
         <Tag
@@ -16,7 +16,7 @@ const Button = ({ Tag = Link, type, link, to, href, target, onClick, onMouseOver
             target={ target }
             onClick={ onClick }
             onMouseOver={ onMouseOver }
-            className={ `${ styles.button } ${ styles?.[type] }` }>
+            className={ `${ styles.button } ${ styles?.[type] } ${ disabled ? styles.disabled : '' }` }>
             { children }
             { arrow ? (
                 <svg style={{ marginLeft: 6 }} width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,18 +1,19 @@
 import {
-  combineReducers,
-  configureStore,
-  getDefaultMiddleware
+  // combineReducers,
+  applyMiddleware,
+  createStore,
+  // getDefaultMiddleware,
+  compose
 } from '@reduxjs/toolkit'
+import { localStorage, thunk } from './middleware'
+import ducks from './ducks'
 
-const contador = () => 0
 
-const middleware = {...getDefaultMiddleware}
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const enhancer = composeEnhancers(applyMiddleware(thunk, localStorage))
+const reducer = ducks
 
-const reducer = combineReducers({
-  contador
-})
-
-const store = configureStore({ reducer, middleware })
+const store = createStore( reducer, enhancer )
 
 export {
   store

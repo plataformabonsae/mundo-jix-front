@@ -1,8 +1,7 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
+// import { useParams } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { Menu } from 'components/Menu'
-import { Header } from 'components/Header'
 import { Banner } from 'components/Banner'
 
 import { Badges } from './components/Badges'
@@ -14,17 +13,25 @@ import { InCompany } from './components/InCompany'
 import { Ultradesafio } from './components/Ultradesafio'
 import { DesafiosCadastrados } from './components/DesafiosCadastrados'
 
+// import { store } from 'store/configureStore'
+
+import { dashboardFetch } from 'services/dashboard'
 
 import styles from './styles.module.sass'
 
 const Dashboard = () => {
 
-    let {  type } = useParams()
+    const dispatch = useDispatch()
+
+    useEffect( () => {
+        dispatch(dashboardFetch())
+    }, [dispatch] )
+
+    let { data: type } = useSelector(state => state.usertype)
+    // const { data: dashboard } = useSelector( state => state.dashboard )
 
     return (
         <>
-            <Menu />
-            <Header name={'Gabriela Salomão Silveira'} />
             
             { type === 'talento' && (
                 <main className={ styles.dashboard__talento }>

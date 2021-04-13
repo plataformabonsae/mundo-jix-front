@@ -11,12 +11,12 @@ import sairIcon from 'assets/components/Menu/sair.svg'
 import styles from './styles.module.sass'
 
 
-const Button = ({ children, to, active, dashboard, meusDesafios, desafios, perfil, sair }) => {
+const Button = ({ Tag = NavLink, children, to, active, dashboard, meusDesafios, desafios, perfil, sair }) => {
 
     return (
-        <NavLink
-            to={ to }
-            activeClassName={ styles.active }
+        <Tag
+            to={ to ? to : null }
+            activeClassName={ to ? styles.active : null }
             className={ styles.button }>
             <img src={
                 // eslint-disable-next-line
@@ -31,7 +31,7 @@ const Button = ({ children, to, active, dashboard, meusDesafios, desafios, perfi
                 sair && sairIcon
             } alt={`Navegar pelo site`} />
             { children }
-        </NavLink>
+        </Tag>
     )
 }
 

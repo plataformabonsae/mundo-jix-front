@@ -1,4 +1,9 @@
 import React from 'react'
+import { useForm } from 'react-hook-form'
+import { 
+    useDispatch, 
+    useSelector 
+} from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { Input, InputGroup } from 'components/Inputs'
@@ -6,6 +11,8 @@ import Button from 'components/Button'
 import Copyright from 'components/Copyright'
 import { Logo } from 'components/Logo'
 
+import { newuser } from 'services/auth' 
+import history from 'utils/history'
 
 // import Typography from 'utils/styles/Typography.module.sass'
 
@@ -13,8 +20,21 @@ import styles from './styles.module.sass'
 
 
 const Email = ({ title, desc, type }) => {
+
+    const { register, errors, handleSubmit } = useForm()
+
+    const dispatch = useDispatch()
+    const { data: user } = useSelector(state => state.login)
+    const { error, loading } = useSelector(state => state.token)
+
+    const onSubmit = (data) => {
+        console.log(data)
+        dispatch(newuser(type, data))
+        user && history.push(`/join/${type}/terms`)
+    }
+
  return (
-     <section className={ styles.login }>
+     <form onSubmit={handleSubmit(onSubmit)} className={ styles.login }>
 
         <div className={ styles.content }>
             <Logo
@@ -23,12 +43,22 @@ const Email = ({ title, desc, type }) => {
 
             <InputGroup>
                 <Input
+                    disabled={loading}
+                    ref={register({ required: true })}
                     type="text"
+                    name="name"
+                    errors={errors}
+                    errorMessage="Digite o seu nome"
                     placeholder="Digite seu nome">
                     nome
                 </Input>
                 <Input
+                    disabled={loading}
+                    ref={register({ required: true })}
                     type="text"
+                    name="last_name"
+                    errors={errors}
+                    errorMessage="Digite o seu sobrenome"
                     placeholder="Digite seu sobrenome">
                     Sobrenome
                 </Input>
@@ -36,31 +66,53 @@ const Email = ({ title, desc, type }) => {
 
             <InputGroup>
                 <Input
+                    disabled={loading}
+                    ref={register({ required: true })}
                     type="email"
-                    placeholder="Digite seu nome">
+                    name="email"
+                    errors={errors}
+                    errorMessage="Digite o seu e-mail"
+                    placeholder="Digite seu e-mail">
                     e-mail
                 </Input>
             </InputGroup>
 
             <InputGroup>
                 <Input
+                    disabled={loading}
+                    ref={register({ required: true })}
                     type="password"
+                    name="password"
+                    errors={errors}
+                    errorMessage="Digite uma senha"
                     placeholder="Digite uma senha">
                     Senha
                 </Input>
                 <Input
+                    disabled={loading}
+                    ref={register({ required: true })}
                     type="password"
+                    name="confirm_password"
+                    errors={errors}
+                    errorMessage="Repita a senha"
                     placeholder="Repita a senha">
                     Confirmar senha
                 </Input>
             </InputGroup>
 
+            { error ? 
+                (<div className={ styles.error }>Verifique os dados para continuar</div>) 
+            : null }
+
+            <input ref={register()} type="hidden" name="cpf" value="000.000.000-00" />
+            <input ref={register()} type="hidden" name="is_mentor" value="0" />
+            <input ref={register()} type="hidden" name="is_judge" value="0" />
+
             <Button
-                Tag={ Link }
-                to={`/join/${type}/terms`}
-                type="primary"
-                href="/">
-                Cadastrar
+                disabled={ loading }
+                Tag={ `button` }
+                type="primary">
+                Continuar
             </Button>
 
             <span className={ styles.or }>ou</span>
@@ -90,7 +142,7 @@ const Email = ({ title, desc, type }) => {
 
         <Copyright />
 
-     </section>
+     </form>
  )
 }
 

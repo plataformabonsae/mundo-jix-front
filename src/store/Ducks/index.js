@@ -9,13 +9,15 @@ import usertype from './UserType'
 import dashboard from './Dashboard'
 import profile from './Profile'
 
-
-// Redux: Root Reducer
-export default combineReducers({
+const ducks = combineReducers({
   auth,
   login,
   token,
   usertype,
   dashboard,
   profile
-});
+})
+
+
+// Redux: Root Reducer
+export default ducks

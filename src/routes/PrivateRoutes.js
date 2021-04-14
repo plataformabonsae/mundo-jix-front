@@ -1,11 +1,14 @@
-import React, { useContext, createContext, } from 'react'
+import React, { 
+  // useContext, 
+  // createContext, 
+} from 'react'
 import { Route, 
-  Redirect, 
+  // Redirect, 
   // Router, 
   // Switch 
 } from 'react-router-dom'
 
-import { PrivateRouteContainer } from './PrivateRouteContainer'
+// import { PrivateRouteContainer } from './PrivateRouteContainer'
 
 import { Dashboard } from 'containers/private/Dashboard'
 import { Profile } from 'containers/private/Profile'
@@ -27,13 +30,13 @@ const PrivateRoutes = () => {
   return (
     <>
       {/* Dashboard */}
-      <PrivateRouteContainer path="/dashboard/:type" component={Dashboard} />
+      <Route path="/dashboard/:type" component={Dashboard} />
 
       {/* Perfil */}
-      <PrivateRouteContainer path="/perfil/:type/:action" component={Profile} />
+      <Route path="/perfil/:type/:action" component={Profile} />
 
       {/* Logout */}
-      <PrivateRouteContainer path="/auth/:type/logout" component={Logout} />
+      <Route path="/auth/:type/logout" component={Logout} />
 
       {/* signup pos-step */}
       {/* <Route path="/join/:type/:action" component={ Join } />

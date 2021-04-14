@@ -8,6 +8,7 @@ const COMPANY = {
 
     // POST
     login: `${BASEURL}/login`,
+    update: `${BASEURL}/user/update`,
     register: `${BASEURL}/register`,
     logout: `${BASEURL}/logout`,
 

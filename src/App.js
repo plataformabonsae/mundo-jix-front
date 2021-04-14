@@ -14,7 +14,7 @@ import './App.css'
 
 // import { useLocation } from 'react-router'
 
-// import history from 'utils/history'
+import history from 'utils/history'
 
 // import { store } from 'store/configureStore'
 import { autoLogin } from 'services/login'
@@ -37,6 +37,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(autoLogin())
+    console.log(history)
     // setHasUser(user)
   }, [dispatch])
 

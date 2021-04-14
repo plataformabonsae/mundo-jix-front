@@ -30,7 +30,8 @@ const Email = ({ title, desc, type }) => {
     const onSubmit = (data) => {
         console.log(data)
         dispatch(newuser(type, data))
-        user && history.push(`/join/${type}/terms`)
+            .then(() => user)
+            .then(() => history.push(`/join/${type}/terms`))
     }
 
  return (

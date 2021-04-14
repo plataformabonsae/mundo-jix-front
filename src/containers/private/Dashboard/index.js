@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 // import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+// import { useSpring, animated } from 'react-spring'
 
 import { Banner } from 'components/Banner'
 

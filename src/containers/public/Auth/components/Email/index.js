@@ -1,5 +1,8 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { 
+    Link, 
+    // useLocation
+ } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { 
     useDispatch, 
@@ -27,20 +30,24 @@ import history from 'utils/history'
 const Email = ({ title, desc, type }) => {
 
     const { register, errors, handleSubmit } = useForm()
-    let location = useLocation()
+    // let location = useLocation()
 
-    let { from } = location.state || { from: { pathname: `/dashboard/${type}` } }
+    // let { from } = location.state || { from: { pathname: `/dashboard/${type}` } }
 
     const dispatch = useDispatch()
-    // const { data: user } = useSelector(state => state.login)
+    const { data: user } = useSelector(state => state.login)
     const { error, loading } = useSelector(state => state.token)
 
     const onSubmit = (data) => {
         // console.log(auth.login(type, data))
         dispatch(login(type, data))
-        console.log(location, 'location')
-        // history.push(`/dashboard/${type}`)
-        history.replace(from)
+            .then(() => user )
+            .then(() => history.push(`/dashboard/${type}`))
+        
+        // console.log(dispatch(login(type, data)), 'dispatch')
+        // console.log(location, 'location')
+        // console.log(from, `from`)
+        // history.replace(from)
     }
 
     

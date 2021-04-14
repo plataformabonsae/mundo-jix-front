@@ -7,6 +7,7 @@ import login from './Login'
 import token from './Token'
 import usertype from './UserType'
 import dashboard from './Dashboard'
+import profile from './Profile'
 
 
 // Redux: Root Reducer
@@ -15,5 +16,6 @@ export default combineReducers({
   login,
   token,
   usertype,
-  dashboard
+  dashboard,
+  profile
 });

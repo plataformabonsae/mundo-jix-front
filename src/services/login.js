@@ -5,7 +5,7 @@ import { store } from 'store/configureStore'
 
 import { tokenFetch } from 'services/token'
 
-import { useAuth } from 'utils/context/auth'
+// import { useAuth } from 'utils/context/auth'
 
 
 import history from 'utils/history'
@@ -37,7 +37,7 @@ export const autoLogin = (from) => async (dispatch, getState) => {
     const { token, usertype } = store.getState()
     if (token?.data && usertype?.data) {
         const data = await dispatch(loginFetch(usertype.data, token.data))
-        // from && history.replace(from)
+        from && history.replace(from)
     //   auth?.setAuth(data)
       if ( !data ) dispatch(logout())
     }

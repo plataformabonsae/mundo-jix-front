@@ -12,25 +12,29 @@ import { Header } from 'components/Header'
 export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
 
     const location = useLocation() 
+    const { data: usertype } = useSelector(state => state.usertype)
     const { data: user } = useSelector(state => state.login)
+    // console.log(user, loading)
 
-    return (
-        <Route {...rest} render={
-            props => (  
-                user ? (
-                    <>
-                        <Menu user={ user } />
-                        <Header user={ user } />
-                        <Component {...props} />
-                    </> )
-                : (
-                    <Redirect
-                    to={{
-                        pathname: "/auth/talento/login",
-                        state: { from: location }
-                    }}
-                    />
-                )
-        ) } /> )
-    
-}
+    // if (loading) {
+    //     return <div>carregando...</div>
+    // } else {
+        return (
+            <Route {...rest} render={
+                props => (  
+                     user ? (
+                        <>
+                            <Menu user={ user } />
+                            <Header user={ user } />
+                            <Component {...props} />
+                        </> )
+                     : (
+                         <Redirect
+                         to={{
+                             pathname: `/auth/${usertype}/logout`,
+                             state: { from: location }
+                         }} />
+                     ) )
+         } /> )
+    }
+

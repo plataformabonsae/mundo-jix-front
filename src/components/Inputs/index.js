@@ -201,15 +201,17 @@ const InputWithMask = React.forwardRef(({name, mask, value, placeholder, type, o
 // )
 // )
 
-const Checkbox = React.forwardRef(({name, value, placeholder, onChange, children, checked }, ref) => (
-    <label className={ styles.inputCheckbox }>
+const Checkbox = React.forwardRef(({ disabled, onClick, name, value, placeholder, onChange, children, checked }, ref) => (
+    <label className={ `${styles.inputCheckbox} ${ disabled ? styles.disabled : ''}` }>
         <input
+            disabled={ disabled }
             name={ name }
             type='checkbox'
             value={ value }
             checked={ checked }
             placeholder={ placeholder }
             onChange={ onChange }
+            onClick={ onClick }
             ref={ ref } />
         <span>{ children }</span>
     </label>

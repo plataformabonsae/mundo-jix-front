@@ -13,39 +13,35 @@ import { ButtonGroup } from 'components/ButtonGroup'
 
 import styles from './styles.module.sass'
 
-import { newuser } from 'services/auth' 
+import { edit } from 'services/auth' 
 
-import history from 'utils/history'
+// import history from 'utils/history'
 
 
 const Terms = ({ children, type }) => {
 
     const [accept, setAccept] = useState(false)
-    const { register, errors, handleSubmit } = useForm()
+    const { register, handleSubmit } = useForm()
 
     const props = useSpring({ opacity: !accept ? 1 : 0 })
 
     const dispatch = useDispatch()
     const { data: user } = useSelector(state => state.login)
-    const { error, loading } = useSelector(state => state.token)
+    const { loading } = useSelector(state => state.profile)
 
     const onSubmit = (data) => {
-        console.log(user, data)
-        dispatch(newuser(type, {
-            name: user.name,
-            cpf: user.cpf,
-            password: '12345678',
-            email: user.email,
-            is_mentor: user.is_mentor,
-            is_judge: user.is_judge,
-            ...data
+        let { accepted_terms: accepted } = data
+        accepted ? accepted = 1 : accepted = 0
+        dispatch(edit(type, {
+            name: user.name, 
+            email: user.email, 
+            accepted_terms: accepted 
         }))
         handleAccept()
     }
 
     const handleAccept = () => {
-        setAccept(previous => !previous)
-        
+        setAccept(previous => user?.accepted_terms ? true : false)
     } 
 
     return (
@@ -57,12 +53,14 @@ const Terms = ({ children, type }) => {
 
             <Card>
                 <Checkbox
+                    disabled={ loading }
+                    checked={ user?.accepted_terms }
                     ref={register({ required: true })}
                     name="accepted_terms"
-                    onChange={ handleSubmit(onSubmit) }>Concordo e desejo continuar</Checkbox>
+                    onClick={ handleSubmit(onSubmit) }>Concordo e desejo continuar</Checkbox>
             </Card>
 
-            { accept ? ( 
+            { user?.accepted_terms ? ( 
                 <ButtonGroup>   
                     <div className={ styles.mustConfirm }>Você prefere terminar o cadastro agora ou depois?</div>
                     <Button

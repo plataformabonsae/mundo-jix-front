@@ -20,4 +20,4 @@ const ducks = combineReducers({
 
 
 // Redux: Root Reducer
-export default ducks
+export { ducks }

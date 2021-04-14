@@ -6,7 +6,7 @@ import {
   compose
 } from '@reduxjs/toolkit'
 import { localStorage, thunk } from './middleware'
-import ducks from './ducks/index.js'
+import ducks from 'store/ducks'
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

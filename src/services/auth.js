@@ -41,7 +41,9 @@ export const edit = (type, body, url = TALENT.AUTH.update) => async (dispatch) =
 export const editFetch = (type = `talento`, body, url = TALENT.AUTH.update, token) => async (dispatch) => {
     if (type === `empresa`) url = COMPANY.AUTH.update
     try {
-        // console.log(type, body, url, token, JSON.stringify(body))
+        console.log(body, `body`)
+        console.log(url, 'url')
+        console.log(JSON.stringify(body), 'body em string')
         dispatch(ProfileActions.profileRequest())
         const response = await fetch(
             url, 
@@ -50,12 +52,12 @@ export const editFetch = (type = `talento`, body, url = TALENT.AUTH.update, toke
                 headers: {
                     Authorization: `Bearer ${ token }`,
                     Accept: 'application/json',
-                    'Content-Type': `multipart/form-data; boundary=XXX`
+                    'Content-Type': `multipart/form-data`
                 },
                 body: JSON.stringify(body)
             })
         const { data } = await response.json()
-        console.log(await response)
+        console.log(response, 'response')
         data
             .then(() => dispatch(ProfileActions.profileSuccess(data)) )
     } catch(error) {

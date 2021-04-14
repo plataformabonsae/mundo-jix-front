@@ -47,7 +47,7 @@ const Routes = () => {
 //     dispatch(autoLogin())
 //   }, [dispatch])
 
-    const { data: usertype } = useSelector(state => state.usertype)
+    // const { data: usertype } = useSelector(state => state.usertype)
     const { data: user, loading } = useSelector(state => state.login)
 
     return (

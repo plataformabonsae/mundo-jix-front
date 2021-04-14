@@ -37,7 +37,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(autoLogin())
-    console.log(history)
+    // console.log(history)
     // setHasUser(user)
   }, [dispatch])
 

@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useHistory, useLocation } from 'react-router-dom'
 import { cpf, cnpj } from 'cpf-cnpj-validator'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { Card } from 'components/Card'
 import { Title } from 'components/Text'
@@ -12,46 +13,69 @@ import {
     InputFile,
     SelectInput,
     AddGroup,
-    // RemoveGroup,
-    // InputWithMask,
+    RemoveGroup,
+    InputWithMask,
     Textarea
  } from 'components/Inputs'
 import Button from 'components/Button'
 import { ButtonGroup } from 'components/ButtonGroup'
 
+import { edit } from 'services/auth'
+
+import history from 'utils/history'
 
 // TODO
-// 1 - Adicionar e remover mais números
-// 2 - '' '' '' redes socias
+// errors in masked inputs
 
 
 const Pessoal = ({action, type, noShadow, finalRoute, hasPassword}) => {
 
-    const history = useHistory()
-    const { pathname } = useLocation()
+    // const history = useHistory()
+    // const { pathname } = useLocation()
+    const dispatch = useDispatch()
+    const { data: user } = useSelector(state => state.login)
+    const { data: usertype } = useSelector(state => state.usertype)
+    const { loading } = useSelector(state => state.profile)
 
     const { register, errors, control, handleSubmit } = useForm()
-    
-    const onSubmit = (data) => {
-        let array = pathname.split('/')
-        if( type === 'talento' ) {
-            history.push(`/${array[1]}/${type}/academico`)
-        } else {
-            history.push(`/dashboard/${type}`)
-        }
-        console.log(array)
-    }
 
-    // // Add More Tels
-    // const [moreTels, setMoreTels] = useState(0)
-    // const handleMoreTels = (e) => {
-    //     // e.prevent.default
-    //     setMoreTels(prev => ++prev)
-    // }
-    // const handleLessTels = (e) => {
-    //     // e.prevent.default
-    //     setMoreTels(prev => --prev)
-    // }
+    const [tels, setTels] = useState([0])
+    const [emails, setEmails] = useState([0])
+    const [socials, setSocials] = useState([0])
+    
+        const onSubmit = async (data) => {
+            let { 
+                name,
+                last_name,
+                cpf,
+                birthdate,
+                // file,
+            } = data
+            // console.log(data)
+            // console.log(file)
+            await dispatch(edit(type, {
+                name,
+                last_name,
+                cpf,
+                birthdate,
+                // file,
+            }))
+            .then(() => {
+                if( type === 'talento' ) {
+                    history.push(`/join/${type}/academico`)
+                } else {
+                    history.push(`/dashboard/${type}`)
+                }
+            })
+        }
+        // let array = pathname.split('/')
+        // if( type === 'talento' ) {
+        //     history.push(`/${array[1]}/${type}/academico`)
+        // } else {
+        //     history.push(`/dashboard/${type}`)
+        // }
+        // console.log(array)
+        // console.log(data)
 
     const handleNascimento = val => {
         let value = val
@@ -102,49 +126,59 @@ const Pessoal = ({action, type, noShadow, finalRoute, hasPassword}) => {
                     noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Dados pessoais</Title>
     
-                    <PhotoUpload name="image" ref={register} />
+                    <PhotoUpload name="file" ref={register()} />
     
                     <InputGroup>
                         <Input
-                            ref={register({ required: true, maxLength: 20 })}
+                            defaultValue={ user.name }
+                            ref={register({ required: true })}
                             errors={errors}
-                            errorMessage="Máximo 20 caracteres"
+                            errorMessage="Digite seu primeiro nome"
                             name="name"
                             placeholder="Digite seu primeiro nome">
                             Nome
                         </Input>
                         <Input
-                            ref={register({ required: true, maxLength: 20 })}
-                            name="last-name" 
+                            defaultValue={ user.last_name }
+                            ref={register({ required: true })}
+                            name="last_name" 
                             errors={errors}
-                            errorMessage="Máximo 20 caracteres"
+                            errorMessage="Digite seu sobrenome"
                             placeholder="Digite seu sobrenome">
                             Sobrenome
                         </Input>
                     </InputGroup>
     
                     <InputGroup>
-                        <Input
+                        <InputWithMask
+                            defaultValue={ user.cpf }
                             ref={register({ required: true, validate: val => cpf.isValid(val) })}
-                            name="CPF"
+                            name="cpf"
                             errors={errors}
                             errorMessage="Digite um CPF válido"
                             placeholder="Somente números"
+                            control={ control }
+                            mask={ `999.999.999-99` }
                             >
                             CPF
-                        </Input>
-                        <Input
+                        </InputWithMask>
+                        <InputWithMask
+                            defaultValue={ user.birthdate }
                             ref={register({ required: true, validate: val => handleNascimento(val) })}
                             name="birthdate"
                             errors={errors}
                             errorMessage="Você precisa ter mais que 18 anos"
-                            placeholder="Somente números">
+                            placeholder="Somente números"
+                            control={ control }
+                            mask={ `99/99/9999` }>
                             Data de nascimento
-                        </Input>
+                        </InputWithMask>
                     </InputGroup>
-                    { hasPassword ? (
+                    { !hasPassword ? (
                         <InputGroup>
                             <Input
+                                defaultValue={ user.birthdate }
+                                disabled={ true }
                                 ref={register({ required: true })}
                                 type="password"
                                 name="password"
@@ -163,58 +197,80 @@ const Pessoal = ({action, type, noShadow, finalRoute, hasPassword}) => {
                     noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Contato</Title>
     
-                    <InputGroup>
-                        <Input
-                            ref={register({ required: true, maxLength: 20 })}
-                            errors={errors}
-                            errorMessage="Somente números"
-                            name={ `tel.${[0]}.number` }
-                            placeholder="Digite seu telefone">
-                            Telefone
-                        </Input>
-                        <SelectInput
-                            ref={register({ required: true })}
-                            name={`tel.${[0]}.type`} 
-                            control={control}
-                            errors={errors}
-                            errorMessage="Selecione um tipo"
-                            placeholder="Selecione o tipo de telefone"
-                            options={ typeTel }>
-                            Tipo de telefone
-                        </SelectInput>
-                        <AddGroup text="Adicionar telefone" />
-                    </InputGroup>
+                { tels.map((_, index) => {
+                    return (
+                        <InputGroup key={index}>
+                            <InputWithMask
+                                defaultValue={ user.tel || '' }
+                                ref={register({ required: true, maxLength: 20 })}
+                                errors={errors}
+                                errorMessage="Somente números"
+                                name={ `tel.${[index]}.number` }
+                                placeholder="Digite seu telefone"
+                                control={ control }
+                                mask={ `(99) 99999-9999` }>
+                                Telefone
+                            </InputWithMask>
+                            <SelectInput
+                                ref={register({ required: true })}
+                                name={`tel.${[index]}.type`} 
+                                control={control}
+                                errors={errors}
+                                errorMessage="Selecione um tipo"
+                                placeholder="Selecione o tipo de telefone"
+                                options={ typeTel }>
+                                Tipo de telefone
+                            </SelectInput>
+                        </InputGroup>
+                    )
+                }) }
+                
+                    { tels.length > 1 && (
+                        <RemoveGroup onClick={ () => setTels(state => [...state].slice(0, -1) ) } text="Remover telefone" />
+                    )}
+                    <AddGroup onClick={ () => setTels(state => [...state, state++]) } text="Adicionar telefone" />
     
-                    <InputGroup>
-                        <Input
-                            ref={register({ required: true, pattern: /^\S+@\S+$/i })}
-                            name="email"
-                            errors={errors}
-                            errorMessage="Digite um e-mail válido"
-                            placeholder="Digite seu melhor e-mail"
-                            >
-                            E-mail
-                        </Input>
-                        <AddGroup text="Adicionar e-mail" />
-                    </InputGroup>
+                { emails.map((_, index) => {
+                    return (
+                        <InputGroup key={index}>
+                            <Input
+                                defaultValue={ user.email }
+                                ref={register({ required: true, pattern: /^\S+@\S+$/i })}
+                                name={`email.${[index]}`}
+                                errors={errors}
+                                errorMessage="Digite um e-mail válido"
+                                placeholder="Digite seu melhor e-mail"
+                                >
+                                E-mail
+                            </Input>
+                        </InputGroup>
+                    )
+                }) }
+                
+                { emails.length > 1 && (
+                    <RemoveGroup onClick={ () => setEmails(state => [...state].slice(0, -1) ) } text="Remover e-mail" />
+                )}
+                <AddGroup onClick={ () => setEmails(state => [...state, state++]) } text="Adicionar e-mail" />
                 </Card>
     
                 <Card
                     noShadow={ noShadow }>
                     <Title style={{ marginBottom: 32 }}>Redes sociais</Title>
-    
-                    <InputGroup>
+                    
+                { socials.map((_, index) => {
+                    return (
+                    <InputGroup key={index}>
                         <Input
                             ref={register({ required: true, maxLength: 20 })}
                             errors={errors}
                             errorMessage="Somente números"
-                            name={ `social.${[0]}.link` }
+                            name={ `social.${[index]}.link` }
                             placeholder="Link da rede social">
                             Cole aqui
                         </Input>
                         <SelectInput
                             ref={register({ required: true })}
-                            name={`social.${[0]}.type`} 
+                            name={`social.${[index]}.type`} 
                             control={control}
                             errors={errors}
                             errorMessage="Selecione um tipo"
@@ -222,9 +278,14 @@ const Pessoal = ({action, type, noShadow, finalRoute, hasPassword}) => {
                             options={ typeSocial }>
                             Tipo de rede
                         </SelectInput>
-    
-                        <AddGroup text="Adicionar rede social" />
                     </InputGroup>
+                )
+            }) }
+            
+            { emails.length > 1 && (
+                <RemoveGroup onClick={ () => setSocials(state => [...state].slice(0, -1) ) } text="Remover rede social" />
+            )}
+            <AddGroup onClick={ () => setSocials(state => [...state, state++]) } text="Adicionar rede social" />
                 </Card>
     
                 <Card
@@ -246,11 +307,13 @@ const Pessoal = ({action, type, noShadow, finalRoute, hasPassword}) => {
     
                 <ButtonGroup>   
                     <Button
+                        disabled={ loading }
                         to={finalRoute ? finalRoute : `/dashboard/${type}`}
-                    type="outlineWhite">
+                        type="outlineWhite">
                         Salvar e sair
                     </Button>
                     <Button
+                        disabled={ loading }
                         Tag="button"
                         type="secondary">
                         Continuar
@@ -429,7 +492,7 @@ const Pessoal = ({action, type, noShadow, finalRoute, hasPassword}) => {
                         <Input
                             ref={register({ required: true })}
                             name="bairro"
-                            errors={errors}
+                            errors={ errors }
                             errorMessage="Digite a rua da empresa"
                             placeholder="Digite o bairro"
                             >

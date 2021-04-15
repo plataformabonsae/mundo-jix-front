@@ -4,16 +4,18 @@
     // width: 200px
     margin:
         right: 12px
-    height: 80px
+    min-height: 80px
     display: flex
     align-items: stretch
     // align-items: center
 
 .circle
     text-align: center
+    width: 35%
 
 .content
     display: flex
+    align-items: center
     flex: 1
     flex-direction: column
     justify-content: space-between
@@ -22,9 +24,12 @@
 
 .locked
     box-sizing: border-box
+    align-items: center
     position: relative
-    height: 80px
-    width: 80px
+    height: 0
+    width: 35%
+    padding:
+        bottom: 35%
     border-radius: 300px
     border: 5px solid $MEDIUM_BLACK
     

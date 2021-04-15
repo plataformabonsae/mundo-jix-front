@@ -49,13 +49,13 @@ const Menu = ({ active, user = { name: 'test', last_name: 'test' } }) => {
             // onMouseLeave={() => setIsOpen( false )}
             >
             <Profile 
-                image={ profile }
+                // image={ profile }
                 name={`${user.name} ${user.last_name}`}
-                location={ 12 } />            
+                location={ 8 } />            
 
             { type === 'talento' ? (
                 <>
-                    <Points points={ 5234 } />
+                    <Points points={ 0 } />
 
                     <Button to={`/dashboard/${type}`} dashboard>Dashboard</Button>
                     <Button to={`/meus-desafios/${type}`} meusDesafios>Meus desafios</Button>
@@ -71,8 +71,6 @@ const Menu = ({ active, user = { name: 'test', last_name: 'test' } }) => {
                     <Button to={`/auth/${type}/logout`} sair>Sair</Button>
                 </>
             ) }
-
-            
 
         </Aside>
     )

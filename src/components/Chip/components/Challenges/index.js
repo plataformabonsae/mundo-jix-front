@@ -37,14 +37,14 @@ const Challenges = ({ children, title, desc, currentValue, maxValue, valueText, 
             <div 
                 className={ styles.icon } 
                 style={{ backgroundColor: types[desafio].color }}>
-                <img src={ types[desafio].image } alt="Conteúdo bloqueado" />
+                <img src={ types[desafio].image } alt={ title } />
             </div>
 
             <article className={ styles.content }>
-                <Title size={32}>
+                <Title size={28}>
                     { currentValue }
                 </Title>
-                <Title size={14}>
+                <Title size={12}>
                     { title }
                 </Title>
             </article>

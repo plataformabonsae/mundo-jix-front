@@ -23,7 +23,7 @@ import {
 
 import styles from './styles.module.sass'
 
-import history from 'utils/history'
+// import history from 'utils/history'
 
 
 
@@ -35,14 +35,15 @@ const Email = ({ title, desc, type }) => {
     // let { from } = location.state || { from: { pathname: `/dashboard/${type}` } }
 
     const dispatch = useDispatch()
-    const { data: user } = useSelector(state => state.login)
+    // const { data: user } = useSelector(state => state.login)
     const { error, loading } = useSelector(state => state.token)
 
     const onSubmit = (data) => {
         // console.log(auth.login(type, data))
         dispatch(login(type, data))
-            .then(() => user )
-            .then(() => history.push(`/dashboard/${type}`))
+            // .then(() => user )
+            // .then(() => history.replace(from))
+            // .then(() => history.push(`/dashboard/${type}`))
         
         // console.log(dispatch(login(type, data)), 'dispatch')
         // console.log(location, 'location')

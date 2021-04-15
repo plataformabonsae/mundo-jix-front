@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSpring, animated } from 'react-spring'
 import { useForm } from 'react-hook-form'
 
@@ -15,7 +15,7 @@ import styles from './styles.module.sass'
 
 import { edit } from 'services/auth' 
 
-// import history from 'utils/history'
+import history from 'utils/history'
 
 
 const Terms = ({ children, type }) => {
@@ -29,23 +29,24 @@ const Terms = ({ children, type }) => {
     const { data: user } = useSelector(state => state.login)
     const { loading } = useSelector(state => state.profile)
 
-    const onSubmit = (data) => {
+    useEffect(()=> {
+        setAccept(Number(user?.accepted_terms) === 1 ? true : false)
+        // console.log(accept)
+    }, [user?.accepted_terms])
+
+    const onSubmit = async (data) => {
         let { accepted_terms: accepted } = data
         accepted ? accepted = 1 : accepted = 0
-        dispatch(edit(type, {
+        await dispatch(edit(type, {
             name: user.name, 
             email: user.email, 
             accepted_terms: accepted 
         }))
-        handleAccept()
+        .then(() => setAccept(data.accepted_terms))
     }
 
-    const handleAccept = () => {
-        setAccept(previous => user?.accepted_terms ? true : false)
-    } 
-
     return (
-        <form>   
+        <section>   
 
             <Card>
                 { children }
@@ -54,17 +55,18 @@ const Terms = ({ children, type }) => {
             <Card>
                 <Checkbox
                     disabled={ loading }
-                    checked={ user?.accepted_terms }
-                    ref={register({ required: true })}
+                    checked={ accept }
+                    ref={register()}
                     name="accepted_terms"
-                    onClick={ handleSubmit(onSubmit) }>Concordo e desejo continuar</Checkbox>
+                    onChange={ handleSubmit(onSubmit) }>Concordo e desejo continuar</Checkbox>
             </Card>
 
-            { user?.accepted_terms ? ( 
+            { accept ? ( 
                 <ButtonGroup>   
                     <div className={ styles.mustConfirm }>Você prefere terminar o cadastro agora ou depois?</div>
                     <Button
-                        to={`/dashboard/${type}`}
+                        Tag={`button`}
+                        onClick={ () => history.go(0) }
                         type="outlineWhite">
                         Completar depois
                     </Button>
@@ -84,7 +86,7 @@ const Terms = ({ children, type }) => {
                 
             </animated.div>
 
-        </form>
+        </section>
     )
 }
 

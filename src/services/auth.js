@@ -1,8 +1,10 @@
 import { Creators as TokenActions } from 'store/ducks/Token'
+// import { Creators as LoginActions } from 'store/ducks/Login'
 import { Creators as ProfileActions } from 'store/ducks/Profile'
 import { TALENT, COMPANY } from 'utils/api'
 import { loginFetch } from 'services/login'
 import { tokenFetch } from 'services/token'
+// import { useSelector } from 'react-redux'
 
 
 export const login = (type, user) => async (dispatch) => {
@@ -29,21 +31,27 @@ export const newuser = (type, body, url = TALENT.AUTH.register) => async (dispat
 }
 
 export const edit = (type, body, url = TALENT.AUTH.update) => async (dispatch) => {
-    const token = window.localStorage.getItem('token')
     if (type === `empresa`) url = COMPANY.AUTH.update
+    const token = window.localStorage.getItem('token')
+    console.log('edit')
     try {
         await dispatch(editFetch(type, body, url, token))
+        console.log('edit try')
     } catch (error) {
         dispatch(ProfileActions.profileFailure(error))
+        console.log('edit catch')
     }
 }
 
 export const editFetch = (type = `talento`, body, url = TALENT.AUTH.update, token) => async (dispatch) => {
     if (type === `empresa`) url = COMPANY.AUTH.update
+    // const { data: user } = useSelector(state => state.login)
     try {
-        console.log(body, `body`)
-        console.log(url, 'url')
-        console.log(JSON.stringify(body), 'body em string')
+        const formData = new FormData()
+        for( var key in body ) {
+            formData.append(key, body[key])
+            console.log(key, body[key])
+        }
         dispatch(ProfileActions.profileRequest())
         const response = await fetch(
             url, 
@@ -52,14 +60,11 @@ export const editFetch = (type = `talento`, body, url = TALENT.AUTH.update, toke
                 headers: {
                     Authorization: `Bearer ${ token }`,
                     Accept: 'application/json',
-                    'Content-Type': `multipart/form-data`
                 },
-                body: JSON.stringify(body)
+                body: formData
             })
-        const { data } = await response.json()
-        console.log(response, 'response')
-        data
-            .then(() => dispatch(ProfileActions.profileSuccess(data)) )
+            const { ok } = response
+            if(ok) dispatch(ProfileActions.profileSuccess())
     } catch(error) {
         dispatch(ProfileActions.profileFailure(error))
     }

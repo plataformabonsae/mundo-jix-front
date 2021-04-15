@@ -54,10 +54,10 @@ const Insignia = ({ children, title, desc, currentValue, maxValue, valueText, lo
             </div>
         ) }
         <article className={ styles.content }>
-            <Title size={16}>
+            <Title size={14}>
                 { title }
             </Title>
-            <Text size={14} color={ colors.DARK_GRAY }>
+            <Text size={12} color={ colors.DARK_GRAY }>
                 { desc }
             </Text>
         </article>

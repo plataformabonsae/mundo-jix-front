@@ -23,8 +23,8 @@ const Search = () => (
 )
 
 
-const InputGroup = ({ children, name, key }) => (
-    <fieldset name={name} key={key} className={ styles.wrapper }>
+const InputGroup = ({ children, name, ref }) => (
+    <fieldset ref={ref} name={name} className={ styles.wrapper }>
         { children }
     </fieldset>
 )
@@ -49,19 +49,20 @@ const RemoveGroup = ({children, text, onClick}) => {
     )
 }
 
-const InputFile = ({ children, file }) => (
+const InputFile = React.forwardRef(({ children, file }) => (
     <div className={ styles.upload }>
         <button type="button">
             Escolher arquivo
         </button>
         Nenhum arquivo selecionado
     </div>
-)
+))
 
-const Input = React.forwardRef(({disabled, name, value, placeholder, type, onChange, children, checked, errors, errorMessage }, ref) => (
+const Input = React.forwardRef(({defaultValue, disabled, name, value, placeholder, type, onChange, children, checked, errors, errorMessage }, ref) => (
     <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' }  ${ disabled ? styles.disabled : '' }`}>
         <span className={ styles.name }>{ children }</span>
         <input
+            defaultValue={ defaultValue }
             disabled={ disabled }
             name={ name }
             type={ type ? type : 'text' }
@@ -88,7 +89,9 @@ const Textarea = React.forwardRef(({name, rows, value, placeholder, type, onChan
     </label>
 ))
 
-const SelectInput = React.forwardRef(({name, value, placeholder, type, onChange, children, control, errors, errorMessage, options, isMulti }, ref) => (
+const SelectInput = React.forwardRef((props, ref) => {
+    const {name, value, placeholder, type, onChange, children, control, errors, errorMessage, options, isMulti } = props
+    return(
     <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
         <span className={ styles.name }>{ children }</span>
         <Controller
@@ -135,53 +138,56 @@ const SelectInput = React.forwardRef(({name, value, placeholder, type, onChange,
                 }} innerRef={ ref } /> } />
         <div className={styles.error}>{ errors?.[name] && errorMessage }</div>
     </label>
-))
+)})
 
-// const InputWithMask = ({name, mask, value, placeholder, type, onChange, children, errors, control, errorMessage }) => {
+const InputWithMask = React.forwardRef((props, ref) => {
+    const {name, defaultValue, mask, value, placeholder, type, onChange, children, errors, control, errorMessage } = props
+    // console.log(errors)
+    return (
+        <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
+            <span className={ styles.name }>{ children }</span>
+            <Controller
+                as={<InputMask inputRef={ ref }  />}
+                control={ control }
+                errors={errors}
+                // inputRef={ ref }
+                name={ name }
+                type={ type ? type : 'text' }
+                value={ value }
+                placeholder={ placeholder }
+                onChange={ onChange }
+                mask={ mask }
+                defaultValue={defaultValue} />
+            <div className={styles.error}>{ errors?.[name] && errorMessage }</div>
+        </label>
+    )
+})
+
+// const InputWithMasko = React.forwardRef(({name, mask, value, placeholder, type, onChange, children, errors, control, errorMessage }, ref) => {
+
+//     // https://unform.dev/examples/react-input-mask/
 
 //     return (
 //         <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
 //             <span className={ styles.name }>{ children }</span>
 //             <Controller
-//                 as={<InputMask />}
 //                 control={ control }
 //                 name={ name }
-//                 type={ type ? type : 'text' }
-//                 value={ value }
-//                 placeholder={ placeholder }
-//                 onChange={ onChange }
-//                 mask={ mask }
-//                 defaultValue={''} />
+//                 render={({ value, name, ref, mask, placeholder }) => (
+//                     <InputMask 
+//                         placeholder={ placeholder } 
+//                         value={ value} 
+//                         name={ name } 
+//                         mask={ mask }
+//                         defaultValue={ mask }
+//                         inputRef={ ref } />
+//                 )}
+//                 />
 //             <div className={styles.error}>{ errors?.[name] && errorMessage }</div>
 //         </label>
 //     )
-// }
-
-const InputWithMask = React.forwardRef(({name, mask, value, placeholder, type, onChange, children, errors, control, errorMessage }, ref) => {
-
-    // https://unform.dev/examples/react-input-mask/
-
-    return (
-        <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
-            <span className={ styles.name }>{ children }</span>
-            <Controller
-                control={ control }
-                name={ name }
-                render={({ value, name, ref, mask, placeholder }) => (
-                    <InputMask 
-                        placeholder={ placeholder } 
-                        value={value} 
-                        name={name} 
-                        mask={mask}
-                        defaultValue={''}
-                        inputRef={ref} />
-                )}
-                />
-            <div className={styles.error}>{ errors?.[name] && errorMessage }</div>
-        </label>
-    )
-    }
-)
+//     }
+// )
 
 // const InputWithMask = React.forwardRef(({name, mask, value, placeholder, type, onChange, children, errors, control, errorMessage }, ref) => (
 //     <label className={` ${styles.input} ${errors?.[name]?.type === 'required' ? styles.required : '' } `}>
@@ -201,9 +207,13 @@ const InputWithMask = React.forwardRef(({name, mask, value, placeholder, type, o
 // )
 // )
 
-const Checkbox = React.forwardRef(({ disabled, onClick, name, value, placeholder, onChange, children, checked }, ref) => (
+const Checkbox = React.forwardRef((props, ref) => {
+    const { defaultChecked,disabled, onClick, name, value, placeholder, onChange, children, checked } = props
+    
+    return (
     <label className={ `${styles.inputCheckbox} ${ disabled ? styles.disabled : ''}` }>
         <input
+            defaultChecked={ defaultChecked }
             disabled={ disabled }
             name={ name }
             type='checkbox'
@@ -215,21 +225,30 @@ const Checkbox = React.forwardRef(({ disabled, onClick, name, value, placeholder
             ref={ ref } />
         <span>{ children }</span>
     </label>
-))
+)})
 
-const PhotoUpload = React.forwardRef(({name, value, placeholder, onChange, onClick, children, checked }, ref) => {
+const PhotoUpload = React.forwardRef((props, ref ) => {
 
-    const handleClick = () => {
-        alert('clicou')
-    }
+    const {file, name, value, placeholder, onChange, onClick, children, checked } = props
+
+    // const handleClick = (e) => {
+    //     e.preventDefault()
+        
+    // }
 
     return (
         <div className={ styles.PhotoUpload }>
-            <button onClick={ handleClick }>
-                <img src={Photo} alt="Upload de foto"/>
+            <label>
+                <img src={file ? file : Photo } alt="Upload de foto"/>
                 <Text tag="span" size="10" weight="bold">Inserir foto</Text>
-                <input name={name} ref={ref} type="file" style={{ display: 'none' }} onChange={onChange}/>
-            </button>
+                <input 
+                    accept="image/*" 
+                    name={name} 
+                    ref={ref} 
+                    type="file" 
+                    style={{ display: 'none' }} 
+                    onChange={onChange}/>
+            </label>
         </div>
 
     )

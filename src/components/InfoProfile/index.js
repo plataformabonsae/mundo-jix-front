@@ -16,7 +16,7 @@ const InfoProfile = ({ center, noShadow, children, hasPassword }) => {
 
     const joinType = (action, type) => {
         if(action === 'pessoal') {
-            return <Pessoal hasPassword={hasPassword} noShadow={ noShadow } type={ type } action={ action } />
+            return <Pessoal hasPassword={!hasPassword} noShadow={ noShadow } type={ type } action={ action } />
         }
         else if(action === 'academico') {
             return <Academico noShadow={ noShadow } type={type} action={ action } />

@@ -2,9 +2,9 @@
 
 .card
     // width: 200px
-    margin:
-        right: 12px
-    min-height: 80px
+    // margin:
+    //     right: 12px
+    height: 100%
     display: flex
     align-items: stretch
     // align-items: center
@@ -14,28 +14,30 @@
     width: 35%
 
 .content
-    display: flex
-    align-items: center
+    // display: flex
+    // align-items: center
     flex: 1
     flex-direction: column
     justify-content: space-between
     margin: 6px
-        left: 12px
+    left: 12px
 
 .locked
+    // display: flex
     box-sizing: border-box
-    align-items: center
+    // align-items: center
     position: relative
-    height: 0
-    width: 35%
-    padding:
-        bottom: 35%
+    height: 80px
+    width: 80px
+    // padding:
+    //     bottom: 35%
     border-radius: 300px
     border: 5px solid $MEDIUM_BLACK
-    
+
     img
         position: absolute
         top: 50%
         left: 50%
         transform: translate(-50%, -50%)
         height: 30px
+        width: 30px

@@ -1,136 +1,125 @@
-import React, { 
-    // useEffect,
-    // useState
- } from 'react'
-import { 
-    Router, 
-    Switch,
-    Route,
-    Redirect,
-    // useLocation 
-} from 'react-router-dom'
-import { useSelector, 
-    // useDispatch
- } from 'react-redux'
+import React from // useState // useEffect,
+"react";
+import {
+  Router,
+  Switch,
+  Route,
+  Redirect,
+  // useLocation
+} from "react-router-dom";
+import {
+  useSelector,
+  // useDispatch
+} from "react-redux";
 
 // import { PrivateRoutes } from './PrivateRoutes'
 // import { PublicRoutes } from './PublicRoutes'
 
 // import { PrivateRouteContainer } from './PrivateRouteContainer'
 
-
-import history from 'utils/history'
+import history from "utils/history";
 // import { autoLogin } from 'services/login'
 
-import Auth from 'containers/public/Auth'
-// import Join from 'containers/public/Join'
+import Auth from "containers/public/Auth";
+import { Recover } from "containers/public/Recover"; // import Join from 'containers/public/Join'
 
-import { Dashboard } from 'containers/private/Dashboard'
-import { Profile } from 'containers/private/Profile'
-import { Logout } from 'containers/private/Logout'
-import { Join } from 'containers/private/Join'
+import { Dashboard } from "containers/private/Dashboard";
+import { Profile } from "containers/private/Profile";
+import { Logout } from "containers/private/Logout";
+import { Join } from "containers/private/Join";
 
-import { Loading } from 'components/Loading'
+import { Loading } from "components/Loading";
 // import { Menu } from 'components/Menu'
 // import { Header } from 'components/Header'
 
-
 // import { store } from 'store/configureStore'
 
-import { ProvideAuth } from 'utils/context/auth'
-import { PrivateRouteContainer } from './PrivateRouteContainer'
+import { ProvideAuth } from "utils/context/auth";
+import { PrivateRouteContainer } from "./PrivateRouteContainer";
 
 const Routes = () => {
+  // const [acceptedTerms, setAcceptedTerms] = useState()
 
-    // const [acceptedTerms, setAcceptedTerms] = useState()
-    
-    // const dispatch = useDispatch()
-//   console.log(history)
-    const { data: usertype } = useSelector(state => state.usertype)
-    const { data: user, loading } = useSelector(state => state.login)
+  // const dispatch = useDispatch()
+  //   console.log(history)
+  const { data: usertype } = useSelector((state) => state.usertype);
+  const { data: user, loading } = useSelector((state) => state.login);
 
-    // useEffect(() => {
-    //     dispatch(autoLogin())
-    // }, [dispatch])
+  // useEffect(() => {
+  //     dispatch(autoLogin())
+  // }, [dispatch])
 
+  return (
+    <ProvideAuth>
+      <Router history={history}>
+        <Switch>
+          <>
+            {loading ? (
+              <Loading text={"Carregando..."} />
+            ) : user ? (
+              !user?.accepted_terms ? (
+                <>
+                  {/* Join */}
+                  <Route path="/join/:type/:action" component={Join} />
 
-    return (
+                  <Redirect from="/dashboard" to={`/join/${usertype}/terms`} />
+                </>
+              ) : (
+                <>
+                  {/* Dashboard */}
+                  <PrivateRouteContainer
+                    path="/dashboard/:type"
+                    component={Dashboard}
+                  />
 
-        <ProvideAuth>
+                  {/* Perfil */}
+                  <PrivateRouteContainer
+                    path="/perfil/:type/:action"
+                    component={Profile}
+                  />
 
-            <Router history={history}>
-                
-                <Switch>
+                  {/* Logout */}
+                  <PrivateRouteContainer
+                    path="/auth/:type/logout"
+                    component={Logout}
+                  />
 
-                    <>
+                  <Redirect from="/join" to={`/dashboard/${usertype}`} />
 
-                    { loading ? 
-                        <Loading text={ 'Carregando...' } />
-                        : 
-                            user ? (
-                                !user?.accepted_terms ? (
-                                    <>
-                                        {/* Join */}
-                                        <Route path="/join/:type/:action" component={Join} />
+                  {/* <Redirect from="/auth/:type/:action" to={`/dashboard/${usertype}`} /> */}
+                </>
+              )
+            ) : (
+              <>
+                <Route path="/auth/:type/:action" component={Auth} />
 
-                                        <Redirect from="/dashboard" to={`/join/${usertype}/terms`} />
-                                    </>
-                                ) : (
-                                <>
+                <Route path="/recover/:type/:action" component={Recover} />
 
-                                    {/* Dashboard */}
-                                    <PrivateRouteContainer path="/dashboard/:type" component={Dashboard} />
+                <Redirect from="*" to="/auth/talento/login" />
+                <Redirect from="/" to="/auth/talento/login" />
+              </>
+            )}
 
-                                    {/* Perfil */}
-                                    <PrivateRouteContainer path="/perfil/:type/:action" component={Profile} />
+            {/* <Redirect from="/logged" to="/dashboard/talento" /> */}
 
+            {/* Dashboard */}
+            {/* <PrivateRouteContainer path="/dashboard/:type" component={Dashboard} /> */}
 
-                                    {/* Logout */}
-                                    <PrivateRouteContainer path="/auth/:type/logout" component={ Logout } />
-                                    
-                                    <Redirect from="/join" to={`/dashboard/${usertype}`} />
-                                    
-                                    {/* <Redirect from="/auth/:type/:action" to={`/dashboard/${usertype}`} /> */}
-                                </>
-                                )
-                            )
-                            : (
-                                <>
+            {/* Perfil */}
+            {/* <PrivateRouteContainer path="/perfil/:type/:action" component={Profile} /> */}
 
-                                    <Route path="/auth/:type/:action" component={ Auth } />
-                                    
-                                    <Redirect from="*" to="/auth/talento/login" />
-                                    <Redirect from="/" to="/auth/talento/login" />
-                                </>
-                            ) }
-                    
-                    {/* <Redirect from="/logged" to="/dashboard/talento" /> */}
+            {/* Logout */}
+            {/* <PrivateRouteContainer path="/auth/:type/logout" component={Logout} /> */}
 
-                    {/* Dashboard */}
-                    {/* <PrivateRouteContainer path="/dashboard/:type" component={Dashboard} /> */}
+            {/* signup pos-step */}
+            {/* <PrivateRouteContainer path="/join/:type/:action" component={ Join } /> */}
 
-                    {/* Perfil */}
-                    {/* <PrivateRouteContainer path="/perfil/:type/:action" component={Profile} /> */}
+            {/* <Route path="/auth/:type/:action" component={ Auth } /> */}
+          </>
+        </Switch>
+      </Router>
+    </ProvideAuth>
+  );
+};
 
-                    {/* Logout */}
-                    {/* <PrivateRouteContainer path="/auth/:type/logout" component={Logout} /> */}
-
-                    {/* signup pos-step */}
-                    {/* <PrivateRouteContainer path="/join/:type/:action" component={ Join } /> */}
-
-                    {/* <Route path="/auth/:type/:action" component={ Auth } /> */}
-                    
-                    </>
-                    
-                        
-                </Switch>
-                
-            </Router>
-
-        </ProvideAuth>
-    )
-}
-
-export {
-    Routes
-}
+export { Routes };

@@ -1,6 +1,5 @@
 @import 'utils/styles/colors'
 
-
 .button
     text-align: center
     position: relative
@@ -41,13 +40,12 @@
     background: transparent
     border: 1px solid white
 
-
 .google
     @extend .button
     background: #EA4335
     // border: 1px solid $DARK_BLUE
-   
-    &::before 
+
+    &::before
         content: ''
         position: absolute
         left: 12px
@@ -61,10 +59,10 @@
         width: 18px
 
 .facebook
-   @extend .button
-   background: #3B5998
-   
-   &::before 
+    @extend .button
+    background: #3B5998
+
+    &::before
         content: ''
         position: absolute
         left: 12px
@@ -79,10 +77,10 @@
         width: 18px
 
 .linkedin
-   @extend .button
-   background: #007AB9
-   
-   &::before 
+    @extend .button
+    background: #007AB9
+
+    &::before
         content: ''
         position: absolute
         left: 12px
@@ -97,12 +95,12 @@
         width: 18px
 
 .email
-   @extend .button
-   color: $DARK_GRAY
-   background: transparent
-   border: 1px solid $DARK_GRAY
-   
-   &::before 
+    @extend .button
+    color: $DARK_GRAY
+    background: transparent
+    border: 1px solid $DARK_GRAY
+
+    &::before
         content: ''
         position: absolute
         left: 12px
@@ -120,7 +118,7 @@
 .transparent
     @extend .button
     color: $INFORMATION
-    &::before 
+    &::before
         content: ''
         position: absolute
         left: 12px
@@ -128,7 +126,7 @@
         transform: translateY(-50%)
         display: inline-block
         background:
-            image: url(/assets/components/Button/linkedin.svg)
+            // image: url(/assets/components/Button/linkedin.svg)
             size: contain
             repeat: no-repeat
         height: 18px

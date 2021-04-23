@@ -1,23 +1,20 @@
-const BASEURL = 'http://104.131.46.30/api/company';
+const BASEURL = "http://104.131.46.30/api/company";
 
 const COMPANY = {
-
   API: BASEURL,
 
   AUTH: {
-
     // POST
     login: `${BASEURL}/login`,
-    update: `${BASEURL}/user/update`,
+    update: `${BASEURL}/update`,
     register: `${BASEURL}/register`,
     logout: `${BASEURL}/logout`,
 
     //GET
-    user: `${BASEURL}/user`
+    user: `${BASEURL}/user`,
   },
 
   DASHBOARD: {
-
     // GET
     talent: `${BASEURL}/dashboard`,
     badges: `${BASEURL}/dashboard/badges`,
@@ -28,7 +25,6 @@ const COMPANY = {
   },
 
   CHALLENGES: {
-   
     // GET
     challenges: `${BASEURL}/challenges`,
     challenge: (id) => `${BASEURL}/challenge/${id}`,
@@ -38,16 +34,11 @@ const COMPANY = {
     feedback: (id) => `${BASEURL}/feedback/${id}`,
     badges: `${BASEURL}/dashboard/badges`,
   },
-  
-  PROJECT: {
 
+  PROJECT: {
     // GET
     project_edit: (id) => `${BASEURL}/project/edit/${id}`,
+  },
+};
 
-  }
-
-}
-
-export {
-  COMPANY
-}
+export { COMPANY };

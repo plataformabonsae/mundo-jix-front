@@ -1,128 +1,109 @@
-import React from 'react'
-import { 
-    Link, 
-    // useLocation
- } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { 
-    useDispatch, 
-    useSelector 
-} from 'react-redux'
+import React from "react";
+import {
+  Link,
+  // useLocation
+} from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
-import { InputGroup, Input, Checkbox } from 'components/Inputs'
-import Button from 'components/Button'
-import Copyright from 'components/Copyright'
-import { Logo } from 'components/Logo'
+import { InputGroup, Input, Checkbox } from "components/Inputs";
+import Button from "components/Button";
+import Copyright from "components/Copyright";
+import { Logo } from "components/Logo";
 
-import { 
-    login, 
-    // logout 
-} from 'services/login'
+import {
+  login,
+  // logout
+} from "services/login";
 
 // import Typography from 'utils/styles/Typography.module.sass'
 
-import styles from './styles.module.sass'
+import styles from "./styles.module.sass";
 
-// import history from 'utils/history'
-
-
+import history from "utils/history";
 
 const Email = ({ title, desc, type }) => {
+  const { register, errors, handleSubmit } = useForm();
+  // let location = useLocation()
 
-    const { register, errors, handleSubmit } = useForm()
-    // let location = useLocation()
+  // let { from } = location.state || { from: { pathname: `/dashboard/${type}` } }
 
-    // let { from } = location.state || { from: { pathname: `/dashboard/${type}` } }
+  const dispatch = useDispatch();
+  // const { data: user } = useSelector(state => state.login)
+  const { error, loading } = useSelector((state) => state.token);
 
-    const dispatch = useDispatch()
-    // const { data: user } = useSelector(state => state.login)
-    const { error, loading } = useSelector(state => state.token)
+  const onSubmit = (data) => {
+    dispatch(login(type, data));
+  };
 
-    const onSubmit = (data) => {
-        // console.log(auth.login(type, data))
-        dispatch(login(type, data))
-            // .then(() => user )
-            // .then(() => history.replace(from))
-            // .then(() => history.push(`/dashboard/${type}`))
-        
-        // console.log(dispatch(login(type, data)), 'dispatch')
-        // console.log(location, 'location')
-        // console.log(from, `from`)
-        // history.replace(from)
-    }
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.login}>
+      <Button
+        style={{ position: "absolute", top: 24, left: 12 }}
+        type="transparent"
+        onClick={history.goBack}
+      >
+        Voltar
+      </Button>
 
-    
-    return (
-        <form onSubmit={handleSubmit(onSubmit)} className={ styles.login }>
+      <div className={styles.content}>
+        <Logo title={title} desc={desc} />
 
-            <div className={ styles.content }>
-                <Logo
-                    title={ title }
-                    desc={ desc }/>
+        <InputGroup>
+          <Input
+            disabled={loading}
+            ref={register({ required: true })}
+            type="email"
+            name="email"
+            errors={errors}
+            errorMessage="Digite o seu e-mail"
+            placeholder="Digite seu e-mail"
+          >
+            e-mail
+          </Input>
+        </InputGroup>
 
-                <InputGroup>
-                    <Input
-                        disabled={loading}
-                        ref={register({ required: true })}
-                        type="email"
-                        name="email"
-                        errors={errors}
-                        errorMessage="Digite o seu e-mail"
-                        placeholder="Digite seu e-mail">
-                        e-mail
-                    </Input>
-                </InputGroup>
-                
-                <InputGroup>
-                    <Input
-                        disabled={loading}
-                        type="password"
-                        ref={register({ required: true })}
-                        name="password"
-                        errors={errors}
-                        errorMessage="Digite uma senha"
-                        placeholder="Digite sua senha">
-                        senha
-                    </Input>
-                </InputGroup>
+        <InputGroup>
+          <Input
+            disabled={loading}
+            type="password"
+            ref={register({ required: true })}
+            name="password"
+            errors={errors}
+            errorMessage="Digite uma senha"
+            placeholder="Digite sua senha"
+          >
+            senha
+          </Input>
+        </InputGroup>
 
-                { error ? 
-                    (<div className={ styles.error }>Usuário ou senha incorretos</div>) 
-                : null }
-                
-                <div className={ styles.sub }>
-                    <Checkbox
-                        type="checkbox"
-                        placeholder="Digite sua senha">
-                        Lembrar-me
-                    </Checkbox>
-                    <span className={ styles.subSpan }>
-                        Esqueceu sua senha? 
-                        <Link to={`/join/${type}/recover`}>
-                            Clique aqui
-                        </Link>
-                    </span>
-                </div>
+        {error ? (
+          <div className={styles.error}>Usuário ou senha incorretos</div>
+        ) : null}
 
-                <Button
-                    disabled={ loading }
-                    type="primary"
-                    Tag={`button`}>
-                    Entrar
-                </Button>
+        <div className={styles.sub}>
+          <Checkbox type="checkbox" placeholder="Digite sua senha">
+            Lembrar-me
+          </Checkbox>
+          <span className={styles.subSpan}>
+            Esqueceu sua senha?
+            <Link to={`/join/${type}/recover`}>Clique aqui</Link>
+          </span>
+        </div>
 
-                <div className={ styles.subSpan } style={{ marginTop: 32 }}>
-                    Não possui uma conta? 
-                    <Link to={`/auth/${type}/signup`}>
-                        Cadastre-se
-                    </Link>
-                </div>
-            </div> 
+        <Button disabled={loading} type="primary" Tag={`button`}>
+          Entrar
+        </Button>
 
-            <Copyright />
+        <div className={styles.subSpan} style={{ marginTop: 32 }}>
+          Não possui uma conta?
+          <Link to={`/auth/${type}/signup`}>Cadastre-se</Link>
+        </div>
+      </div>
 
-        </form>
- )
-}
+      <Copyright />
+    </form>
+  );
+};
 
-export default Email
+export default Email;

@@ -1,7 +1,6 @@
 @import 'utils/styles/colors'
 @import 'utils/styles/Typography.module.sass'
 
-
 .logo
     img
         height: 80px
@@ -15,8 +14,11 @@
         display: inline-block
         color: $DARK_GRAY
         margin:
-            bottom: 24px  
+            bottom: 24px
 
+.back
+    position: absolute
+    top: 0
 
 .login
     position: relative
@@ -30,10 +32,10 @@
         // bottom: 20px
 
     > span
-       position: absolute
-       left: 50%
-       bottom: 0
-       transform: translateX(-50%)
+        position: absolute
+        left: 50%
+        bottom: 0
+        transform: translateX(-50%)
 
 .content
     width: 100%
@@ -44,7 +46,7 @@
     justify-content: space-between
     margin:
         bottom: 24px
-    
+
     &Span
         font:
             size: 12px
@@ -61,7 +63,6 @@
 .error
     font:
         size: 14px
-    margin: 
+    margin:
         bottom: 12px
     color: $ERROR
-

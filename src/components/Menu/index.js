@@ -46,7 +46,7 @@ const Menu = ({ active, user = { name: "test", last_name: "test" } }) => {
     >
       <Profile
         // image={ profile }
-        name={`${user.name} ${user.last_name}`}
+        name={`${user.name} ${user.last_name ? user.last_name : ""}`}
         location={8}
       />
 
@@ -78,7 +78,7 @@ const Menu = ({ active, user = { name: "test", last_name: "test" } }) => {
           <Button to={`/meus-desafios/${type}`} meusDesafios>
             Meus desafios
           </Button>
-          <Button to={`/perfil/${type}`} perfil>
+          <Button to={`/perfil/${type}/pessoal`} perfil>
             Perfil
           </Button>
           <Button to={`/auth/${type}/logout`} sair>

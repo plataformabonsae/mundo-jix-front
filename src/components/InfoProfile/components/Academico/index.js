@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import { toast } from 'react-toastify'
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation } from "react-router-dom";
 // import { cpf } from 'cpf-cnpj-validator'
@@ -32,8 +33,8 @@ const Academico = ({ action, type, noShadow, advance, save, finalRoute }) => {
   const onSubmit = (data) => {
     console.log(JSON.stringify(data));
     let array = pathname.split("/");
+
     history.push(`/${array[1]}/${type}/profissional`);
-    console.log(array);
   };
 
   const typeEscolar = [

@@ -1,16 +1,42 @@
 import { Creators as TokenActions } from "store/ducks/Token";
 import { Creators as UserTypeActions } from "store/ducks/UserType";
 import { TALENT, COMPANY } from "utils/api";
+import axios from "axios";
 
 export const tokenFetch = (
   type = `talento`,
   body,
-  url = type === `talento` ? TALENT.AUTH.login : COMPANY.AUTH.login
+  url = type === `empresa` ? COMPANY.AUTH.login : TALENT.AUTH.login
 ) => async (dispatch) => {
   try {
-    dispatch(TokenActions.tokenRequest());
-    console.log(body, `body TokenFetch`);
-    // dispatch(UserTypeActions.userTypeRequest())
+    // axios
+    // dispatch(TokenActions.tokenRequest());
+    // const formData = new FormData();
+    // for (var key in body) {
+    //   formData.append(key, body[key]);
+    //   console.log(key, body[key]);
+    // }
+    // const call = await axios({
+    //   url,
+    //   method: "post",
+    //   data: formData,
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // })
+    //   .then(function (response) {
+    //     // dispatch(UserTypeActions.userTypeSuccess(type));
+    //     // dispatch(TokenActions.tokenSuccess(response?.data.token));
+    //     console.log(response);
+    //   })
+    //   .catch(function (response) {
+    //     //handle error
+    //     // dispatch(TokenActions.tokenFailure(response)) &&
+    //     //   dispatch(UserTypeActions.userTypeFailure(response));
+    //     console.log(response);
+    //   });
+
+    dispatch(UserTypeActions.userTypeRequest());
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -19,10 +45,7 @@ export const tokenFetch = (
       },
       body: JSON.stringify(body),
     });
-    console.log(body, "body tokenFetch");
-    console.log(response, "response tokenFetch");
     const { success, data } = await response.json();
-    console.log(data, `response TokenFetch`);
     success &&
       dispatch(UserTypeActions.userTypeSuccess(type)) &&
       dispatch(TokenActions.tokenSuccess(data.token));

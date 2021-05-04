@@ -1,7 +1,8 @@
 import React from "react";
 import {
   Link,
-  // useLocation
+  // useLocation,
+  useHistory,
 } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,24 +17,21 @@ import {
   // logout
 } from "services/login";
 
+// import history from "utils/history";
+
 // import Typography from 'utils/styles/Typography.module.sass'
 
 import styles from "./styles.module.sass";
 
-import history from "utils/history";
-
 const Email = ({ title, desc, type }) => {
   const { register, errors, handleSubmit } = useForm();
-  // let location = useLocation()
-
-  // let { from } = location.state || { from: { pathname: `/dashboard/${type}` } }
-
-  const dispatch = useDispatch();
-  // const { data: user } = useSelector(state => state.login)
+  const history = useHistory();
   const { error, loading } = useSelector((state) => state.token);
+  const dispatch = useDispatch();
 
-  const onSubmit = (data) => {
-    dispatch(login(type, data));
+  const onSubmit = async (data) => {
+    const req = dispatch(login(type, data));
+    await req.then((res) => history.push("/dashboard"));
   };
 
   return (
@@ -41,7 +39,7 @@ const Email = ({ title, desc, type }) => {
       <Button
         style={{ position: "absolute", top: 24, left: 12 }}
         type="transparent"
-        onClick={history.goBack}
+        to={`/auth/${type}/login`}
       >
         Voltar
       </Button>
@@ -87,7 +85,7 @@ const Email = ({ title, desc, type }) => {
           </Checkbox>
           <span className={styles.subSpan}>
             Esqueceu sua senha?
-            <Link to={`/join/${type}/recover`}>Clique aqui</Link>
+            <Link to={`/auth/${type}/recuperar`}>Clique aqui</Link>
           </span>
         </div>
 

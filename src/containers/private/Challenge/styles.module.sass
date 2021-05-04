@@ -1,0 +1,25 @@
+@import 'utils/styles/colors.sass'
+
+.challenge
+  padding:
+    bottom: 36px
+
+.section
+  margin: 36px
+  text-align: center
+
+  &__border
+    @extend .section
+    padding: 36px
+    border: 1px solid $INCOMPANY
+    border-radius: 10px
+
+.container
+  margin:
+    top: 36px
+  display: flex
+  // flex-wrap: wrap
+
+  > *
+    margin: 0 12px
+    flex: 33.33%

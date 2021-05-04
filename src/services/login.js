@@ -1,8 +1,8 @@
-import { Creators as LoginActions } from "store/ducks/Login";
+import { Creators as UserActions } from "store/ducks/User";
 import { TALENT, COMPANY } from "utils/api";
 
 import { store } from "store/configureStore";
-
+import axios from "axios";
 import { tokenFetch } from "services/token";
 
 // import { useAuth } from 'utils/context/auth'
@@ -25,6 +25,7 @@ export const logout = () => async (dispatch) => {
   await dispatch(logoutFetch());
   window.localStorage.removeItem("token");
   window.localStorage.removeItem("usertype");
+  window.localStorage.removeItem("accepted_terms");
 };
 
 export const autoLogin = (from) => async (dispatch, getState) => {
@@ -33,7 +34,6 @@ export const autoLogin = (from) => async (dispatch, getState) => {
   if (token?.data && usertype?.data) {
     const data = await dispatch(loginFetch(usertype.data, token.data));
     from && history.replace(from);
-    //   auth?.setAuth(data)
     if (!data) dispatch(logout());
   }
 };
@@ -41,42 +41,65 @@ export const autoLogin = (from) => async (dispatch, getState) => {
 export const loginFetch = (
   type = "talento",
   token,
-  url = TALENT.AUTH.user
+  url = type === `empresa` ? COMPANY.AUTH.user : TALENT.AUTH.user
 ) => async (dispatch) => {
-  if (type === `empresa`) url = COMPANY.AUTH.user;
-  try {
-    dispatch(LoginActions.loginRequest());
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
+  dispatch(UserActions.userRequest());
+  const res = axios({
+    url,
+    method: "get",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  await res
+    .then(function (response) {
+      const user = response.data.data;
+      dispatch(UserActions.userSuccess(user));
+      window.localStorage.setItem("accepted_terms", user?.accepted_terms);
+    })
+    .catch(function (response) {
+      //handle error
+      console.log(response.data.data.data);
+      dispatch(UserActions.userFailure(response));
     });
-    const { data } = await response.json();
-    dispatch(LoginActions.loginSuccess(data));
-    return data;
-  } catch (error) {
-    dispatch(LoginActions.loginFailure(error));
-    dispatch(logout());
-  }
+  return res;
+  // try {
+  //   dispatch(UserActions.userRequest());
+  //   const response = await fetch(url, {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //       Accept: "application/json",
+  //     },
+  //   });
+  //   const { data } = await response.json();
+  //   dispatch(UserActions.userSuccess(data));
+  //   return data;
+  // } catch (error) {
+  //   dispatch(UserActions.userFailure(error));
+  //   dispatch(logout());
+  // }
 };
 
-export const logoutFetch = (type, token, url = TALENT.AUTH.logout) => async (
-  dispatch
-) => {
-  if (type === `empresa`) url = COMPANY.AUTH.logout;
-  try {
-    dispatch(LoginActions.logoutRequest());
-    await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
+export const logoutFetch = (
+  type = window.localStorage.getItem("talento"),
+  token = window.localStorage.getItem("token"),
+  url = type === "empresa" ? COMPANY.AUTH.logout : TALENT.AUTH.logout
+) => async (dispatch) => {
+  dispatch(UserActions.logoutRequest());
+  const res = axios({
+    url,
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  await res
+    .then((response) => {
+      dispatch(UserActions.logoutSuccess());
+    })
+    .catch((error) => {
+      dispatch(UserActions.logoutFailure(error));
+      throw new Error(error, "Erro no logout");
     });
-    dispatch(LoginActions.logoutSuccess());
-  } catch (error) {
-    dispatch(LoginActions.logoutFailure(error));
-  }
 };

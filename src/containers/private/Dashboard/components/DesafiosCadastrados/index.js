@@ -2,15 +2,15 @@ import React from "react";
 // import Slider from "@farbenmeer/react-spring-slider"
 
 import { Card } from "components/Card";
-import Button from "components/Button";
-import { Title, Text } from "components/Text";
+// import Button from "components/Button";
+import { Title } from "components/Text";
 import { Filter } from "components/Filter";
 
-import star from "assets/components/Card/star.svg";
-import check from "assets/components/Card/check.svg";
+// import star from "assets/components/Card/star.svg";
+// import check from "assets/components/Card/check.svg";
 
 import styles from "./styles.module.sass";
-import * as colors from "utils/styles/Colors";
+// import * as colors from "utils/styles/Colors";
 
 // TODO
 

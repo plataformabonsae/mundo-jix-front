@@ -50,37 +50,45 @@ const Menu = ({ active, user = { name: "test", last_name: "test" } }) => {
         location={8}
       />
 
-      {type === "talento" ? (
+      {type === "talento" && (
         <>
           <Points points={0} />
 
-          <Button to={`/dashboard/${type}`} dashboard>
+          <Button to={`/dashboard`} dashboard>
             Dashboard
           </Button>
-          <Button to={`/meus-desafios/${type}`} meusDesafios>
+          <Button to={`/meus-desafios`} meusDesafios>
             Meus desafios
           </Button>
-          <Button to={`/desafios/${type}`} desafios>
+          <Button to={`/desafios`} desafios>
             Desafios
           </Button>
-          <Button to={`/perfil/${type}/pessoal`} perfil>
+          <Button to={`/perfil/pessoal`} perfil>
             Perfil
           </Button>
           <Button to={`/auth/${type}/logout`} sair>
             Sair
           </Button>
         </>
-      ) : (
+      )}
+      {type === "empresa" && (
         <>
-          <Button to={`/dashboard/${type}`} dashboard>
+          <Button to={`/dashboard/`} dashboard>
             Dashboard
           </Button>
-          <Button to={`/meus-desafios/${type}`} meusDesafios>
+          <Button to={`/meus-desafios/`} meusDesafios>
             Meus desafios
           </Button>
-          <Button to={`/perfil/${type}/pessoal`} perfil>
+          <Button to={`/perfil/pessoal`} perfil>
             Perfil
           </Button>
+          <Button to={`/auth/${type}/logout`} sair>
+            Sair
+          </Button>
+        </>
+      )}
+      {(type === "jurado" || type === "mentor") && (
+        <>
           <Button to={`/auth/${type}/logout`} sair>
             Sair
           </Button>

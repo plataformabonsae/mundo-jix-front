@@ -7,6 +7,8 @@ import Social from "../components/Social";
 import Signup from "../components/Signup";
 
 import content from "utils/content/login.json";
+import bgCompany from "assets/auth/left-business.png";
+import bgTalent from "assets/auth/left.png";
 
 const Type = ({ action, type }) => {
   const authAction = (request) => {
@@ -39,6 +41,12 @@ const Type = ({ action, type }) => {
         <>
           <Background
             position={`${action !== "signup" ? "left" : "right"}`}
+            backgroundImage={
+              (action === "login" && type === "empresa") ||
+              (action === "email" && type === "empresa")
+                ? bgCompany
+                : bgTalent
+            }
             title={`${content?.[type].name}`}
             text={`${content?.[type].desc}`}
           />

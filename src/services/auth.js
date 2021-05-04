@@ -1,17 +1,17 @@
 import { Creators as TokenActions } from "store/ducks/Token";
-// import { Creators as LoginActions } from 'store/ducks/Login'
-import { Creators as ProfileActions } from "store/ducks/Profile";
+import { Creators as UserActions } from "store/ducks/User";
+// import { Creators as ProfileActions } from "store/ducks/Profile";
 import { TALENT, COMPANY } from "utils/api";
 import { loginFetch } from "services/login";
 import { tokenFetch } from "services/token";
-// import { useSelector } from 'react-redux'
+// import { useSelector } from "react-redux";
+import axios from "axios";
 
 export const login = (type, user) => async (dispatch) => {
   const { token } = await dispatch(tokenFetch(type, user));
   if (token && type) {
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("usertype", type);
-    console.log(token);
     await dispatch(loginFetch(type, token));
   }
 };
@@ -20,10 +20,8 @@ export const newuser = (type, body, url = TALENT.AUTH.register) => async (
   dispatch
 ) => {
   if (type === `empresa`) url = COMPANY.AUTH.register;
-  console.log(url, "newUser");
   try {
     const { token } = await dispatch(tokenFetch(type, body, url));
-    console.log(token, "token res newUser");
     if (token && type) {
       window.localStorage.setItem("token", token);
       window.localStorage.setItem("usertype", type);
@@ -34,47 +32,64 @@ export const newuser = (type, body, url = TALENT.AUTH.register) => async (
   }
 };
 
-export const edit = (type, body, url = TALENT.AUTH.update) => async (
-  dispatch
-) => {
-  if (type === `empresa`) url = COMPANY.AUTH.update;
+export const edit = (
+  type,
+  body,
+  url = type === "empresa" ? COMPANY.AUTH.update : TALENT.AUTH.update
+) => async (dispatch) => {
   const token = window.localStorage.getItem("token");
-  console.log("edit");
   try {
     await dispatch(editFetch(type, body, url, token));
-    console.log("edit try");
   } catch (error) {
-    dispatch(ProfileActions.profileFailure(error));
-    console.log("edit catch");
+    dispatch(UserActions.userFailure(error));
   }
 };
 
 export const editFetch = (
   type = `talento`,
   body,
-  url = TALENT.AUTH.update,
+  url = (type = `empresa` ? COMPANY.AUTH.update : TALENT.AUTH.update),
   token
 ) => async (dispatch) => {
-  if (type === `empresa`) url = COMPANY.AUTH.update;
-  // const { data: user } = useSelector(state => state.login)
-  try {
-    const formData = new FormData();
-    for (var key in body) {
-      formData.append(key, body[key]);
-      console.log(key, body[key]);
-    }
-    dispatch(ProfileActions.profileRequest());
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-      body: formData,
-    });
-    const { ok } = response;
-    if (ok) dispatch(ProfileActions.profileSuccess());
-  } catch (error) {
-    dispatch(ProfileActions.profileFailure(error));
+  const formData = new FormData();
+  for (var key in body) {
+    formData.append(key, body[key]);
+    console.log(key, body[key]);
   }
+  dispatch(UserActions.userUpdate());
+  const res = axios({
+    url,
+    method: "post",
+    data: formData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  await res
+    .then(function (response) {
+      dispatch(UserActions.userSuccess(response.data.data.user));
+      console.log(response);
+    })
+    .catch(function (response) {
+      //handle error
+      console.log(response.data.data);
+      dispatch(UserActions.userFailure(response));
+    });
+  console.log(res);
+  // console.log(body);
+  // console.log(token);
+  // const response = await fetch(url, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": `multipart/form-data`,
+  //     Host: `${document.location.origin}`,
+  //     Authorization: `Bearer ${token}`,
+  //     Accept: "application/json",
+  //   },
+  //   body: JSON.stringify(body),
+  // });
+  // const { ok } = response;
+  // if (ok) dispatch(ProfileActions.profileSuccess());
+  // else dispatch(ProfileActions.profileFailure("error"));
 };

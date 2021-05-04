@@ -1,0 +1,39 @@
+
+.wrapper
+  position: relative
+  margin:
+    bottom: 65px + 32px
+
+.image
+  // position: relative
+  &::before
+    content: ''
+    display: block
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    background: linear-gradient(180deg, rgba(5, 45, 65, 0) 0%, #052D41 100%)
+
+  img
+    height: 300px
+    object-fit: cover
+    width: 100%
+
+.title
+  position: absolute
+  padding: 0 24px
+  bottom: 24px
+  z-index: 2
+
+.logo
+  position: absolute
+  width: 100%
+  text-align: center
+  bottom: -65px
+
+  img
+    height: 130px
+    width: 130px
+    border-radius: 3000px

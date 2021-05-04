@@ -32,7 +32,7 @@ const MyChallenges = () => {
       <article className={styles.slider}>
         {data?.my_challenges && data?.my_challenges.lenght > 0 ? (
           <Swiper spaceBetween={24} slidesPerView={3}>
-            {data?.my_challenges.map((item, index) => {
+            {data?.my_challenges.map((item, index) => (
               <SwiperSlide>
                 <Chip
                   meusDesafios
@@ -41,8 +41,8 @@ const MyChallenges = () => {
                   maxValue={100}
                   currentValue={100}
                 />
-              </SwiperSlide>;
-            })}
+              </SwiperSlide>
+            ))}
           </Swiper>
         ) : (
           <Text>Se inscreva em um desafio para ver seu progresso</Text>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 
 import { Card } from "components/Card";
 import { Title } from "components/Text";
@@ -21,8 +21,9 @@ import {
 import { Text } from "components/Text";
 import Button from "components/Button";
 import { ButtonGroup } from "components/ButtonGroup";
+// import { cep, cepReset } from "services/adress";
 
-import { edit } from "services/auth";
+// import { edit } from "services/auth";
 
 // TODO
 // 1 - Adicionar e remover mais números
@@ -32,10 +33,10 @@ const Profissional = ({ action, type, noShadow }) => {
   const history = useHistory();
   // const { pathname } = useLocation()
 
-  const dispatch = useDispatch();
-  const { data: user } = useSelector((state) => state.login);
-  const { data: usertype } = useSelector((state) => state.usertype);
-  const { loading } = useSelector((state) => state.profile);
+  // const dispatch = useDispatch();
+  // const { data: user } = useSelector((state) => state.login);
+  // const { data: usertype } = useSelector((state) => state.usertype);
+  // const { loading } = useSelector((state) => state.profile);
 
   const { register, errors, control, handleSubmit } = useForm();
 

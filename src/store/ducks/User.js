@@ -1,11 +1,14 @@
+// import { getLocalStorage } from "../helper/getLocalStorage";
+
 /* Actions Types */
 export const Types = {
-  LOGIN_REQUEST: 'login/LOGIN_REQUEST',
-  LOGIN_SUCCESS: 'login/LOGIN_SUCCESS',
-  LOGIN_FAILURE: 'login/LOGIN_FAILURE',
-  LOGOUT_REQUEST: 'logout/LOGOUT_REQUEST',
-  LOGOUT_SUCCESS: 'logout/LOGOUT_SUCCESS',
-  LOGOUT_FAILURE: 'logout/LOGOUT_FAILURE',
+  USER_REQUEST: "user/REQUEST",
+  USER_UPDATE: "user/UPDATE",
+  USER_SUCCESS: "user/SUCCESS",
+  USER_FAILURE: "user/FAILURE",
+  LOGOUT_REQUEST: "logout/REQUEST",
+  LOGOUT_SUCCESS: "logout/SUCCESS",
+  LOGOUT_FAILURE: "logout/FAILURE",
 };
 
 /* Reducer */
@@ -13,26 +16,36 @@ const INITIAL_STATE = {
   loading: false,
   data: null,
   error: null,
+  logged: null,
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case Types.LOGIN_REQUEST:
+    case Types.USER_REQUEST:
       return {
         ...state,
+        logged: true,
         loading: true,
       };
-    case Types.LOGIN_SUCCESS:
+    case Types.USER_UPDATE:
+      return {
+        loading: true,
+        logged: true,
+        data: action.payload,
+      };
+    case Types.USER_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
+        logged: true,
         data: action.payload,
       };
-    case Types.LOGIN_FAILURE:
+    case Types.USER_FAILURE:
       return {
         ...state,
         loading: false,
+        logged: false,
         error: action.payload.error,
       };
     case Types.LOGOUT_REQUEST:
@@ -60,17 +73,21 @@ export default function reducer(state = INITIAL_STATE, action) {
 
 /* Actions */
 export const Creators = {
-  loginRequest: (payload) => ({
-    type: Types.LOGIN_REQUEST,
+  userRequest: (payload) => ({
+    type: Types.USER_REQUEST,
     payload,
   }),
-  loginSuccess: (payload) => ({
-    type: Types.LOGIN_SUCCESS,
+  userUpdate: (payload) => ({
+    type: Types.USER_UPDATE,
     payload,
   }),
-  loginFailure: (error) => ({
-    type: Types.LOGIN_FAILURE,
-    payload: {error},
+  userSuccess: (payload) => ({
+    type: Types.USER_SUCCESS,
+    payload,
+  }),
+  userFailure: (error) => ({
+    type: Types.USER_FAILURE,
+    payload: { error },
   }),
   logoutRequest: () => ({
     type: Types.LOGOUT_REQUEST,
@@ -82,6 +99,6 @@ export const Creators = {
   }),
   logoutFailure: (error) => ({
     type: Types.LOGOUT_FAILURE,
-    payload: {error},
+    payload: { error },
   }),
 };

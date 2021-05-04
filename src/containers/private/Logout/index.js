@@ -1,19 +1,23 @@
-import React, { useEffect } from 'react'
-import { Redirect } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { logout } from 'services/login'
+import React, { useEffect, useState } from "react";
+import { Redirect, useParams, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "services/login";
 
-// import history from 'utils/history'
+// import history from "utils/history";
 
 const Logout = ({ from }) => {
-    const dispatch = useDispatch()
-    useEffect(()=> {
-        dispatch(logout())
+  const [hasLoggedOut, setHasLoggedOut] = useState(false);
+  const { type } = useParams();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-    }, [dispatch])
-    return <Redirect to="/auth/talento/login" />  
-}
+  useEffect(() => {
+    dispatch(logout()).then(() => setHasLoggedOut(true));
+  }, [dispatch, location, type]);
 
-export { 
-    Logout
-}
+  if (!hasLoggedOut) {
+    return <Redirect to={`/auth/${type}/login`} />;
+  }
+};
+
+export { Logout };

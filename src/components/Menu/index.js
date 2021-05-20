@@ -2,9 +2,11 @@ import React, {
   // useState
   useEffect,
 } from "react";
-//  import { useParams } from 'react-router-dom'
+// import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 // import { useSpring, animated } from 'react-spring'
+
+import { BASEURL } from "utils/api";
 
 // import facebook from 'assets/components/Menu/facebook.svg'
 // import linkedin from 'assets/components/Menu/linkedin.svg'
@@ -21,7 +23,8 @@ import { Button } from "./components/Button";
 // 1 - Animation on open e close aside
 // 2 - social
 
-const Menu = ({ active, user = { name: "test", last_name: "test" } }) => {
+const Menu = ({ active, user = { name: "", last_name: "" } }) => {
+  // const location = useLocation();
   let { data: type } = useSelector((state) => state.usertype);
 
   useEffect(() => {
@@ -45,8 +48,15 @@ const Menu = ({ active, user = { name: "test", last_name: "test" } }) => {
     // onMouseLeave={() => setIsOpen( false )}
     >
       <Profile
-        // image={ profile }
-        name={`${user.name} ${user.last_name ? user.last_name : ""}`}
+        image={`${
+          (user?.file || user?.data?.file) &&
+          BASEURL + (user.file || user.data.file)
+        }`}
+        name={`${user?.name || user?.data?.name} ${
+          user?.last_name || user?.data?.last_name
+            ? user.last_name || user.data.last_name
+            : ""
+        }`}
         location={8}
       />
 
@@ -63,7 +73,7 @@ const Menu = ({ active, user = { name: "test", last_name: "test" } }) => {
           <Button to={`/desafios`} desafios>
             Desafios
           </Button>
-          <Button to={`/perfil/pessoal`} perfil>
+          <Button to={`/perfil`} perfil>
             Perfil
           </Button>
           <Button to={`/auth/${type}/logout`} sair>

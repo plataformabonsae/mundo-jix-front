@@ -1,0 +1,58 @@
+@import 'utils/styles/colors'
+
+.carousel
+  margin: 32px 0
+  padding: 32px
+  background: $LIGHT_GRAY_2
+
+.header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin:
+    bottom: 32px
+
+.content
+  display: flex
+
+.desc,
+.downloads
+  padding: 24px
+  flex: 1
+
+.desc
+  border:
+    right: 1px solid $LIGHT_GRAY
+
+.title
+  margin:
+    bottom: 48px
+
+.desc
+  &__title
+    margin:
+      bottom: 24px
+    font:
+      size: 14px
+    color: $MEDIUM_BLACK
+    letter-spacing: 2px
+    text-transform: uppercase
+
+.videos
+  margin: -20px
+  background: rgb(228, 229, 231)
+  margin:
+    bottom: 0
+
+// Swiper
+
+.swiper-button-next
+  position: absolute
+  z-index: 12
+  right: 0
+  padding: 12px
+  background: red
+
+.feedbacks
+  max-height: 600px
+  overflow: auto

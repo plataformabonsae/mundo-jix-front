@@ -1,4 +1,6 @@
+import React from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
+import parse from "html-react-parser";
 
 import { Card } from "components/Card";
 import { Text, Title } from "components/Text";
@@ -62,7 +64,7 @@ const Insignia = ({
     <article className={styles.content}>
       <Title size={16}>{title}</Title>
       <Text size={14} color={colors.DARK_GRAY}>
-        {desc}
+        {parse(desc)}
       </Text>
     </article>
   </Card>

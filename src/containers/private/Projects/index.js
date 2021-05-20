@@ -5,7 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Input } from "components/Inputs";
 // import Button from "components/Button";
 
-import { Header } from "./components/Header";
+import { TitleAndBack } from "components/TitleAndBack";
+
 import { ProjectCard } from "./components/ProjectCard";
 
 import { all } from "services/challenges";
@@ -61,7 +62,7 @@ const Projects = (props) => {
   if (challengeExists) {
     return (
       <div>
-        <Header data={currentChallenge} />
+        <TitleAndBack data={currentChallenge} noBack />
         <section className={styles.search}>
           <Input
             disabled={loading}

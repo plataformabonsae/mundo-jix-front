@@ -87,7 +87,7 @@ const RecommendedChallenges = () => {
           </Swiper>
         </article>
       ) : (
-        <Text style={{ padding: "12px 0" }}>Sem desafios por enquanto</Text>
+        <Text style={{ padding: "12px 0" }}>Sem novo desafios por enquanto</Text>
       )}
     </Card>
   );

@@ -1,0 +1,40 @@
+@import 'utils/styles/colors'
+
+.search
+  display: flex
+  padding: 0 32px
+  align-items: center
+
+.invites
+  display: grid
+  grid: auto / 1fr 1fr
+  padding: 32px
+  padding:
+    bottom: 128px
+
+.title
+  padding: 32px
+
+  &__container
+    position: relative
+
+    &::before
+      content: ''
+      display: block
+      width: 60px
+      height: 1px
+      background: $LIGHT_GRAY
+      margin:
+        left: 32px
+
+.banner
+  position: fixed
+  display: flex
+  justify-content: flex-end
+  align-items: center
+  padding: 32px
+  background: rgb(199, 230, 195)
+  bottom: 0
+  right: 0
+  left: 18vw
+  z-index: 2

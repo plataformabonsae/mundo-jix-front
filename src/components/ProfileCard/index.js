@@ -5,10 +5,15 @@ import { Title, Text } from "components/Text";
 
 import styles from "./styles.module.sass";
 
+import profile from "assets/logo/JixProfile.png";
+
+import { BASEURL } from "utils/api";
+
 import profileDefault from "assets/components/ProfileCard/default.png";
 import guardia from "assets/components/ProfileCard/guardia.svg";
 
 const ProfileCard = (props) => {
+  const { data } = props;
   return (
     <Card
       border
@@ -47,11 +52,14 @@ const ProfileCard = (props) => {
       ) : (
         <>
           <div className={styles.imagename}>
-            <img src={props.img || profileDefault} alt={props.name} />
-            <Title size={16}>{props.name || "Nome e Sobrenome"}</Title>
+            <img
+              src={data.file ? BASEURL + data.file : profile}
+              alt={data.name}
+            />
+            <Title size={16}>{data.name || "Nome e Sobrenome"}</Title>
           </div>
           <Text style={{ textAlign: "justify" }}>
-            {props.bio ||
+            {data.bio ||
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non at vulputate tempus proin. Ultricies nibh feugiat sed duis. Adipiscing turpis donec dictum commodo."}
           </Text>
         </>

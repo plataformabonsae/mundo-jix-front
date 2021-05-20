@@ -11,13 +11,15 @@ import history from "utils/history";
 
 export const login = (type, user) => async (dispatch) => {
   // const auth = useAuth()
-  const { token } = await dispatch(tokenFetch(type, user));
-  if (token && type) {
-    window.localStorage.setItem("token", token);
+  const res = await dispatch(tokenFetch(type, user));
+  if (res.data.data.token && type) {
+    console.log("logou");
+    window.localStorage.setItem("token", res.data.data.token);
     window.localStorage.setItem("usertype", type);
-    const data = await dispatch(loginFetch(type, token));
-    return data;
+    const response = await dispatch(loginFetch(type, res.data.data.token));
+    return response;
   }
+  return res;
 };
 
 export const logout = () => async (dispatch) => {
@@ -38,68 +40,72 @@ export const autoLogin = (from) => async (dispatch, getState) => {
   }
 };
 
-export const loginFetch = (
-  type = "talento",
-  token,
-  url = type === `empresa` ? COMPANY.AUTH.user : TALENT.AUTH.user
-) => async (dispatch) => {
-  dispatch(UserActions.userRequest());
-  const res = axios({
-    url,
-    method: "get",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  await res
-    .then(function (response) {
-      const user = response.data.data;
-      dispatch(UserActions.userSuccess(user));
-      window.localStorage.setItem("accepted_terms", user?.accepted_terms);
-    })
-    .catch(function (response) {
-      //handle error
-      console.log(response.data.data.data);
-      dispatch(UserActions.userFailure(response));
+export const loginFetch =
+  (
+    type = "talento",
+    token,
+    url = type === `empresa` ? COMPANY.AUTH.user : TALENT.AUTH.user
+  ) =>
+  async (dispatch) => {
+    dispatch(UserActions.userRequest());
+    const res = axios({
+      url,
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-  return res;
-  // try {
-  //   dispatch(UserActions.userRequest());
-  //   const response = await fetch(url, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //       Accept: "application/json",
-  //     },
-  //   });
-  //   const { data } = await response.json();
-  //   dispatch(UserActions.userSuccess(data));
-  //   return data;
-  // } catch (error) {
-  //   dispatch(UserActions.userFailure(error));
-  //   dispatch(logout());
-  // }
-};
+    await res
+      .then(function (response) {
+        const user = response?.data?.data;
+        dispatch(UserActions.userSuccess(user));
+        window.localStorage.setItem("accepted_terms", user?.accepted_terms);
+      })
+      .catch(function (response) {
+        //handle error
+        console.log(response.data.data.data);
+        dispatch(UserActions.userFailure(response));
+      });
+    return res;
+    // try {
+    //   dispatch(UserActions.userRequest());
+    //   const response = await fetch(url, {
+    //     method: "GET",
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //       Accept: "application/json",
+    //     },
+    //   });
+    //   const { data } = await response.json();
+    //   dispatch(UserActions.userSuccess(data));
+    //   return data;
+    // } catch (error) {
+    //   dispatch(UserActions.userFailure(error));
+    //   dispatch(logout());
+    // }
+  };
 
-export const logoutFetch = (
-  type = window.localStorage.getItem("talento"),
-  token = window.localStorage.getItem("token"),
-  url = type === "empresa" ? COMPANY.AUTH.logout : TALENT.AUTH.logout
-) => async (dispatch) => {
-  dispatch(UserActions.logoutRequest());
-  const res = axios({
-    url,
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  await res
-    .then((response) => {
-      dispatch(UserActions.logoutSuccess());
-    })
-    .catch((error) => {
-      dispatch(UserActions.logoutFailure(error));
-      throw new Error(error, "Erro no logout");
+export const logoutFetch =
+  (
+    type = window.localStorage.getItem("talento"),
+    token = window.localStorage.getItem("token"),
+    url = type === "empresa" ? COMPANY.AUTH.logout : TALENT.AUTH.logout
+  ) =>
+  async (dispatch) => {
+    dispatch(UserActions.logoutRequest());
+    const res = axios({
+      url,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-};
+    await res
+      .then((response) => {
+        dispatch(UserActions.logoutSuccess());
+      })
+      .catch((error) => {
+        dispatch(UserActions.logoutFailure(error));
+        throw new Error(error, "Erro no logout");
+      });
+  };

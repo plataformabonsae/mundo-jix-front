@@ -1,4 +1,5 @@
 import React from "react";
+// import parse from "html-react-parser";
 
 import { Title, Text } from "components/Text";
 
@@ -9,9 +10,9 @@ const Header = (props) => {
   return (
     <header className={styles.header}>
       <Text size={14} className={styles.tag}>
-        {data?.challenge_type.replace("_", " ") || "..."}
+        {data?.challenge_type.replace("_", " ") || ""}
       </Text>
-      <Title className={styles.name}>{data?.name || "..."}</Title>
+      <Title className={styles.name}>{data?.name || ""}</Title>
     </header>
   );
 };

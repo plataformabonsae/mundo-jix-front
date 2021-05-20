@@ -4,6 +4,7 @@ import InputMask from "react-input-mask";
 import Select from "react-select";
 
 import { Text } from "components/Text";
+import { BASEURL } from "utils/api";
 
 import styles from "./styles.module.sass";
 
@@ -44,12 +45,52 @@ const RemoveGroup = ({ children, text, onClick }) => {
   );
 };
 
-const InputFile = React.forwardRef((props, ref) => (
-  <div className={styles.upload}>
-    <button type="button">Escolher arquivo</button>
-    Nenhum arquivo selecionado
-  </div>
-));
+const InputFile = React.forwardRef(
+  (
+    {
+      defaultValue,
+      disabled,
+      name,
+      value,
+      placeholder,
+      type,
+      onChange,
+      children,
+      checked,
+      errors,
+      errorMessage,
+      onKeyUp,
+      accept,
+      validate,
+      fontSize,
+      ...rest
+    },
+    ref
+  ) => (
+    <label
+      className={` ${styles.input} ${
+        errors?.[name]?.type === "required" ? styles.required : ""
+      }  ${disabled ? styles.disabled : ""}`}
+    >
+      <span className={styles.name}>{children}</span>
+      <div className={styles.upload}>
+        <input
+          accept={accept}
+          name={name}
+          ref={ref}
+          type="file"
+          style={{ fontSize: fontSize }}
+          // style={{ display: "none" }}
+          onChange={onChange}
+          {...rest}
+        />
+        {/* <button type="button">Escolher arquivo</button> */}
+        {/* Nenhum arquivo selecionado */}
+      </div>
+      <div className={styles.error}>{errors?.[name] && errorMessage}</div>
+    </label>
+  )
+);
 
 const Input = React.forwardRef(
   (
@@ -66,9 +107,11 @@ const Input = React.forwardRef(
       errors,
       errorMessage,
       onKeyUp,
+      validate,
+      fontSize,
+      ...rest
     },
-    ref,
-    ...rest
+    ref
   ) => (
     <label
       className={` ${styles.input} ${
@@ -82,12 +125,15 @@ const Input = React.forwardRef(
         name={name}
         type={type ? type : "text"}
         value={value}
+        style={{ fontSize: fontSize }}
         placeholder={placeholder}
         onChange={onChange}
         ref={ref}
         {...rest}
       />
-      <div className={styles.error}>{errors?.[name] && errorMessage}</div>
+      <div className={styles.error}>
+        {(errors?.[name] || validate) && errorMessage}
+      </div>
     </label>
   )
 );
@@ -105,6 +151,7 @@ const Textarea = React.forwardRef(
       checked,
       errors,
       errorMessage,
+      ...props
     },
     ref
   ) => (
@@ -122,6 +169,7 @@ const Textarea = React.forwardRef(
         placeholder={placeholder}
         onChange={onChange}
         ref={ref}
+        {...props}
       />
       <div className={styles.error}>{errors?.[name] && errorMessage}</div>
     </label>
@@ -139,6 +187,7 @@ const SelectInput = React.forwardRef((props, ref) => {
     // control,
     errors,
     errorMessage,
+    defaultValue,
     // options,
     // isMulti,
   } = props;
@@ -158,10 +207,11 @@ const SelectInput = React.forwardRef((props, ref) => {
         {...props}
         as={
           <Select
+            // defaultValue={defaultValue}
             styles={{
               placeholder: (provided, state) => ({
                 ...provided,
-                fontFamily: "Noto Sans",
+                // fontFamily: "Noto Sans",
                 fontSize: 12,
               }),
               option: (provided, state) => ({
@@ -305,12 +355,18 @@ const PhotoUpload = React.forwardRef((props, ref) => {
 
   return (
     <div className={styles.PhotoUpload}>
-      <img src={image} alt="" />
       <label>
-        <img src={file ? file : Photo} alt="Upload de foto" />
-        <Text tag="span" size="10" weight="bold">
-          Inserir foto
-        </Text>
+        <img
+          className={styles.PhotoUpload__image}
+          src={image ? BASEURL + image : null}
+          alt=""
+        />
+        <div className={styles.PhotoUpload__content}>
+          <img src={file ? file : Photo} alt="Upload de foto" />
+          <Text tag="span" size="10" weight="bold">
+            Inserir foto
+          </Text>
+        </div>
         <input
           accept="image/*"
           name={name}

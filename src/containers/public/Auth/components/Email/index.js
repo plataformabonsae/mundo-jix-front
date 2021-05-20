@@ -31,7 +31,9 @@ const Email = ({ title, desc, type }) => {
 
   const onSubmit = async (data) => {
     const req = dispatch(login(type, data));
-    await req.then((res) => history.push("/dashboard"));
+    await req
+      .then((res) => history.push("/dashboard"))
+      .catch((err) => console.log(err, "erro"));
   };
 
   return (

@@ -26,6 +26,7 @@ const TALENT = {
 
   CHALLENGES: {
     // GET
+    my_challenges: `${BASEURL}/my_challenges`,
     challenges: `${BASEURL}/challenges`,
     challenge: (id) => `${BASEURL}/challenge/${id}`,
     trail: (id) => `${BASEURL}/trail/${id}`,
@@ -33,11 +34,20 @@ const TALENT = {
     project: (id) => `${BASEURL}/project/${id}`,
     feedback: (id) => `${BASEURL}/feedback/${id}`,
     badges: `${BASEURL}/dashboard/badges`,
+    subscribe: (id) => `${BASEURL}/challenge/subscribe/${id}`,
   },
 
   PROJECT: {
-    // GET
-    project_edit: (id) => `${BASEURL}/project/edit/${id}`,
+    project: (id) => `${BASEURL}/project/${id}`,
+    edit: (id) => `${BASEURL}/project/edit/${id}`,
+    store: `${BASEURL}/project/store`,
+    update: (id) => `${BASEURL}/project/update/${id}`,
+  },
+
+  TEAM: {
+    search: (id, query) => `${BASEURL}/team/search/${id}?name=${query}`,
+    my_invites: `${BASEURL}/team/my_invites`,
+    invite: (id) => `${BASEURL}/team/invite/${id}`,
   },
 };
 

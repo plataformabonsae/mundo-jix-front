@@ -12,12 +12,14 @@ const MainImage = (props) => {
   return (
     <main className={styles.wrapper}>
       <div className={styles.image}>
-        <img src={data?.image || defaultImage} alt={data?.name} />
+        <img src={data?.files || defaultImage} alt={data?.name} />
       </div>
-      <Title color={"white"} className={styles.title}>
-        {data?.name || "..."}
-      </Title>
-      <div className={styles.logo}>
+      {!props.noName && (
+        <Title color={"white"} className={styles.title}>
+          {data?.name || "..."}
+        </Title>
+      )}
+      <div style={{ textAlign: props.logoPosition }} className={styles.logo}>
         <img src={props.logo || defaultLogo} alt={data?.name} />
       </div>
     </main>

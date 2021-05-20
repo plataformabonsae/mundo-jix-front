@@ -1,6 +1,8 @@
 @import 'utils/styles/colors.sass'
 
 .challenge
+  position: relative
+  z-index: 2
   padding:
     bottom: 36px
 
@@ -23,3 +25,16 @@
   > *
     margin: 0 12px
     flex: 33.33%
+
+.hasbackdrop
+  position: relative
+  &::before
+    content: ''
+    display: block
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: rgba($LIGHT_BLACK, .8)
+    z-index: 3

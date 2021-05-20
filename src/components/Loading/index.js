@@ -10,11 +10,12 @@ const Loading = ({ text }) => {
     const props = useSpring({ opacity: 1, from: { opacity: 0 }})
 
     return (
-        <section className={ styles.wrapper }>
+        // <section className={ styles.wrapper }>
             <animated.div style={ props } >
-                <img src={ logo } alt="Mundo Jix" />
+                {/* <img src={ logo } alt="Mundo Jix" /> */}
+                Carregando ...
             </animated.div>
-        </section>
+        // </section>
     )
 }
 

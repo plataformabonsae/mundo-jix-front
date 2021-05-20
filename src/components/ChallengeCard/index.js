@@ -1,16 +1,57 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import parse from "html-react-parser";
 
 import { Card } from "components/Card";
 import Button from "components/Button";
+import { MainImage } from "components/MainImage";
 import { Title, Text } from "components/Text";
 
 import * as colors from "utils/styles/Colors";
-// import styles from "./styles.module.sass";
+
+import cool from "assets/components/Challenge/cool.svg";
+
+import styles from "./styles.module.sass";
 
 const ChallengeCard = (props) => {
   return (
     <Card key={props.item.id} border noShadow>
+      {props.canSubscribe && (
+        <header className={styles.header}>
+          <Title color="white" style={{ weight: "bold", fontSize: 16 }}>
+            {props.item.name}
+          </Title>
+          <div className={styles.header__buttons}>
+            {/* <Button type={`outlineWhite`}>Favoritar</Button> */}
+            <Button
+              // to={`/desafios/${props.item.challenge_type}/${props.item.id}/inscricao`}
+              to={
+                !props.subscribed
+                  ? props.to
+                  : `/meus-desafios/${props.item.challenge_type}/${props.item.id}`
+              }
+              style={{ marginLeft: 12 }}
+              type={!props.subscribed ? `green` : `outlineWhite`}
+            >
+              {!props.subscribed ? (
+                "Participar"
+              ) : (
+                <>
+                  <img
+                    className={styles.cool}
+                    src={cool}
+                    alt="Participando do desafio"
+                  />
+                  Participando
+                </>
+              )}
+            </Button>
+          </div>
+        </header>
+      )}
+      <div style={{ margin: -20 }}>
+        <MainImage noName data={props.item} logoPosition={`right`} />
+      </div>
       <Text
         color={colors.MEDIUM_GRAY}
         size={12}
@@ -27,7 +68,7 @@ const ChallengeCard = (props) => {
       <Title size={18} style={{ margin: "12px 0" }}>
         {props.item.name}
       </Title>
-      <Text>{props.item.description}</Text>
+      <div>{parse(props.item.resume)}</div>
       <hr style={{ opacity: 0.5, margin: "12px 0" }} />
       <Text
         color={colors.LIGHT_BLACK}
@@ -65,15 +106,17 @@ const ChallengeCard = (props) => {
           justifyContent: "flex-end",
         }}
       >
-        <Button
-          style={{ color: colors.BLUE_1, fontSize: 14 }}
-          arrow
-          transparent
-          Tag={Link}
-          to={props.to}
-        >
-          Ver desafio
-        </Button>
+        {!props.noButton && (
+          <Button
+            style={{ color: colors.BLUE_1, fontSize: 14 }}
+            arrow
+            transparent
+            Tag={Link}
+            to={props.to}
+          >
+            Ver desafio
+          </Button>
+        )}
       </div>
     </Card>
   );

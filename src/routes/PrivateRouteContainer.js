@@ -4,6 +4,7 @@ import { Route } from "react-router-dom";
 
 import { Menu } from "components/Menu";
 import { Header } from "components/Header";
+import { ToastContainer } from "react-toastify";
 
 // import { useAuth } from 'utils/context/auth'
 
@@ -19,9 +20,14 @@ export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
       {...rest}
       render={(props) => (
         <>
-          <Menu user={user ? user : { name: "teste", last_name: "teste" }} />
-          <Header user={user ? user : { name: "teste", last_name: "teste" }} />
+          <Menu
+            user={user?.user ? user?.user : { name: "...", last_name: "..." }}
+          />
+          <Header
+            user={user?.user ? user?.user : { name: "...", last_name: "..." }}
+          />
           <Component {...props} />
+          <ToastContainer />
         </>
       )}
     />

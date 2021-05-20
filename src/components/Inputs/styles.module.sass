@@ -1,7 +1,6 @@
 @import 'utils/styles/colors'
 @import 'utils/styles/mixins'
 
-
 .input
     flex: 50%
     display: flex
@@ -16,7 +15,7 @@
         top: -7px + 12px
         z-index: 2
         display: inline-block
-        font: 
+        font:
             size: 10px
             weight: 600
         text-transform: uppercase
@@ -25,9 +24,9 @@
         padding: 0 4px
         background: $WHITE
 
-
     input,
     textarea
+        +borderRadius
         resize: none
         // flex: 1
         // width: 100%
@@ -37,7 +36,6 @@
         &[type='password'],
         &[type='email'],
         &[type='textarea'],
-            +borderRadius
             display: block
             width: 100%
             padding: 12px
@@ -79,8 +77,6 @@
         color: $MEDIUM_BLACK
         // letter-spacing: 2px
 
-
-
 .wrapper
     display: flex
     flex-wrap: wrap
@@ -93,6 +89,8 @@
     text-align: center
     margin: 12px 0
     label
+        overflow: hidden
+        position: relative
         display: inline-flex
         justify-content: center
         align-items: center
@@ -102,12 +100,22 @@
         background: $LIGHT_GRAY
         border-radius: 100%
         border: none
-        img
-            display: block
-        span
+        cursor: pointer
 
+    &__image
+        position: absolute
+        top: 0
+        right: 0
+        height: 100%
+        width: 100%
+        object-fit: cover
+        opacity: .3
 
-    
+    &__content
+        text-align: center
+        position: relative
+        z-index: 4
+
 .addGroup
     cursor: pointer
     width: 100%
@@ -140,7 +148,6 @@
     text-decoration: underline
     color: $DARK_GRAY
 
-
 .upload
     display: flex
     width: 100%
@@ -156,7 +163,6 @@
     button
         margin:
             right: 12px
-
 
 .search
     cursor: pointer

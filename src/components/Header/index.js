@@ -14,8 +14,8 @@ const Header = ({ name, notifications, invites, user }) => {
           Boas vindas,
         </Text>
         <Text size={18} weight={"bold"} className={styles.name}>{`${
-          user.name
-        } ${user.last_name ? user.last_name : ""}`}</Text>
+          user?.name || user?.data?.name
+        } ${user?.last_name || user?.data?.last_name}`}</Text>
       </div>
       <div className={styles.alerts}>
         <Invites invites={invites} />
@@ -25,8 +25,12 @@ const Header = ({ name, notifications, invites, user }) => {
   );
 };
 
-const SubHeader = ({ children }) => {
-  return <header className={styles.subheader}>{children}</header>;
+const SubHeader = ({ children, style }) => {
+  return (
+    <header style={style} className={styles.subheader}>
+      {children}
+    </header>
+  );
 };
 
 export { Header, SubHeader };

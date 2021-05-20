@@ -4,8 +4,11 @@
   display: flex
   padding: 36px
   align-items: flex-start
+  justify-content: center
 
 .card
+  position: relative
+  z-index: 4
   max-width: 620px
   min-width: 550px
   margin:
@@ -14,6 +17,9 @@
 .title
   text-transform: uppercase
   letter-spacing: 2px
+  &__modal
+    @extend .title
+    color: $MEDIUM_GRAY
   &__wrapper
     display: flex
     align-items: center
@@ -28,5 +34,28 @@
   text-transform: capitalize
 
 .content
+  position: relative
   margin:
     top: 12px
+  z-index: 4
+  // color: $MEDIUM_GRAY !important
+
+.resume
+  &__list
+    &__item
+      display: inline-block
+      list-style-type: none
+      width: 50%
+      text-transform: uppercase
+
+.info
+  text-align: left
+  margin:
+    bottom: 60px
+
+  &__list
+    list-style-type: none
+    padding: 6px 0
+    font:
+      weight: bold
+    text-transform: uppercase

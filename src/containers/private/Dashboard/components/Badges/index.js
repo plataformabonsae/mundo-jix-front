@@ -32,11 +32,11 @@ const Badges = () => {
               <SwiperSlide>
                 <Chip
                   insignia
-                  title={"Top Cadastro"}
-                  desc={"Complete seu cadastro."}
-                  maxValue={500}
-                  currentValue={125}
-                  valueText={`${125}/${500}`}
+                  title={item?.title}
+                  desc={item?.description}
+                  maxValue={item?.points}
+                  currentValue={item?.pivot?.points}
+                  valueText={`${item?.pivot?.points}/${item?.points}`}
                 />
               </SwiperSlide>
             ))}

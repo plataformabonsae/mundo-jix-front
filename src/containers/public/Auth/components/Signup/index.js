@@ -19,17 +19,13 @@ const Email = ({ title, desc, type }) => {
   const { register, errors, handleSubmit } = useForm();
 
   const dispatch = useDispatch();
-  const { data: user } = useSelector((state) => state.login);
+  const { data: user } = useSelector((state) => state.user);
   const { error, loading } = useSelector((state) => state.token);
 
   const onSubmit = (data) => {
-    console.log(data);
     dispatch(newuser(type, data))
       .catch((error) => console.log(error))
-      .then(() => user);
-    if (user) {
-      history.push(`/join/${type}/terms`);
-    }
+      .then(() => history.push(`/join/${type}/terms`));
   };
 
   return (

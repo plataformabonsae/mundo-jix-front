@@ -11,7 +11,7 @@ const Profile = ({ location, image, name }) => {
     <>
       <div className={styles.profile}>
         <div className={styles.image}>
-          <img src={image ? image : profile} alt={name} />
+          <img src={image !== "undefined" ? image : profile} alt={name} />
           <T.Text weight="bold" size={12} className={styles.location}>
             {location}º
           </T.Text>

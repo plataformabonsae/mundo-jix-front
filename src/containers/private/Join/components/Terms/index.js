@@ -65,8 +65,8 @@ const Terms = ({ children, type, id = 1 }) => {
               Você prefere terminar o cadastro agora ou depois?
             </div>
             <Button
-              Tag={`button`}
-              onClick={() => history.go(0)}
+              // Tag={`button`}
+              to={`/dashboard`}
               type="outlineWhite"
             >
               Completar depois

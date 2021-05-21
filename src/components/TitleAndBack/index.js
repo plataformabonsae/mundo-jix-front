@@ -1,16 +1,22 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { Title, Text } from "components/Text";
+
+import { removeLastPath } from "utils/etc";
 
 import styles from "./styles.module.sass";
 
 const TitleAndBack = (props) => {
+  const location = useLocation();
   const { data, to, noBack } = props;
   return (
     <>
       {!noBack && (
-        <Link className={styles.goback} to={"/"}>
+        <Link
+          className={styles.goback}
+          to={props.to || removeLastPath(location.pathname)}
+        >
           Voltar
         </Link>
       )}

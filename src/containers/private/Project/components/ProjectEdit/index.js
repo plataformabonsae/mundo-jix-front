@@ -17,23 +17,25 @@ import {
 
 import { sanitize } from "utils/etc";
 
-import { get, post } from "services/project";
+import { get, post, update } from "services/project";
 
 import styles from "./styles.module.sass";
 
 const ProjectEdit = (props) => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [countResume, setCountResume] = useState(0);
+  const { data: usertype } = useSelector((state) => state.usertype);
+  const { data: project, loading } = useSelector((state) => state.project);
+  const [countResume, setCountResume] = useState(
+    props?.data?.resume?.length || 0
+  );
   const [materials, setMaterials] = useState([]);
   const [links, setLinks] = useState([]);
   const { register, errors, control, handleSubmit } = useForm();
-  const { data: usertype } = useSelector((state) => state.usertype);
-  const { data, loading } = useSelector((state) => state.project);
 
   // useEffect(() => {
-  //   dispatch(get());
-  // }, [dispatch]);
+  //   dispatch(get(usertype, { challenge_id: id }));
+  // }, [dispatch, usertype, id]);
 
   const handleCountChar = (e) => {
     setCountResume(e.target.value.length);
@@ -66,12 +68,39 @@ const ProjectEdit = (props) => {
   ];
 
   const onSubmit = async (data) => {
-    // console.log(sanitize(data));
-    console.log(data);
-    const req = dispatch(post(usertype, data));
-    await req
-      .then((res) => console.log(res, "res"))
-      .catch((err) => console.log(err, "erro"));
+    const { challenge_id, challenge, description, links, name, resume } = data;
+    if (props.edit) {
+      const req = dispatch(
+        update(usertype, {
+          challenge_id,
+          challenge,
+          description,
+          links: [{ link: "", type: "" }],
+          links_edit: [{ link: "", type: "" }],
+          name,
+          resume,
+          _method: "PUT",
+        })
+      );
+      await req
+        .then((res) => console.log(res, "res"))
+        .catch((err) => console.log(err, "erro"));
+    } else {
+      const req = dispatch(
+        post(usertype, {
+          challenge_id,
+          challenge,
+          description,
+          // links: [{ link: "", type: "" }],
+          // links_edit: [{ link: "", type: "" }],
+          name,
+          resume,
+        })
+      );
+      await req
+        .then((res) => console.log(res, "res"))
+        .catch((err) => console.log(err, "erro"));
+    }
   };
 
   return (
@@ -79,6 +108,12 @@ const ProjectEdit = (props) => {
       <input
         type="hidden"
         name="challenge_id"
+        value={id}
+        ref={register({ required: true })}
+      />
+      <input
+        type="hidden"
+        name="challenge"
         value={id}
         ref={register({ required: true })}
       />
@@ -93,7 +128,7 @@ const ProjectEdit = (props) => {
           <InputFile
             disabled={loading}
             ref={register()}
-            type="text"
+            // type="text"
             name="thumbnail"
             errors={errors}
             errorMessage="Selecione uma imagem para a capa"
@@ -105,6 +140,7 @@ const ProjectEdit = (props) => {
         <label className={styles.label}>
           <Title size={18}>Título da solução</Title>
           <Input
+            defaultValue={props?.data?.name}
             disabled={loading}
             ref={register({ required: true })}
             type="text"
@@ -119,12 +155,13 @@ const ProjectEdit = (props) => {
         <label className={styles.label}>
           <Title size={18}>Resumo sobre o projeto</Title>
           <Textarea
+            defaultValue={props?.data?.resume}
             disabled={loading}
             ref={register({ required: true })}
             name="resume"
             onChange={handleCountChar}
             errors={errors}
-            maxlength="140"
+            maxLength="140"
             rows="3"
             errorMessage="Escreva aqui o que é o seu projeto"
             placeholder="Escreva aqui o que é o seu projeto"
@@ -136,10 +173,10 @@ const ProjectEdit = (props) => {
         <label className={styles.label}>
           <Title size={18}>Descreva sua solução</Title>
           <Textarea
+            defaultValue={props?.data?.description}
             disabled={loading}
-            ref={register({ required: true })}
+            ref={register()}
             name="description"
-            onChange={handleCountChar}
             errors={errors}
             rows="14"
             errorMessage="Descreva sua solução"
@@ -151,8 +188,9 @@ const ProjectEdit = (props) => {
         <label className={styles.label}>
           <Title size={18}>Pitch</Title>
           <Input
+            defaultValue={props?.data?.link}
             disabled={loading}
-            ref={register({ required: true })}
+            ref={register()}
             type="text"
             name="link"
             errors={errors}

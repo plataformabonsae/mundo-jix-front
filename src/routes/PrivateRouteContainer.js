@@ -13,18 +13,16 @@ import { ToastContainer } from "react-toastify";
 export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
   // const location = useLocation();
   // const { data: usertype } = useSelector((state) => state.usertype);
-  const { data: user } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
 
   return (
     <Route
       {...rest}
       render={(props) => (
         <>
-          <Menu
-            user={user?.user ? user?.user : { name: "...", last_name: "..." }}
-          />
+          <Menu user={user?.data?.user ? user?.data?.user : user?.data?.data} />
           <Header
-            user={user?.user ? user?.user : { name: "...", last_name: "..." }}
+            user={user?.data?.user ? user?.data?.user : user?.data?.data}
           />
           <Component {...props} />
           <ToastContainer />

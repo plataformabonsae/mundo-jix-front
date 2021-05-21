@@ -35,11 +35,13 @@ const Terms = ({ children, type, id = 1 }) => {
     accepted ? (accepted = 1) : (accepted = 0);
     await dispatch(
       edit(type, {
-        name: user.name,
-        email: user.email,
+        name: user.user.name,
+        email: user.user.email,
         accepted_terms: accepted,
       })
-    ).then(() => setAccept(data.accepted_terms));
+    )
+      .then(() => setAccept(data.accepted_terms))
+      .then(() => window.localStorage.setItem("accepted_terms", 1));
   };
 
   return (

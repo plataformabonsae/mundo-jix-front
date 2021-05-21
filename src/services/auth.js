@@ -60,9 +60,36 @@ export const editFetch =
   async (dispatch) => {
     const formData = new FormData();
     for (var key in body) {
-      formData.append(key, body[key]);
-      console.log(formData.values());
+      if (key === "phones") {
+        formData.append(key, JSON.stringify(body[key]));
+        console.log(key, JSON.stringify(body[key]));
+      } else {
+        formData.append(key, body[key]);
+      }
     }
+    // function buildFormData(formData, data, parentKey) {
+    //   if (
+    //     data &&
+    //     typeof data === "object" &&
+    //     !(data instanceof Date) &&
+    //     !(data instanceof File) &&
+    //     !(data instanceof Blob)
+    //   ) {
+    //     Object.keys(data).forEach((key) => {
+    //       buildFormData(
+    //         formData,
+    //         data[key],
+    //         parentKey ? `${parentKey}[${key}]` : key
+    //       );
+    //     });
+    //   } else {
+    //     const value = data == null ? "" : data;
+
+    //     formData.append(parentKey, value);
+    //   }
+    // }
+    // buildFormData(formData, body);
+
     dispatch(UserActions.userUpdate());
     const res = axios({
       url,

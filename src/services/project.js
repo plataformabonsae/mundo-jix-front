@@ -24,6 +24,7 @@ export const get =
         dispatch(ProjectActions.projectSuccess(response?.data?.data))
       )
       .catch((error) => dispatch(ProjectActions.projectFailure(error)));
+    return res;
   };
 
 export const post =
@@ -72,9 +73,10 @@ export const update =
     }
     const res = axios({
       url: url(body.challenge_id),
+      method: "post",
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
       },
       data: formData,
     });

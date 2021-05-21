@@ -1,4 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import {
+  useSpring,
+  // useSprings,
+  // useTransition,
+  useTrail,
+  animated,
+  // useChain,
+  // config,
+} from "react-spring";
 
 import { Card } from "components/Card";
 import { Title, Text } from "components/Text";
@@ -8,21 +17,35 @@ import close from "assets/components/Modal/close.svg";
 import styles from "./styles.module.sass";
 
 const Dialog = (props) => {
+  const animatedStyles = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+  });
   // console.log(new RegExp("[^|]*$"));
 
   return (
     <>
-      <section className={styles.modal}>
-        <Card border className={styles.card}>
+      <animated.section style={animatedStyles} className={styles.modal}>
+        <Card
+          Tag={animated.section}
+          border
+          className={styles.card}
+          style={{ ...props.style }}
+        >
           {props.header && (
             <div className={styles.header}>
-              <Title style={{ textTransform: "capitalize" }}>{props.header}</Title>
+              <Title style={{ textTransform: "capitalize" }}>
+                {props.header}
+              </Title>
               {props.handleClose && (
                 // <section className={styles.title}>
                 //   <Title size={28}>{props.title}</Title>
-                  <span onClick={() => props.handleClose()} className={styles.close}>
-                    <img src={close} alt="Fechar modal" />
-                  </span>
+                <span
+                  onClick={() => props.handleClose()}
+                  className={styles.close}
+                >
+                  <img src={close} alt="Fechar modal" />
+                </span>
                 // </section>
               )}
             </div>
@@ -40,7 +63,7 @@ const Dialog = (props) => {
           {props.children}
         </Card>
         <div className={styles.shadow}></div>
-      </section>
+      </animated.section>
     </>
   );
 };

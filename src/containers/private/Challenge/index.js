@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Project } from "containers/private/Project";
+import { Trilha } from "containers/private/Trilha";
 
 import { MainImage } from "components/MainImage";
 import { ProfileCard } from "components/ProfileCard";
@@ -213,7 +214,10 @@ const Challenge = (props) => {
           )}
         </section>
       )}
-      {page === "projeto" && <Project data={data} />}
+      {owned && data && (page === "projeto" || !page) && (
+        <Project data={data} />
+      )}
+      {owned && data && (page === "trilha" || !page) && <Trilha />}
       {loading && <Loading />}
     </>
   );

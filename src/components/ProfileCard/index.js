@@ -16,7 +16,7 @@ const ProfileCard = (props) => {
   const { data } = props;
   return (
     <Card
-      border
+      border={props.border}
       noShadow={!props.small && true}
       className={styles.card}
       style={!props.small && { paddingTop: 42, marginTop: 30 }}

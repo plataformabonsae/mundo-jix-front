@@ -21,6 +21,7 @@ import { Join } from "containers/private/Join";
 import { Judges } from "containers/private/Judges";
 import { Project } from "containers/private/Project";
 import { Subscription } from "containers/private/Subscription";
+import { TrilhaWatch } from "containers/private/TrilhaWatch";
 
 // import { Loading } from "components/Loading";
 import { ModalPage } from "components/ModalPage";
@@ -55,6 +56,9 @@ const RoutesConfig = () => {
               <>
                 {(usertype === "talento" || usertype === "empresa") && (
                   <>
+                    {/* Join */}
+                    <Route path="/join/:type/:action" component={Join} />
+
                     {/* Dashboard */}
                     <PrivateRouteContainer
                       path="/dashboard/"
@@ -71,6 +75,11 @@ const RoutesConfig = () => {
                       exact
                       path="/meus-desafios/:type/:id/:page"
                       component={Challenge}
+                    />
+                    <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/trilha/:trilha_id"
+                      component={TrilhaWatch}
                     />
                     <Route
                       exact

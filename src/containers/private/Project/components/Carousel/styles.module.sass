@@ -56,3 +56,68 @@
 .feedbacks
   max-height: 600px
   overflow: auto
+
+.forcefont
+  *
+    font:
+      family: inherit !important
+
+.integrant
+  display: flex
+  justify-content: space-between
+
+  &__content
+    display: flex
+    align-items: center
+
+  &__image
+    position: relative
+    margin:
+      right: 12px
+    &__profile
+      height: 60px
+      width: 60px
+      object-fit: cover
+
+    &__keeper
+      position: absolute
+      height: 20px
+      width: auto
+      top: -6px
+      right: 0
+
+  &__buttons
+    margin: -32px
+    margin:
+      top: 32px
+    display: flex
+    // width: 100%
+    text-align: center
+
+  &__button
+    flex: 1
+    padding: 12px
+    text-transform: uppercase
+    letter-spacing: 1px
+    cursor: pointer
+    font:
+      weight: bold
+
+    border: 1px solid $LIGHT_GRAY
+
+.avaliacao
+  &__content
+    display: flex
+    width: 100%
+
+  &__card
+    background: rgb(249, 250, 252) !important
+    display: flex
+    justify-content: space-between
+
+  &__grades
+    flex: 1
+    padding: 32px
+  &__total
+    flex: 1
+    padding: 32px

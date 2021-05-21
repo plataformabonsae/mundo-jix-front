@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 import { TabFlat } from "components/Tabs";
 import { SubHeader } from "components/Header";
-import { Layout } from "components/Layout";
+// import { Layout } from "components/Layout";
 import { InfoProfile } from "components/InfoProfile";
 
 // import styles from './styles.module.sass'
@@ -32,9 +32,9 @@ const Profile = () => {
         </>
       )}
 
-      <Layout>
-        <InfoProfile type={usertype} noShadow hasPassword />
-      </Layout>
+      {/* <Layout> */}
+      <InfoProfile type={usertype} noShadow hasPassword dontRedirect />
+      {/* </Layout> */}
     </>
   );
 };

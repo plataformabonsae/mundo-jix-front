@@ -57,9 +57,9 @@ const MyChallenges = (props) => {
       <section className={styles.container}>
         <Title className={styles.title}>Meus Desafios</Title>
         <section className={styles.content}>
-          {loading && !data && (<Loading />)}
+          {loading && !data && <Loading />}
           {type === "autodesafio" &&
-            autodesafio.length &&
+            !!autodesafio.length &&
             autodesafio?.map((item, index) => (
               <ChallengeCard
                 // canSubscribe
@@ -69,8 +69,12 @@ const MyChallenges = (props) => {
                 to={`/meus-desafios/${item.challenge_type}/${item.id}`}
               />
             ))}
+          {type === "autodesafio" && !autodesafio.length && (
+            <>Sem Autodesafios cadastrados.</>
+          )}
+
           {type === "in_company" &&
-            inCompany.length &&
+            !!inCompany.length &&
             inCompany?.map((item, index) => (
               <ChallengeCard
                 // canSubscribe
@@ -80,9 +84,12 @@ const MyChallenges = (props) => {
                 to={`/meus-desafios/${item.challenge_type}/${item.id}`}
               />
             ))}
+          {type === "in_company" && !inCompany.length && (
+            <>Sem desafios In Company cadastrados</>
+          )}
 
           {type === "ultradesafio" &&
-            ultradesafio.length &&
+            !!ultradesafio.length &&
             ultradesafio?.map((item, index) => (
               <ChallengeCard
                 // canSubscribe
@@ -92,6 +99,9 @@ const MyChallenges = (props) => {
                 to={`/meus-desafios/${item.challenge_type}/${item.id}`}
               />
             ))}
+          {type === "ultradesafio" && !ultradesafio.length && (
+            <>Sem Ultradesafios cadastrados</>
+          )}
         </section>
       </section>
     </>

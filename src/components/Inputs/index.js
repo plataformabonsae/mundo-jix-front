@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
+import Cropper from "react-easy-crop";
 import { Controller } from "react-hook-form";
 import InputMask from "react-input-mask";
 import Select from "react-select";
 
 import { Text } from "components/Text";
+import Button from "components/Button";
+import { ButtonGroup } from "components/ButtonGroup";
+import { Dialog } from "components/Dialog";
 import { BASEURL } from "utils/api";
 
 import styles from "./styles.module.sass";
+
+import { cropImage, blobToFile } from "utils/etc";
 
 import Photo from "assets/components/Input/PhotoUpload.svg";
 import search from "assets/components/Input/search.svg";
@@ -190,6 +196,7 @@ const SelectInput = React.forwardRef((props, ref) => {
     defaultValue,
     // options,
     // isMulti,
+    options,
   } = props;
   return (
     <label
@@ -207,7 +214,8 @@ const SelectInput = React.forwardRef((props, ref) => {
         {...props}
         as={
           <Select
-            // defaultValue={defaultValue}
+            value={options.value}
+            defaultValue={defaultValue}
             styles={{
               placeholder: (provided, state) => ({
                 ...provided,
@@ -331,52 +339,140 @@ const Checkbox = React.forwardRef((props, ref) => {
 });
 
 const PhotoUpload = React.forwardRef((props, ref) => {
-  const {
-    file,
-    name,
-    // value,
-    // placeholder,
-    onChange,
-    // onClick,
-    // children,
-    // checked,
-    image,
-  } = props;
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [photoSelected, setPhotoSelected] = useState();
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const { file, name, onChange, upload, image, dialog } = props;
 
-  //   const blob = new Blob(image);
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      return;
+    } else {
+      const url = URL.createObjectURL(file);
+      setPhotoSelected(url);
+      // var reader = new FileReader();
+      // reader.readAsDataURL(file);
+      // reader.onloadend = function () {
+      //   setPhotoSelected(reader.result);
+      // };
+    }
+  };
 
-  //   const reader = new FileReader();
-  //   const redable = reader.readAsDataURL(blob);
-  //   // const handleClick = (e) => {
-  //   //     e.preventDefault()
-  //   console.log(redable);
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
 
-  // }
+  const showCroppedImage = useCallback(async () => {
+    try {
+      const croppedImage = await cropImage(photoSelected, croppedAreaPixels);
+      // const file = new File([croppedImage], "profile.png", {
+      //   type: "image/jpg",
+      //   lastModified: new Date().getTime(),
+      // });
+      // console.log("donee", file);
+      // console.log("donee", blobToFile(blob, "asds.svg"));
+      // setCroppedImage(file);
+      upload(croppedImage);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [croppedAreaPixels, photoSelected, upload]);
 
   return (
-    <div className={styles.PhotoUpload}>
-      <label>
-        <img
-          className={styles.PhotoUpload__image}
-          src={image ? BASEURL + image : null}
-          alt=""
-        />
-        <div className={styles.PhotoUpload__content}>
-          <img src={file ? file : Photo} alt="Upload de foto" />
-          <Text tag="span" size="10" weight="bold">
-            Inserir foto
-          </Text>
+    <>
+      <div className={styles.PhotoUpload} onClick={() => props.onClick()}>
+        <div className={styles.PhotoUpload__label}>
+          <img
+            className={styles.PhotoUpload__image}
+            src={image ? BASEURL + image : null}
+            alt=""
+          />
+          <div className={styles.PhotoUpload__content}>
+            <img src={file ? file : Photo} alt="Upload de foto" />
+            <Text tag="span" size="10" weight="bold">
+              {image ? "Mudar foto" : "Inserir foto"}
+            </Text>
+          </div>
         </div>
-        <input
-          accept="image/*"
-          name={name}
-          ref={ref}
-          type="file"
-          style={{ display: "none" }}
-          onChange={onChange}
-        />
-      </label>
-    </div>
+      </div>
+      {dialog && (
+        <Dialog
+          style={{ maxWidth: "unset" }}
+          header={"Selecione sua foto"}
+          handleClose={props.onClick}
+        >
+          <Text style={{ marginBottom: 12 }}>
+            Clique abaixo para selecionar
+          </Text>
+          <input
+            accept="image/*"
+            type="file"
+            // style={{ display: "none" }}
+            onChange={handleImage}
+          />
+          <input
+            accept="image/*"
+            name={name}
+            ref={ref}
+            type="file"
+            // value={croppedImage}
+            style={{ display: "none" }}
+            onChange={handleImage}
+          />
+          {photoSelected && (
+            <>
+              <div className={styles.PhotoUpload__crop}>
+                <Cropper
+                  image={photoSelected}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1 / 1}
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                />
+              </div>
+              <div className={styles.PhotoUpload__buttons}>
+                <div className={styles.PhotoUpload__zoom}>
+                  <Button
+                    style={{ fontSize: 14 }}
+                    Tag="span"
+                    onClick={() => setZoom((prev) => prev + 0.3)}
+                    // transparent
+                    type="transparent"
+                  >
+                    Aumentar zoom
+                  </Button>
+                  <Button
+                    style={{ fontSize: 14 }}
+                    Tag="span"
+                    onClick={() =>
+                      setZoom((prev) => (prev > 1 ? prev - 0.3 : prev))
+                    }
+                    // transparent
+                    type="transparent"
+                  >
+                    Diminuir zoom
+                  </Button>
+                </div>
+                <Button
+                  style={{ marginTop: 12 }}
+                  Tag="span"
+                  onClick={() => showCroppedImage()}
+                  // transparent
+                  type="green"
+                >
+                  Enviar
+                </Button>
+              </div>
+            </>
+          )}
+        </Dialog>
+      )}
+    </>
   );
 });
 

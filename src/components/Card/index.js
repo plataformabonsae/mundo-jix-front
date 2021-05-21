@@ -4,6 +4,7 @@ import styles from "./styles.module.sass";
 import * as color from "utils/styles/Colors";
 
 const Card = ({
+  Tag = "section",
   children,
   style,
   border,
@@ -12,7 +13,7 @@ const Card = ({
   className,
   onClick,
 }) => (
-  <section
+  <Tag
     onClick={onClick}
     className={`${styles.card} ${className ? className : ""}`}
     style={{
@@ -23,7 +24,7 @@ const Card = ({
     }}
   >
     {children}
-  </section>
+  </Tag>
 );
 
 const CardTabs = ({ children }) => (

@@ -5,11 +5,17 @@ import SwiperCore, { Navigation } from "swiper/core";
 import YouTube from "react-youtube";
 
 import { Card } from "components/Card";
+import { ProfileCard } from "components/ProfileCard";
+import { Dialog } from "components/Dialog";
 import { FeedbackCard } from "components/FeedbackCard";
 import { Title, Text } from "components/Text";
 import { TabFlat } from "components/Tabs";
-import { Dot } from "components/Dot";
+// import { Dot } from "components/Dot";
 import Button from "components/Button";
+import { ButtonGroup } from "components/ButtonGroup";
+
+import profileDefault from "assets/components/ProfileCard/default.png";
+import guardia from "assets/components/ProfileCard/guardia.svg";
 
 import chrevron from "assets/components/Project/chevron.svg";
 
@@ -50,6 +56,13 @@ const Carousel = (props) => {
             onClick={() => handleTabs("meu-projeto")}
           >
             Meu projeto
+          </TabFlat>
+          <TabFlat
+            active={activeTab === "equipe"}
+            Tag="span"
+            onClick={() => handleTabs("equipe")}
+          >
+            Equipe
           </TabFlat>
           <TabFlat
             active={activeTab === "feedbacks"}
@@ -173,13 +186,26 @@ const Carousel = (props) => {
                 {data?.name}
               </Title>
               <div className={styles.desc__title}>Descrição</div>
-              <Text>{parse(data?.description)}</Text>
+              <div className={styles.forcefont}>
+                {data?.description && parse(data?.description)}
+              </div>
             </section>
             <section className={styles.downloads}>
               <Title size={18}>Materiais anexados</Title>
             </section>
           </div>
         </Card>
+      )}
+      {activeTab === "equipe" && (
+        <section className={styles.equipe}>
+          <Card noShadow border>
+            <Title style={{ marginBottom: 32 }}>Time</Title>
+            <TeamIntegrant keeper />
+            <TeamIntegrant />
+            <TeamIntegrant />
+            <TeamIntegrant />
+          </Card>
+        </section>
       )}
       {activeTab === "feedbacks" && (
         <section className={styles.feedbacks}>
@@ -189,8 +215,150 @@ const Carousel = (props) => {
           <FeedbackCard buttonText={"Visualizar"} />
         </section>
       )}
+      {activeTab === "avaliacao" && (
+        <section className={styles.avaliacao}>
+          <Card noShadow border>
+            <section className={styles.avaliacao__content}>
+              <section className={styles.avaliacao__grades}>
+                <Title
+                  size={16}
+                  style={{
+                    textAlign: "center",
+                    marginBottom: 24,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Notas
+                </Title>
+                <Card className={styles.avaliacao__card} noShadow border>
+                  <Title>Materia</Title>
+                  <Title>6</Title>
+                </Card>
+                <Card className={styles.avaliacao__card} noShadow border>
+                  <Title>Materia</Title>
+                  <Title>6</Title>
+                </Card>
+                <Card className={styles.avaliacao__card} noShadow border>
+                  <Title>Materia</Title>
+                  <Title>6</Title>
+                </Card>
+                <Card className={styles.avaliacao__card} noShadow border>
+                  <Title>Materia</Title>
+                  <Title>6</Title>
+                </Card>
+                <Card className={styles.avaliacao__card} noShadow border>
+                  <Title>Materia</Title>
+                  <Title>6</Title>
+                </Card>
+              </section>
+              <section className={styles.avaliacao__total}>
+                <Title
+                  size={16}
+                  style={{
+                    textAlign: "center",
+                    marginBottom: 24,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Média
+                </Title>
+                <Title
+                  style={{ textAlign: "center", marginBottom: 24 }}
+                  size={180}
+                >
+                  6
+                </Title>
+                <Title
+                  size={16}
+                  style={{
+                    color: colors.MEDIUM_GRAY,
+                    textAlign: "center",
+                    marginBottom: 24,
+                  }}
+                >
+                  Feedback
+                </Title>
+                <Text>
+                  Etiam et sapien a massa lacinia ultricies. Morbi posuere
+                  ultricies vulputate. Nulla pellentesque laoreet nunc, dictum.
+                  Etiam et sapien a massa lacinia ultricies. Morbi posuere
+                  ultricies vulputate. Nulla pellentesque laoreet nunc, dictum.
+                  Morbi posuere ultricies vulputate. Nulla pellentesque laoreet
+                  nunc, dictum.
+                </Text>
+              </section>
+            </section>
+          </Card>
+        </section>
+      )}
     </section>
   );
 };
 
+const TeamIntegrant = (props) => {
+  const [modal, setModal] = useState(false);
+
+  const handleModal = () => {
+    setModal((prev) => !prev);
+  };
+
+  return (
+    <>
+      <Card border noShadow className={styles.integrant}>
+        <div className={styles.integrant__content}>
+          <div className={styles.integrant__image}>
+            <img
+              className={styles.integrant__image__profile}
+              src={profileDefault}
+              alt={"Integrante do time"}
+            />
+            {props.keeper && (
+              <img
+                className={styles.integrant__image__keeper}
+                src={guardia}
+                alt={"Integrante do time"}
+              />
+            )}
+          </div>
+          <div>
+            <Title size={16}>Nome e sobrenome</Title>
+            <Text size={14}>
+              Skill Um • Skill Dois • Skill Três • Skill Quatro
+            </Text>
+          </div>
+        </div>
+        <Button
+          onClick={() => handleModal()}
+          Tag={"button"}
+          type={"transparent"}
+        >
+          Ver mais
+        </Button>
+      </Card>
+      {modal && (
+        <Dialog header={"Informações do integrante"} handleClose={handleModal}>
+          <div style={{ overflow: "initial" }}>
+            <ProfileCard border={false} />
+          </div>
+          <div className={styles.integrant__buttons}>
+            <span
+              className={styles.integrant__button}
+              style={{ fontSize: 12, color: colors.LIGHT_BLACK }}
+              onClick={() => handleModal()}
+            >
+              Tornar Guardião
+            </span>
+            <span
+              onClick={() => handleModal()}
+              className={styles.integrant__button}
+              style={{ fontSize: 12, color: colors.ERROR }}
+            >
+              Excluir participante
+            </span>
+          </div>
+        </Dialog>
+      )}
+    </>
+  );
+};
 export { Carousel };

@@ -108,7 +108,7 @@ const Presentation = (props) => {
                 )}
               </ul>
               <div style={{ display: "flex", justifyContent: "center" }}>
-                {!buttonContent && <Button type={"outline"}>Favoritar</Button>}
+                {/* {!buttonContent && <Button type={"outline"}>Favoritar</Button>} */}
                 <Button
                   Tag={buttonContent ? Link : "button"}
                   to={`${

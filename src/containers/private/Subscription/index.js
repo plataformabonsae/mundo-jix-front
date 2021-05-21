@@ -29,13 +29,12 @@ const Subscription = (props) => {
   const subscribed = useSelector((state) => state.subscribeChallenge);
   const { data } = useSelector((state) => state.challenges);
   const { control, register, errors, handleSubmit } = useForm();
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: "invites", // unique name for your Field Array
-      // keyName: "id", default to "id", you can change the key name
-    }
-  );
+  // const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+  const { fields, append } = useFieldArray({
+    control,
+    name: "invites", // unique name for your Field Array
+    // keyName: "id", default to "id", you can change the key name
+  });
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -102,7 +101,7 @@ const Subscription = (props) => {
           `/meus-desafios/${currentChallenge?.challenge_type}/${currentChallenge?.id}`
         )
       )
-      .catch((err) => console.log(err, "não enviado"));
+      .catch((err) => console.log(err));
   };
 
   const onSubmit = async (data) => {
@@ -132,10 +131,16 @@ const Subscription = (props) => {
 
   return (
     <section className={styles.wrapper}>
-      <TitleAndBack
-        data={currentChallenge}
-        to={`/desafios/${currentChallenge?.challenge_type}`}
-      />
+      {!(step === "convidar") && (
+        <TitleAndBack
+          data={currentChallenge}
+          to={
+            (step === "1" && `/desafios/${currentChallenge?.challenge_type}`) ||
+            (step === "2" &&
+              `/desafios/${currentChallenge?.challenge_type}/inscricao/${currentChallenge?.id}/1`)
+          }
+        />
+      )}
       <div className={styles.title__container}>
         <Title size={28} className={styles.title}>
           {step === "1" && "Como será sua participação?"}

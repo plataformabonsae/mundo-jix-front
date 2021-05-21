@@ -2,7 +2,7 @@ import React, { useState } from "react";
 // import { toast } from 'react-toastify'
 import { useForm } from "react-hook-form";
 import { cnpj } from "cpf-cnpj-validator";
-// import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Card } from "components/Card";
 import { Title } from "components/Text";
@@ -33,6 +33,7 @@ const Pessoal = ({ action, type, noShadow, finalRoute, hasPassword }) => {
   const dispatch = useDispatch();
   const { data: user } = useSelector((state) => state.login);
   // const { data: profile, loading } = useSelector((state) => state.profile);
+  const { data: usertype } = useSelector((state) => state.usertype);
   const { data: cepData } = useSelector((state) => state.cep);
 
   const { register, errors, control, handleSubmit } = useForm();
@@ -46,7 +47,7 @@ const Pessoal = ({ action, type, noShadow, finalRoute, hasPassword }) => {
     console.log(name, last_name, cpf, birthdate, { email: user.email });
     // console.log(file)
     await dispatch(
-      edit(type, {
+      edit(usertype, {
         file,
         email: user.email,
         name,

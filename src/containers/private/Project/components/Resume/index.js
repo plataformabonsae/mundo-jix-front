@@ -16,9 +16,11 @@ const Resume = (props) => {
       <Card className={styles.card} style={{ padding: 0 }} border noShadow>
         <img src={data?.image || defaultImage} alt={data?.name} />
         <div className={styles.content}>
-          <Text className={styles.status}>{"Em desenvolvimento"}</Text>
+          {/* <Text className={styles.status}>{"Em desenvolvimento"}</Text> */}
           <Title className={styles.title}>{data?.name}</Title>
-          <Text>{parse(data?.description)}</Text>
+          <div className={styles.forcefont}>
+            {data?.resume ? parse(data?.resume) : ""}
+          </div>
         </div>
       </Card>
     </section>

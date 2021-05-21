@@ -32,10 +32,12 @@ const Project = (props) => {
   useEffect(() => {
     dispatch(get(usertype, { challenge_id: id }))
       .then((res) => {
-        setHasProject(true);
+        console.log(res);
+        (res.data.data.project || res.data.data.challenge_id) &&
+          setHasProject(true);
       })
       .catch((err) => {
-        // setHasProject(false);
+        setHasProject(false);
       });
   }, [dispatch, usertype, id]);
 
@@ -44,7 +46,6 @@ const Project = (props) => {
   // }, [hasProject, history, location]);
 
   const handleEditModal = () => {
-    console.log("click");
     setModalEditProject((prev) => !prev);
   };
 
@@ -53,8 +54,8 @@ const Project = (props) => {
       {hasProject && data && (
         <section className={styles.project}>
           <Header data={data.challenge} />
-          <Resume data={data.challenge} />
-          <Carousel data={data.challenge} modal={handleEditModal} />
+          <Resume data={data.project || data} />
+          <Carousel data={data.project || data} modal={handleEditModal} />
         </section>
       )}
       {!hasProject && !loading && (
@@ -66,8 +67,12 @@ const Project = (props) => {
         </ModalPage>
       )}
       {modalEditProject && (
-        <ModalPage title={"Editar projeto"} handleClose={handleEditModal}>
-          <ProjectEdit />
+        <ModalPage
+          title={"Editar projeto"}
+          data={data?.project || data}
+          handleClose={handleEditModal}
+        >
+          <ProjectEdit edit />
         </ModalPage>
       )}
       {loading && <Loading />}

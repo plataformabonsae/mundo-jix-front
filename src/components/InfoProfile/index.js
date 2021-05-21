@@ -2,11 +2,22 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+import { Layout } from "components/Layout";
+
 import { Pessoal } from "./components/Pessoal";
 import { Academico } from "./components/Academico";
 import { Profissional } from "./components/Profissional";
 
-const InfoProfile = ({ center, noShadow, children, hasPassword, type }) => {
+import { Badges } from "./components/Badges";
+
+const InfoProfile = ({
+  center,
+  noShadow,
+  children,
+  hasPassword,
+  type,
+  dontRedirect,
+}) => {
   let history = useHistory();
   let { action } = useParams();
   const { data: user, loading } = useSelector((state) => state.user);
@@ -14,22 +25,52 @@ const InfoProfile = ({ center, noShadow, children, hasPassword, type }) => {
   const joinType = (action, type) => {
     if (action === "pessoal") {
       return (
-        <Pessoal
-          hasPassword={!hasPassword}
-          noShadow={noShadow}
-          type={type}
-          action={action}
-        />
+        <Layout>
+          <Pessoal
+            hasPassword
+            dontRedirect
+            noShadow={noShadow}
+            type={type}
+            action={action}
+          />
+        </Layout>
       );
     } else if (action === "academico") {
-      return <Academico noShadow={noShadow} type={type} action={action} />;
+      return (
+        <Layout>
+          <Academico
+            dontRedirect
+            noShadow={noShadow}
+            type={type}
+            action={action}
+          />
+        </Layout>
+      );
     } else if (action === "profissional") {
-      return <Profissional noShadow={noShadow} type={type} action={action} />;
+      return (
+        <Layout>
+          <Profissional
+            dontRedirect
+            noShadow={noShadow}
+            type={type}
+            action={action}
+          />
+        </Layout>
+      );
     } else if (action === "insignias") {
-      return "insignias";
+      return <Badges />;
     } else {
       if (type === "empresa") {
-        return <Pessoal noShadow={noShadow} type={type} action={action} />;
+        return (
+          <Layout>
+            <Pessoal
+              dontRedirect
+              noShadow={noShadow}
+              type={type}
+              action={action}
+            />
+          </Layout>
+        );
       } else {
         history.push("/404");
       }

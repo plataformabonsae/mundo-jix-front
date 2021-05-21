@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation } from "react-router-dom";
 // import { cpf } from 'cpf-cnpj-validator'
+import { useSelector } from "react-redux";
 
 import { Card } from "components/Card";
 import { Title } from "components/Text";
@@ -26,6 +27,7 @@ import { ButtonGroup } from "components/ButtonGroup";
 const Academico = ({ action, type, noShadow, advance, save, finalRoute }) => {
   const history = useHistory();
   const { pathname } = useLocation();
+  const { data: usertype } = useSelector((state) => state.usertype);
 
   const [socials, setSocials] = useState([0]);
 
@@ -34,7 +36,7 @@ const Academico = ({ action, type, noShadow, advance, save, finalRoute }) => {
     console.log(JSON.stringify(data));
     let array = pathname.split("/");
 
-    history.push(`/${array[1]}/${type}/profissional`);
+    history.push(`/${array[1]}/${usertype}/profissional`);
   };
 
   const typeEscolar = [

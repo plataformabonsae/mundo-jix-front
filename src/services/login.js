@@ -59,7 +59,10 @@ export const loginFetch =
       .then(function (response) {
         const user = response?.data?.data;
         dispatch(UserActions.userSuccess(user));
-        window.localStorage.setItem("accepted_terms", user?.accepted_terms);
+        window.localStorage.setItem(
+          "accepted_terms",
+          user?.user?.accepted_terms
+        );
       })
       .catch(function (response) {
         //handle error

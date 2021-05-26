@@ -270,6 +270,91 @@ const SelectInput = React.forwardRef((props, ref) => {
   );
 });
 
+const SelectInputMulti = React.forwardRef((props, ref) => {
+  const {
+    name,
+    // value,
+    placeholder,
+    // type,
+    // onChange,
+    children,
+    // control,
+    errors,
+    errorMessage,
+    defaultValue,
+    // options,
+    control,
+    isMulti,
+    options,
+    onChange,
+    value,
+  } = props;
+  return (
+    <label
+      className={` ${styles.input} ${
+        errors?.[name]?.type === "required" ? styles.required : ""
+      } `}
+    >
+      <span className={styles.name}>{children}</span>
+      {/* <Controller
+        name={name}
+        control={control}
+        {...props}
+        // value={options.value}
+        // isMulti={isMulti}
+        // as={
+        render={({ name, ref }) => ( */}
+      <Select
+        options={options}
+        defaultValue={defaultValue}
+        inputRef={ref}
+        isMulti
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        styles={{
+          placeholder: (provided, state) => ({
+            ...provided,
+            fontSize: 12,
+          }),
+          option: (provided, state) => ({
+            ...provided,
+            fontSize: 12,
+          }),
+          singleValue: (provided, state) => ({
+            ...provided,
+            fontSize: 12,
+          }),
+          indicatorSeparator: () => ({
+            display: "none",
+          }),
+          input: (provided, state) => ({
+            ...provided,
+            fontSize: 12,
+          }),
+          menu: (provided, state) => ({
+            ...provided,
+            zIndex: 12,
+          }),
+          control: (provided, state) => ({
+            ...provided,
+            border: "1px solid #B3BBBE",
+            minHeight: 42,
+          }),
+          container: (provided, state) => ({
+            ...provided,
+            width: "100%",
+          }),
+        }}
+        innerRef={ref}
+      />
+      {/* )}
+      /> */}
+      <div className={styles.error}>{errors?.[name] && errorMessage}</div>
+    </label>
+  );
+});
+
 const InputWithMask = React.forwardRef((props, ref) => {
   const {
     name,
@@ -504,4 +589,5 @@ export {
   InputWithMask,
   PhotoUpload,
   InputFile,
+  SelectInputMulti,
 };

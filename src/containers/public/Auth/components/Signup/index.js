@@ -94,6 +94,10 @@ const Email = ({ title, desc, type }) => {
                 value: true,
                 message: "Digite o seu e-mail",
               },
+              pattern: {
+                value: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+                message: "Digite um e-mail válido",
+              },
             })}
             type="email"
             name="email"
@@ -201,11 +205,11 @@ const Email = ({ title, desc, type }) => {
         <Button
           disabled={
             loading ||
-            // error ||
+            errors?.email ||
             !allValid ||
             !name.length ||
-            !lastName.length ||
-            !email.length
+            !lastName.length
+            // !email.length
           }
           Tag={`button`}
           submit
@@ -213,6 +217,7 @@ const Email = ({ title, desc, type }) => {
         >
           Continuar
         </Button>
+        {console.log(errors)}
 
         <span className={styles.or}>ou</span>
 

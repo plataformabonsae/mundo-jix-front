@@ -45,9 +45,14 @@ const Academico = ({
     const append = (tel) => {
       setAcademic((prev) => [...prev, tel]);
     };
-    for (let i = 0; i < user.academicformations.length; i++) {
-      append(user.academicformations[i]);
+    if (user.academicformations.length) {
+      for (let i = 0; i < user.academicformations.length; i++) {
+        append(user.academicformations[i]);
+      }
+    } else {
+      append({});
     }
+
     return () => {
       setAcademic([]);
     };
@@ -228,7 +233,7 @@ const Academico = ({
           );
         })}
 
-        {!academic[0]?.course && (
+        {/* {!academic[0] && (
           <>
             <InputGroup>
               <SelectInput
@@ -321,17 +326,17 @@ const Academico = ({
               </InputWithMask>
             </InputGroup>
           </>
-        )}
+        )} */}
 
         <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
           <AddGroup
             onClick={() => setAcademic((prev) => [...prev, prev++])}
-            text="Adicionar rede social"
+            text="Adicionar formação acadêmica"
           />
-          {academic?.length > 0 && (
+          {academic?.length > 1 && (
             <RemoveGroup
               onClick={() => setAcademic((state) => [...state].slice(0, -1))}
-              text="Remover rede social"
+              text="Remover formação acadêmica"
             />
           )}
         </InputGroup>

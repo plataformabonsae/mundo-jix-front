@@ -12,6 +12,7 @@ import {
   InputGroup,
   Input,
   SelectInput,
+  SelectInputMulti,
   AddGroup,
   InputFile,
   Checkbox,
@@ -37,6 +38,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
 
   const { register, errors, control, handleSubmit } = useForm();
   const [availableSkills, setAvailableSkills] = useState([]);
+  const [skillsChange, setSkillsChange] = useState([]);
 
   const [portfolios, setPortfolios] = useState([]);
   const [experiences, setExperiences] = useState([]);
@@ -44,14 +46,25 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
 
   useEffect(() => {
     const append = (skill) => {
-      setAvailableSkills((prev) => [...prev, skill]);
+      setSkillsChange((prev) => [...prev, skill]);
     };
-    const skills = user?.types?.skills;
+    const skills = user?.skills;
     console.log(skills);
     if (skills) {
       for (let i = 0; i < skills.length; i++) {
         append({ value: skills[i].id, label: skills[i].title });
       }
+    }
+  }, [user?.skills]);
+
+  useEffect(() => {
+    const append = (skill) => {
+      setAvailableSkills((prev) => [...prev, skill]);
+    };
+    const skills = user.types.skills;
+    console.log(skills);
+    for (let i = 0; i < skills.length; i++) {
+      append({ value: skills[i].id, label: skills[i].title });
     }
   }, [user?.types?.skills]);
 
@@ -59,8 +72,12 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     const append = (xp) => {
       setExperiences((prev) => [...prev, xp]);
     };
-    for (let i = 0; i < user.experiences.length; i++) {
-      append(user.experiences[i]);
+    if (user.experiences.length) {
+      for (let i = 0; i < user.experiences.length; i++) {
+        append(user.experiences[i]);
+      }
+    } else {
+      append({});
     }
     return () => {
       setExperiences([]);
@@ -71,11 +88,31 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     const append = (link) => {
       setLinks((prev) => [...prev, link]);
     };
-    for (let i = 0; i < user.links.length; i++) {
-      append(user.links[i]);
+    if (user.links.length) {
+      for (let i = 0; i < user.links.length; i++) {
+        append(user.links[i]);
+      }
+    } else {
+      append({});
     }
     return () => {
       setLinks([]);
+    };
+  }, [user]);
+
+  useEffect(() => {
+    const append = (port) => {
+      setPortfolios((prev) => [...prev, port]);
+    };
+    if (user.portfolios.length) {
+      for (let i = 0; i < user.portfolios.length; i++) {
+        append(user.portfolios[i]);
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setPortfolios([]);
     };
   }, [user]);
 
@@ -89,24 +126,30 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
       portfolios,
       experiences,
       links,
+      skills,
     } = data;
     let filtered_portfolios;
+    let filtered_skills;
     let filtered_experiences;
     let filtered_links;
-    for (let i = 0; i < portfolios.length; i++) {
+    for (let i = 0; i < portfolios?.length; i++) {
       filtered_portfolios = [...portfolios].filter((port) => port.link.length);
     }
-    for (let i = 0; i < experiences.length; i++) {
+    for (let i = 0; i < skills?.length; i++) {
+      filtered_skills = [...skills].filter((skill) => skill.id);
+    }
+    for (let i = 0; i < experiences?.length; i++) {
       filtered_experiences = [...experiences].filter((xp) => xp.role.length);
     }
-    for (let i = 0; i < links.length; i++) {
+    for (let i = 0; i < links?.length; i++) {
       filtered_links = [...links].filter((link) => link.link.length);
     }
+    console.log(JSON.stringify(filtered_skills));
     await dispatch(
       edit(usertype, {
         name: user?.user?.name,
         email: user?.user?.email,
-
+        skills: JSON.stringify(filtered_skills),
         current_situation,
         looking_for,
         curriculum: curriculum[0],
@@ -158,6 +201,10 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     { value: "Outro", label: "Outro" },
   ];
 
+  const handleSkillsChange = (data) => {
+    setSkillsChange(data);
+  };
+
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>
       <Card noShadow={noShadow}>
@@ -196,21 +243,27 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
 
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Skills</Title>
-        {console.log(availableSkills)}
-
+        {/* {console.log(availableSkills[0])} */}
         <InputGroup>
-          <SelectInput
-            ref={register()}
+          <SelectInputMulti
             name={`skills`}
-            control={control}
-            isMulti={true}
-            errors={errors}
-            errorMessage="Digite pelo menos uma skill"
-            placeholder="Digite sua skill"
+            value={skillsChange}
             options={availableSkills}
+            control={control}
+            placeholder="Digite sua skill"
+            onChange={handleSkillsChange}
           />
         </InputGroup>
+        {console.log(availableSkills)}
       </Card>
+      {skillsChange.map((item, index) => (
+        <input
+          type="hidden"
+          ref={register()}
+          name={`skills.${index}.id`}
+          value={item.value}
+        />
+      ))}
 
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Portfolio</Title>
@@ -219,6 +272,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
           return (
             <InputGroup>
               <Input
+                defaultValue={field.link}
                 ref={register()}
                 control={control}
                 errors={errors}
@@ -229,6 +283,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
                 Link
               </Input>
               <SelectInput
+                defaultValue={field.platform}
                 ref={register()}
                 name={`portfolios.${index}.platform`}
                 control={control}
@@ -243,7 +298,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
           );
         })}
 
-        {!portfolios[0]?.link && (
+        {/* {!portfolios[0]?.link && (
           <InputGroup>
             <Input
               ref={register()}
@@ -267,14 +322,14 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
               Plataforma
             </SelectInput>
           </InputGroup>
-        )}
+        )} */}
 
         <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
           <AddGroup
             onClick={() => setPortfolios((prev) => [...prev, prev++])}
             text="Adicionar portfolio"
           />
-          {portfolios?.length > 0 && (
+          {portfolios?.length > 1 && (
             <RemoveGroup
               onClick={() => setPortfolios((state) => [...state].slice(0, -1))}
               text="Remover portfolio"
@@ -391,7 +446,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
           );
         })}
 
-        {!experiences[0]?.role && (
+        {/* {!experiences[0]?.role && (
           <>
             <InputGroup>
               <Input
@@ -462,14 +517,14 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
               </Textarea>
             </InputGroup>
           </>
-        )}
+        )} */}
 
         <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
           <AddGroup
             onClick={() => setExperiences((prev) => [...prev, prev++])}
             text="Adicionar experiência"
           />
-          {experiences?.length > 0 && (
+          {experiences?.length > 1 && (
             <RemoveGroup
               onClick={() => setExperiences((state) => [...state].slice(0, -1))}
               text="Remover experiência"
@@ -535,7 +590,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
           );
         })}
 
-        {!links[0]?.link && (
+        {/* {!links[0]?.link && (
           <InputGroup>
             <Input
               ref={register()}
@@ -559,14 +614,14 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
               Tipo de rede
             </SelectInput>
           </InputGroup>
-        )}
+        )} */}
 
         <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
           <AddGroup
             onClick={() => setLinks((prev) => [...prev, prev++])}
             text="Adicionar link"
           />
-          {links?.length > 0 && (
+          {links?.length > 1 && (
             <RemoveGroup
               onClick={() => setLinks((state) => [...state].slice(0, -1))}
               text="Remover link"

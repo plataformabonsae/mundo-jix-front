@@ -69,12 +69,16 @@ const Pessoal = ({
     const append = (tel) => {
       setTels((prev) => [...prev, tel]);
     };
-    for (let i = 0; i < data.phones.length; i++) {
-      append({
-        phone: data.phones[i].phone,
-        phone_type_id: data.phones[i].phone_type_id,
-        id: data.phones[i].id,
-      });
+    if (data.phones.length) {
+      for (let i = 0; i < data.phones.length; i++) {
+        append({
+          phone: data.phones[i].phone,
+          phone_type_id: data.phones[i].phone_type_id,
+          id: data.phones[i].id,
+        });
+      }
+    } else {
+      append({});
     }
     return () => {
       setTels([]);
@@ -85,8 +89,12 @@ const Pessoal = ({
     const append = (tel) => {
       setEmails((prev) => [...prev, tel]);
     };
-    for (let i = 0; i < data.emails.length; i++) {
-      append(data.emails[i]);
+    if (data.emails.length) {
+      for (let i = 0; i < data.emails.length; i++) {
+        append(data.emails[i]);
+      }
+    } else {
+      append({});
     }
     return () => {
       setEmails([]);
@@ -101,11 +109,15 @@ const Pessoal = ({
       for (let i = 0; i < data.socialMedias.length; i++) {
         append(data.socialMedias[i]);
       }
+    } else {
+      append({});
     }
     if (data?.social_medias?.length) {
       for (let i = 0; i < data.social_medias.length; i++) {
         append(data.social_medias[i]);
       }
+    } else {
+      append({});
     }
     return () => {
       setSocials([]);
@@ -323,7 +335,7 @@ const Pessoal = ({
                 <InputGroup key={index}>
                   <InputWithMask
                     defaultValue={field.phone}
-                    name={`phones.${!tels[0]?.phone ? index + 1 : index}.phone`}
+                    name={`phones.${index}.phone`}
                     ref={register()}
                     errors={errors}
                     errorMessage="Somente números"
@@ -335,9 +347,7 @@ const Pessoal = ({
                   </InputWithMask>
                   <SelectInput
                     defaultValue={field.phone_type_id}
-                    name={`phones.${
-                      !tels[0]?.phone ? index + 1 : index
-                    }.phone_type_id`}
+                    name={`phones.${index}.phone_type_id`}
                     ref={register()}
                     control={control}
                     errors={errors}
@@ -351,7 +361,7 @@ const Pessoal = ({
               );
             })}
 
-            {!tels[0]?.phone && (
+            {/* {!tels[0]?.phone && (
               <InputGroup>
                 <InputWithMask
                   // defaultValue={}
@@ -378,14 +388,14 @@ const Pessoal = ({
                   Tipo de telefone
                 </SelectInput>
               </InputGroup>
-            )}
+            )} */}
 
             <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
               <AddGroup
                 onClick={() => setTels((prev) => [...prev, prev++])}
                 text="Adicionar telefone"
               />
-              {tels?.length > 0 && (
+              {tels?.length > 1 && (
                 <RemoveGroup
                   onClick={() => setTels((state) => [...state].slice(0, -1))}
                   text="Remover telefone"
@@ -455,9 +465,7 @@ const Pessoal = ({
                     ref={register()}
                     errors={errors}
                     errorMessage="Somente números"
-                    name={`socialMedias.${
-                      !socials[0]?.link ? index + 1 : index
-                    }.link`}
+                    name={`socialMedias.${index}.link`}
                     placeholder="Link da rede social"
                   >
                     Cole aqui
@@ -465,9 +473,7 @@ const Pessoal = ({
                   <SelectInput
                     defaultValue={social.platform}
                     ref={register()}
-                    name={`socialMedias.${
-                      !socials[0]?.link ? index + 1 : index
-                    }.platform`}
+                    name={`socialMedias.${index}.platform`}
                     control={control}
                     errors={errors}
                     errorMessage="Selecione um tipo"
@@ -480,7 +486,7 @@ const Pessoal = ({
               );
             })}
 
-            {!socials[0]?.link && (
+            {/* {!socials[0]?.link && (
               <InputGroup>
                 <Input
                   defaultValue={""}
@@ -505,14 +511,14 @@ const Pessoal = ({
                   Tipo de rede
                 </SelectInput>
               </InputGroup>
-            )}
+            )} */}
 
             <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
               <AddGroup
                 onClick={() => setSocials((prev) => [...prev, prev++])}
                 text="Adicionar rede social"
               />
-              {socials?.length > 0 && (
+              {socials?.length > 1 && (
                 <RemoveGroup
                   onClick={() => setSocials((state) => [...state].slice(0, -1))}
                   text="Remover rede social"

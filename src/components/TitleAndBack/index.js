@@ -15,7 +15,7 @@ const TitleAndBack = (props) => {
       {!noBack && (
         <Link
           className={styles.goback}
-          to={props.to || removeLastPath(location.pathname)}
+          to={to || removeLastPath(location.pathname)}
         >
           Voltar
         </Link>

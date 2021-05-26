@@ -36,7 +36,14 @@ const Background = ({ position, title, text, backgroundImage }) => {
         }}
         className={position === "right" ? styles.right : styles.left}
       >
-        <animated.article style={textAnim} className={styles.wrapper}>
+        <animated.article
+          style={{
+            left: position === "left" && 0,
+            right: position === "right" && 0,
+            ...textAnim,
+          }}
+          className={styles.wrapper}
+        >
           <h1 className={styles.title && Typography.TITLE_24}>{title}</h1>
           <p className={styles.text && Typography.BODY_16}>{text}</p>
         </animated.article>

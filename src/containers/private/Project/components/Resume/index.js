@@ -2,7 +2,7 @@ import React from "react";
 import parse from "html-react-parser";
 
 import { Card } from "components/Card";
-import { Text, Title } from "components/Text";
+import { Title } from "components/Text";
 
 import defaultImage from "assets/components/MainImage/image.png";
 

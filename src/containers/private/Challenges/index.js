@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 
@@ -58,6 +59,16 @@ const Challenges = (props) => {
   console.log(signedChallenges, "signedChallenges");
   return (
     <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>
+          Mundo Jix - Desafios -{" "}
+          {(type === "autodesafio" && "Autodesafios") ||
+            (type === "in_company" && "In Company") ||
+            (type === "ultradesafio" && "Ultradesafios")}
+        </title>
+        {/* <link rel="canonical" href="http://mysite.com/example" /> */}
+      </Helmet>
       <SubHeader>
         <TabFlat to={`/desafios/autodesafio`} color={"white"}>
           Autodesafio
@@ -72,7 +83,7 @@ const Challenges = (props) => {
       <section className={styles.container}>
         <Title className={styles.title}>Desafios</Title>
         <section className={styles.content}>
-          {loading && !data && (<Loading />)}
+          {loading && !data && <Loading />}
           {type === "autodesafio" &&
             autodesafio.length &&
             autodesafio?.map((item, index) => (

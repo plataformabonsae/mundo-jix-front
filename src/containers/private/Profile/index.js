@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet";
 
 import { TabFlat } from "components/Tabs";
 import { SubHeader } from "components/Header";
@@ -13,6 +14,11 @@ const Profile = () => {
 
   return (
     <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Mundo Jix - Perfil</title>
+        {/* <link rel="canonical" href="http://mysite.com/example" /> */}
+      </Helmet>
       {usertype === "talento" && (
         <>
           <SubHeader>
@@ -32,9 +38,9 @@ const Profile = () => {
         </>
       )}
 
-      {/* <Layout> */}
-      <InfoProfile type={usertype} noShadow hasPassword dontRedirect />
-      {/* </Layout> */}
+      <section style={{ margin: "0 24px" }}>
+        <InfoProfile type={usertype} noShadow hasPassword dontRedirect />
+      </section>
     </>
   );
 };

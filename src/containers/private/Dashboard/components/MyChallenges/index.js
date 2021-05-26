@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 
@@ -14,7 +14,7 @@ import styles from "./styles.module.sass";
 // TODO
 
 const MyChallenges = () => {
-  const { data } = useSelector((state) => state.dashboard);
+  const { data, loading } = useSelector((state) => state.dashboard);
   const [challengeType, setChallengeType] = useState();
   const [activeTab, setActiveTab] = useState("todos");
 
@@ -93,6 +93,7 @@ const MyChallenges = () => {
           <Text>Se inscreva em um desafio para ver seu progresso</Text>
           // <Loading />
         )}
+        {loading && <Loading />}
       </article>
     </Card>
   );

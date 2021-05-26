@@ -93,7 +93,7 @@ const Pessoal = ({ action, type, noShadow, finalRoute, hasPassword }) => {
   ];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form noValidate onSubmit={handleSubmit(onSubmit)}>
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Dados cadastrais</Title>
 

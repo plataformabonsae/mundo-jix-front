@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useLocation, useHistory } from "react-router-dom";
 import { cpf } from "cpf-cnpj-validator";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Card } from "components/Card";
+import { PasswordChecker } from "components/PasswordChecker";
 import { Dialog } from "components/Dialog";
 import { Loading } from "components/Loading";
 import { Title, Text } from "components/Text";
@@ -38,11 +39,11 @@ import * as colors from "utils/styles/Colors";
 // errors in masked inputs
 
 const Pessoal = ({
-  action,
   type,
   noShadow,
   finalRoute,
   hasPassword,
+  redirect,
   dontRedirect,
 }) => {
   const dispatch = useDispatch();
@@ -51,12 +52,18 @@ const Pessoal = ({
   const { data, loading } = useSelector((state) => state.user);
   const { data: usertype } = useSelector((state) => state.usertype);
   const [passwordModal, setPasswordModal] = useState(false);
+  const [changedMainEmail, setChangedMainEmail] = useState(false);
+  const [modalChangeEmail, setModalChangeEmail] = useState(false);
   const [photoModal, setPhotoModal] = useState(false);
+  // const [cpfControl, setCpfControl] = useState(false);
   const user = data.user || data.data;
-  const { register, errors, control, handleSubmit } = useForm();
-  const [tels, setTels] = useState([0]);
+  const { register, errors, control, handleSubmit } = useForm({
+    reValidateMode: "onChange",
+  });
+  const [tels, setTels] = useState([]);
   const [emails, setEmails] = useState([]);
-  const [socials, setSocials] = useState([0]);
+  const [emailError, setEmailError] = useState();
+  const [socials, setSocials] = useState([]);
 
   useEffect(() => {
     const append = (tel) => {
@@ -65,7 +72,7 @@ const Pessoal = ({
     for (let i = 0; i < data.phones.length; i++) {
       append({
         phone: data.phones[i].phone,
-        type: data.phones[i].phone_type_id,
+        phone_type_id: data.phones[i].phone_type_id,
         id: data.phones[i].id,
       });
     }
@@ -74,14 +81,74 @@ const Pessoal = ({
     };
   }, [data]);
 
+  useEffect(() => {
+    const append = (tel) => {
+      setEmails((prev) => [...prev, tel]);
+    };
+    for (let i = 0; i < data.emails.length; i++) {
+      append(data.emails[i]);
+    }
+    return () => {
+      setEmails([]);
+    };
+  }, [data]);
+
+  useEffect(() => {
+    const append = (tel) => {
+      setSocials((prev) => [...prev, tel]);
+    };
+    if (data?.socialMedias?.length) {
+      for (let i = 0; i < data.socialMedias.length; i++) {
+        append(data.socialMedias[i]);
+      }
+    }
+    if (data?.social_medias?.length) {
+      for (let i = 0; i < data.social_medias.length; i++) {
+        append(data.social_medias[i]);
+      }
+    }
+    return () => {
+      setSocials([]);
+    };
+  }, [data]);
+
+  // useEffect(() => {
+  //   console.log(cpf.isValid(cpfControl));
+  // }, [cpfControl]);
+
   const handlePasswordModal = () => {
     setPasswordModal((prev) => !prev);
   };
 
+  const handleEmailHasChanged = (state) => {
+    setChangedMainEmail(state);
+  };
+
+  const handleEmailModal = (state) => {
+    if (changedMainEmail)
+      setModalChangeEmail((prev) => (state === "close" ? false : !prev));
+  };
+
   const onSubmit = async (data) => {
     // let { email, name, last_name, cpf, phones, birthdate } = data;
-    // console.log(data);
-    await dispatch(edit(usertype, data))
+    handleEmailModal("close");
+    const { phones, emails, socialMedias } = data;
+    let filtered_phones;
+    let filtered_social_media;
+    for (let i = 0; i < phones.length; i++) {
+      filtered_phones = [...phones].filter((phone) => phone.phone);
+    }
+    for (let i = 0; i < socialMedias.length; i++) {
+      filtered_social_media = [...socialMedias].filter((social) => social.link);
+    }
+    await dispatch(
+      edit(usertype, {
+        ...data,
+        phones: JSON.stringify(filtered_phones),
+        emails: JSON.stringify(emails) || "{}",
+        social_medias: JSON.stringify(filtered_social_media),
+      })
+    )
       .then(() => {
         toast.success("Informações atualizadas", {
           position: toast.POSITION.BOTTOM_RIGHT,
@@ -93,10 +160,15 @@ const Pessoal = ({
           history.push(removeLastPath(location.pathname) + "/academico")
       )
       .catch((error) => {
-        toast.error("Algum erro ocorreu, por favor tente novamente", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
-        console.log(error);
+        console.log(error.response.data);
+        toast.error(
+          error.response.data.errors.email[0] ===
+            "This email is already taken." &&
+            "Esse e-mail já está sendo utilizado.",
+          {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          }
+        );
       });
   };
 
@@ -108,9 +180,9 @@ const Pessoal = ({
   };
 
   const typeTel = [
-    { value: 1, label: "Celular" },
-    { value: 2, label: "Profissional" },
-    { value: 3, label: "Pessoal" },
+    { value: "Celular", label: "Celular" },
+    { value: "Profissional", label: "Profissional" },
+    { value: "Pessoal", label: "Pessoal" },
   ];
   // const typeTel = ["Celular", "Profissional", "Pessoal"];
 
@@ -154,25 +226,26 @@ const Pessoal = ({
       });
   };
 
+  const marginTitulo = {
+    marginBottom: 32,
+  };
+
   if (!user) {
     return <Loading />;
   } else {
     return (
       <>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ToastContainer />
+        <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <Card noShadow={noShadow}>
-            <Title style={{ marginBottom: 32 }}>Dados pessoais</Title>
-
+            <Title style={marginTitulo}>Dados pessoais</Title>
             <PhotoUpload
               name="file"
               upload={handleUploadPhoto}
               dialog={photoModal}
               onClick={handlePhotoModal}
               ref={register()}
-              image={user?.file || user?.data?.data?.file || ""}
+              image={user?.file || user?.data?.data?.file}
             />
-
             <InputGroup>
               <Input
                 defaultValue={user.name || user.data.name}
@@ -195,14 +268,13 @@ const Pessoal = ({
                 Sobrenome
               </Input>
             </InputGroup>
-
             <InputGroup>
               <InputWithMask
-                defaultValue={user.cpf || user.data.cpf}
-                ref={register({
-                  required: true,
+                defaultValue={user?.cpf || user?.data?.cpf}
+                ref={register()}
+                rules={{
                   validate: (val) => cpf.isValid(val),
-                })}
+                }}
                 name="cpf"
                 errors={errors}
                 errorMessage="Digite um CPF válido"
@@ -213,11 +285,13 @@ const Pessoal = ({
                 CPF
               </InputWithMask>
               <InputWithMask
+                required
                 defaultValue={user?.birthdate || user?.data?.birthdate}
-                ref={register({
+                ref={register}
+                rules={{
                   required: true,
                   validate: (val) => handleNascimento(val),
-                })}
+                }}
                 name="birthdate"
                 errors={errors}
                 errorMessage="Você precisa ter mais que 18 anos"
@@ -230,7 +304,7 @@ const Pessoal = ({
             </InputGroup>
             {hasPassword && (
               <Button
-                style={{ color: colors.BLUE_1, fontSize: 14 }}
+                style={{ color: colors.INFORMATION, fontSize: 14 }}
                 transparent
                 Tag={"span"}
                 onClick={() => handlePasswordModal()}
@@ -242,13 +316,14 @@ const Pessoal = ({
 
           <Card noShadow={noShadow}>
             <Title style={{ marginBottom: 32 }}>Contato</Title>
+
             {tels.map((field, index) => {
               // console.log(field);
               return (
                 <InputGroup key={index}>
                   <InputWithMask
-                    defaultValue={`${field.phone}`}
-                    name={`phones[new][][phone]`}
+                    defaultValue={field.phone}
+                    name={`phones.${!tels[0]?.phone ? index + 1 : index}.phone`}
                     ref={register()}
                     errors={errors}
                     errorMessage="Somente números"
@@ -259,8 +334,10 @@ const Pessoal = ({
                     Telefone {++index}
                   </InputWithMask>
                   <SelectInput
-                    defaultValue={field.type}
-                    name={`phones[new][][phone_type_id]`}
+                    defaultValue={field.phone_type_id}
+                    name={`phones.${
+                      !tels[0]?.phone ? index + 1 : index
+                    }.phone_type_id`}
                     ref={register()}
                     control={control}
                     errors={errors}
@@ -274,23 +351,55 @@ const Pessoal = ({
               );
             })}
 
-            {tels?.length > 1 && (
-              <RemoveGroup
-                onClick={() => setTels((state) => [...state].slice(0, -1))}
-                text="Remover telefone"
-              />
+            {!tels[0]?.phone && (
+              <InputGroup>
+                <InputWithMask
+                  // defaultValue={}
+                  name={`phones.0.phone`}
+                  ref={register()}
+                  errors={errors}
+                  errorMessage="Somente números"
+                  placeholder="Digite seu telefone"
+                  control={control}
+                  mask={`(99) 99999-9999`}
+                >
+                  Telefone 1
+                </InputWithMask>
+                <SelectInput
+                  defaultValue={null}
+                  name={`phones.0.phone_type_id`}
+                  ref={register()}
+                  control={control}
+                  errors={errors}
+                  errorMessage="Selecione um tipo"
+                  placeholder="Selecione o tipo de telefone"
+                  options={typeTel}
+                >
+                  Tipo de telefone
+                </SelectInput>
+              </InputGroup>
             )}
-            <AddGroup
-              onClick={() => setTels((prev) => [...prev, prev++])}
-              text="Adicionar telefone"
-            />
 
-            <InputGroup>
+            <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+              <AddGroup
+                onClick={() => setTels((prev) => [...prev, prev++])}
+                text="Adicionar telefone"
+              />
+              {tels?.length > 0 && (
+                <RemoveGroup
+                  onClick={() => setTels((state) => [...state].slice(0, -1))}
+                  text="Remover telefone"
+                />
+              )}
+            </InputGroup>
+
+            <InputGroup style={{ marginTop: 24 }}>
               <Input
                 defaultValue={user.email}
                 ref={register({ required: true, pattern: /^\S+@\S+$/i })}
                 name={`email`}
                 errors={errors}
+                onChange={(e) => handleEmailHasChanged(e.target.value)}
                 errorMessage="Digite um e-mail válido"
                 placeholder="Digite seu melhor e-mail"
               >
@@ -298,53 +407,67 @@ const Pessoal = ({
               </Input>
             </InputGroup>
 
-            {emails.map((_, index) => {
+            {emails.map((email, index) => {
               return (
                 <InputGroup key={index}>
                   <Input
-                    // defaultValue={user.email}
-                    ref={register({ required: true, pattern: /^\S+@\S+$/i })}
-                    name={`emails[new][${index}][email]`}
+                    defaultValue={email.email}
+                    ref={register({
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: "Digite um e-mail válido",
+                      },
+                    })}
+                    name={`emails.${index}.email`}
                     errors={errors}
-                    errorMessage="Digite um e-mail válido"
+                    errorMessage={`${errors?.emails?.[index]?.email?.message}`}
+                    // errorMessage={"Digite um e-mail válido"}
                     placeholder="Digite um e-mail"
                   >
-                    E-mail {index + 2}
+                    E-mail {index + 1}
                   </Input>
                 </InputGroup>
               );
             })}
 
-            {emails.length > 0 && (
-              <RemoveGroup
-                onClick={() => setEmails((state) => [...state].slice(0, -1))}
-                text="Remover e-mail"
+            <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+              <AddGroup
+                onClick={() => setEmails((prev) => [...prev, prev++])}
+                text="Adicionar e-mail"
               />
-            )}
-            <AddGroup
-              onClick={() => setEmails((state) => [...state, state++])}
-              text="Adicionar e-mail"
-            />
+              {emails?.length > 0 && (
+                <RemoveGroup
+                  onClick={() => setEmails((state) => [...state].slice(0, -1))}
+                  text="Remover e-mail"
+                />
+              )}
+            </InputGroup>
           </Card>
 
           <Card noShadow={noShadow}>
             <Title style={{ marginBottom: 32 }}>Redes sociais</Title>
 
-            {socials.map((_, index) => {
+            {socials.map((social, index) => {
               return (
                 <InputGroup key={index}>
                   <Input
+                    defaultValue={social.link}
                     ref={register()}
                     errors={errors}
                     errorMessage="Somente números"
-                    name={`social.${[index]}.link`}
+                    name={`socialMedias.${
+                      !socials[0]?.link ? index + 1 : index
+                    }.link`}
                     placeholder="Link da rede social"
                   >
                     Cole aqui
                   </Input>
                   <SelectInput
+                    defaultValue={social.platform}
                     ref={register()}
-                    name={`social.${[index]}.type`}
+                    name={`socialMedias.${
+                      !socials[0]?.link ? index + 1 : index
+                    }.platform`}
                     control={control}
                     errors={errors}
                     errorMessage="Selecione um tipo"
@@ -357,24 +480,53 @@ const Pessoal = ({
               );
             })}
 
-            {socials.length > 1 && (
-              <RemoveGroup
-                onClick={() => setSocials((state) => [...state].slice(0, -1))}
-                text="Remover rede social"
-              />
+            {!socials[0]?.link && (
+              <InputGroup>
+                <Input
+                  defaultValue={""}
+                  ref={register()}
+                  errors={errors}
+                  errorMessage="Somente números"
+                  name={`socialMedias.0.link`}
+                  placeholder="Link da rede social"
+                >
+                  Cole aqui
+                </Input>
+                <SelectInput
+                  defaultValue={""}
+                  ref={register()}
+                  name={`socialMedias.0.platform`}
+                  control={control}
+                  errors={errors}
+                  errorMessage="Selecione um tipo"
+                  placeholder="Selecione a rede social"
+                  options={typeSocial}
+                >
+                  Tipo de rede
+                </SelectInput>
+              </InputGroup>
             )}
-            <AddGroup
-              onClick={() => setSocials((state) => [...state, state++])}
-              text="Adicionar rede social"
-            />
+
+            <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+              <AddGroup
+                onClick={() => setSocials((prev) => [...prev, prev++])}
+                text="Adicionar rede social"
+              />
+              {socials?.length > 0 && (
+                <RemoveGroup
+                  onClick={() => setSocials((state) => [...state].slice(0, -1))}
+                  text="Remover rede social"
+                />
+              )}
+            </InputGroup>
           </Card>
 
           <Card noShadow={noShadow}>
-            <Title style={{ marginBottom: 32 }}>Redes sociais</Title>
+            <Title style={{ marginBottom: 32 }}>Sobre você</Title>
 
             <InputGroup>
               <Textarea
-                defaultValue={`${user?.description}`}
+                defaultValue={`${user?.description || ""}`}
                 ref={register()}
                 errors={errors}
                 errorMessage="Máximo de 200 caracteres"
@@ -387,19 +539,55 @@ const Pessoal = ({
           </Card>
 
           <ButtonGroup>
+            {!dontRedirect && (
+              <Button
+                disabled={loading}
+                to={finalRoute ? finalRoute : `/dashboard`}
+                type="outlineWhite"
+              >
+                Salvar e sair
+              </Button>
+            )}
             <Button
               disabled={loading}
-              to={finalRoute ? finalRoute : `/dashboard`}
-              type="outlineWhite"
+              Tag={changedMainEmail ? "span" : "button"}
+              onClick={() => (changedMainEmail ? handleEmailModal() : null)}
+              type="secondary"
             >
-              Salvar e sair
-            </Button>
-            <Button disabled={loading} Tag="button" type="secondary">
-              Continuar
+              {dontRedirect ? "Salvar" : "Continuar"}
             </Button>
           </ButtonGroup>
+          {modalChangeEmail && (
+            <Dialog
+              style={{ minWidth: 400 }}
+              header={"Email principal"}
+              handleClose={handleEmailModal}
+            >
+              <Title size={18}>Confirma mudança de e-mail principal?</Title>
+              <Text style={{ margin: "12px 0" }}>
+                Se confirmar, você passará a entrar pelo e-mail
+                <span style={{ display: "block", fontWeight: "bold" }}>
+                  {changedMainEmail}
+                </span>
+              </Text>
+              <ButtonGroup>
+                <Button
+                  Tag={"span"}
+                  disabled={loading}
+                  type="tertiary"
+                  onClick={() => handleEmailModal()}
+                >
+                  Cancelar
+                </Button>
+                <Button disabled={loading} Tag="button" type="primary">
+                  Salvar
+                </Button>
+              </ButtonGroup>
+            </Dialog>
+          )}
         </form>
         {passwordModal && <ChangePassword handleDialog={handlePasswordModal} />}
+        {loading && <Loading />}
       </>
     );
   }
@@ -409,9 +597,20 @@ const ChangePassword = (props) => {
   const dispatch = useDispatch();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
+  const [showTooltip, setShowTooltip] = useState(false);
   const { data: usertype } = useSelector((state) => state.usertype);
-  const { data: user, loading } = useSelector((state) => state.user);
+  const { data, loading } = useSelector((state) => state.user);
   const { register, errors, handleSubmit } = useForm();
+
+  // checks all validations are true
+  const [allValid, setAllValid] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      setPassword();
+      setConfirmPassword();
+    };
+  }, []);
 
   const onSubmit = async (data) => {
     const { email, password, confirm_password, name } = data;
@@ -441,71 +640,92 @@ const ChangePassword = (props) => {
 
   return (
     <Dialog
-      style={{ minWidth: 400 }}
+      style={{ minWidth: 400, overflow: "inherit" }}
       header={"Mudar senha"}
       handleClose={props.handleDialog}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <input
           type="hidden"
           ref={register({ required: true })}
           name={"email"}
-          value={user?.user?.email}
+          value={data?.user?.email || data?.data?.email}
         />
         <input
           type="hidden"
           ref={register({ required: true })}
           name={"name"}
-          value={user?.user?.name}
+          value={data?.user?.name || data?.data?.name}
         />
-        <InputGroup>
+        <InputGroup style={{ position: "relative" }}>
           <Input
-            defaultValue={""}
             disabled={loading}
             ref={register({
-              required: true,
-              validate: password === confirmPassword,
+              required: {
+                value: true,
+                message: "Digite a senha",
+              },
+              minLength: {
+                value: 8,
+                message: "A senha precisa ter pelo menos 8 caracteres.",
+              },
+              pattern: {
+                value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/,
+                message:
+                  "A senha precisa conter 1 caractere especial, 1 letra miníscula, 1 letra maiúscula e um número.",
+              },
             })}
             type="password"
             name="password"
             errors={errors}
-            errorMessage="Digite uma senha válida"
+            errorMessage={
+              errors?.password?.type === "pattern"
+                ? "paternet"
+                : errors?.password?.message
+            }
             placeholder="Digite a senha"
-            onChange={(e) => setPassword(e.target.value)}
+            onKeyUp={(e) => setPassword(e.target.value)}
+            onFocus={() => setShowTooltip(true)}
+            onBlur={() => setShowTooltip(false)}
           >
             Senha
           </Input>
+          {showTooltip && (
+            <PasswordChecker
+              style={{ left: "50%" }}
+              password={password}
+              confirmPassword={confirmPassword}
+              setValid={setAllValid}
+              isValid={allValid}
+            />
+          )}
         </InputGroup>
         <InputGroup>
           <Input
-            defaultValue={""}
+            autocomplete="off"
             disabled={loading}
             ref={register({
-              required: true,
-              validate: password === confirmPassword,
+              required: {
+                value: true,
+                message: "Repita a senha",
+              },
+              validate: (e) => confirmPassword === password,
             })}
             type="password"
             name="confirm_password"
             errors={errors}
-            errorMessage="Digite uma senha válida"
+            errorMessage={errors?.confirm_password?.message}
             placeholder="Digite a senha novamente"
             onChange={(e) => setConfirmPassword(e.target.value)}
           >
             Confirme a senha
           </Input>
         </InputGroup>
-        {password !== confirmPassword && (
-          <Text size={14} style={{ marginBottom: 12 }}>
-            {" "}
-            As senhas precisam ser iguais.{" "}
-          </Text>
-        )}
+
         <Button
-          disabled={
-            loading || password !== confirmPassword || !password?.length
-          }
-          Tag="button"
           submit
+          disabled={loading || !allValid}
+          Tag="button"
           type="green"
         >
           Atualizar senha

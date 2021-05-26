@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, Link, useHistory, useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 import { Loading } from "components/Loading";
 import { ModalPage } from "components/ModalPage";
 
 import { ProjectEdit } from "./components/ProjectEdit";
 import { Header } from "./components/Header";
-import { TeamInfo } from "./components/TeamInfo";
+// import { TeamInfo } from "./components/TeamInfo";
 import { Resume } from "./components/Resume";
 import { Carousel } from "./components/Carousel";
 
@@ -18,7 +18,6 @@ import { get } from "services/project";
 import styles from "./styles.module.sass";
 
 const Project = (props) => {
-  const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
   const { id } = useParams();

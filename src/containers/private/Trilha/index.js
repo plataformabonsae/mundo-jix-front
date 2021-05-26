@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { Title, Text } from "components/Text";
+// import { Title, Text } from "components/Text";
 import { TabFlat } from "components/Tabs";
 import { Banner } from "components/Banner";
+import { Loading } from "components/Loading";
 
 import { Header } from "./components/Header";
 import { TrilhaItem } from "./components/TrilhaItem";
@@ -59,6 +60,7 @@ const Trilha = (props) => {
           </section>
         )}
       </header>
+      {loading && <Loading />}
     </section>
   );
 };

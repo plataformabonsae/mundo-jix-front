@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   useSpring,
   // useSprings,
   // useTransition,
-  useTrail,
   animated,
   // useChain,
   // config,
@@ -29,7 +28,9 @@ const Dialog = (props) => {
         <Card
           Tag={animated.section}
           border
-          className={styles.card}
+          className={`${styles.card} ${
+            props.className ? props.className : null
+          }`}
           style={{ ...props.style }}
         >
           {props.header && (

@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -32,6 +33,13 @@ const Judges = (props) => {
 
   return (
     <SpaceBackground>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>
+          Mundo Jix - Login {type === "mentor" ? "Mentor" : "Jurado"}
+        </title>
+        {/* <link rel="canonical" href="http://mysite.com/example" /> */}
+      </Helmet>
       <section className={styles.wrapper}>
         <Logo
           color="white"
@@ -40,7 +48,7 @@ const Judges = (props) => {
           } `}
           desc={"Preencha com seus dados os campos abaixo."}
         />
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <Card className={styles.card}>
             <Input
               ref={register({ required: true, pattern: /^\S+@\S+$/i })}

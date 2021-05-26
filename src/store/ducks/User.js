@@ -31,7 +31,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         loading: true,
         logged: true,
-        data: action.payload,
+        // data: action.payload,
       };
     case Types.USER_SUCCESS:
       return {

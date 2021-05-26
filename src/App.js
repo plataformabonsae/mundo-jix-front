@@ -7,6 +7,8 @@ import {
   // useSelector,
 } from "react-redux";
 // import { useLocation } from 'react-router-dom'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // import { useRoutes } from 'hookrouter'
 import { Routes } from "routes";
@@ -27,7 +29,12 @@ const App = () => {
     dispatch(autoLogin());
   }, [dispatch]);
 
-  return <Routes />;
+  return (
+    <>
+      <ToastContainer />
+      <Routes />
+    </>
+  );
 };
 
 export default App;

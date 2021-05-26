@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import YouTube from "react-youtube";
 import parse from "html-react-parser";
@@ -22,7 +22,7 @@ import styles from "./styles.module.sass";
 // skills
 
 const Presentation = (props) => {
-  const { data, handleClickToSubscribe, buttonContent, refCard } = props;
+  const { data, handleClickToSubscribe, buttonContent } = props;
 
   const opts = {
     height: "360",
@@ -69,7 +69,7 @@ const Presentation = (props) => {
                 )}
               </div>
               <div>
-                Por <a href="#">Nome da Marca</a>
+                Por <a href="#0">Nome da Marca</a>
               </div>
             </>
           )}

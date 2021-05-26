@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 import { Wrapper, Card } from "../components/Layout";
 import Background from "../components/Background";
@@ -37,6 +38,13 @@ const Type = ({ action, type }) => {
 
   return (
     <Wrapper background={`${action !== "signup" ? "left" : "right"}`}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>
+          Mundo Jix - Login {type === "empresa" ? "empresa" : "talento"}
+        </title>
+        {/* <link rel="canonical" href="http://mysite.com/example" /> */}
+      </Helmet>
       {action !== "signup" ? (
         <>
           <Background

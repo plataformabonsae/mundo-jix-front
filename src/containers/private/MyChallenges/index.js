@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Title } from "components/Text";
 import { SubHeader } from "components/Header";
@@ -13,7 +14,7 @@ import { my } from "services/challenges";
 
 const MyChallenges = (props) => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  // const location = useLocation();
   const { type } = useParams();
   const [autodesafio, setAutodesafio] = useState([]);
   const [inCompany, setInCompany] = useState([]);
@@ -43,6 +44,11 @@ const MyChallenges = (props) => {
 
   return (
     <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Mundo Jix - Meus desafios</title>
+        {/* <link rel="canonical" href="http://mysite.com/example" /> */}
+      </Helmet>
       <SubHeader>
         <TabFlat to={`/meus-desafios/autodesafio`} color={"white"}>
           Autodesafio

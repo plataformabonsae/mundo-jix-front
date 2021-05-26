@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "react-spring";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,8 +14,6 @@ import styles from "./styles.module.sass";
 
 import { edit } from "services/auth";
 
-import history from "utils/history";
-
 const Terms = ({ children, type, id = 1 }) => {
   const [accept, setAccept] = useState(false);
   const { register, handleSubmit } = useForm();
@@ -26,12 +25,13 @@ const Terms = ({ children, type, id = 1 }) => {
   const { data: usertype } = useSelector((state) => state.usertype);
 
   useEffect(() => {
-    setAccept(Number(user?.accepted_terms) === 1 ? true : false);
-    // console.log(accept)
-  }, [user?.accepted_terms]);
+    setAccept(Number(user?.user?.accepted_terms) === 1 ? true : false);
+    console.log(user?.user?.accepted_terms);
+  }, [user]);
 
   const onSubmit = async (data) => {
     let { accepted_terms: accepted } = data;
+    console.log(accepted ? (accepted = 1) : (accepted = 0));
     accepted ? (accepted = 1) : (accepted = 0);
     await dispatch(
       edit(type, {
@@ -41,7 +41,16 @@ const Terms = ({ children, type, id = 1 }) => {
       })
     )
       .then(() => setAccept(data.accepted_terms))
-      .then(() => window.localStorage.setItem("accepted_terms", 1));
+      .then(() => window.localStorage.setItem("accepted_terms", accepted))
+      .catch((error) => {
+        console.log(error.response.data);
+        toast.error(
+          "Um erro ocorreu ao tentar enviar os dados. Tente novamente",
+          {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          }
+        );
+      });
   };
 
   return (

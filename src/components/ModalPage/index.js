@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useSpring, animated } from "react-spring";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 
 import { Card } from "components/Card";
@@ -14,6 +15,11 @@ const ModalPage = (props) => {
   const location = useLocation();
   const history = useHistory();
 
+  const animatedStyles = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+  });
+
   const { type } = useParams();
 
   const handleClose = () => {
@@ -25,7 +31,7 @@ const ModalPage = (props) => {
 
   return (
     <>
-      <section className={styles.modal}>
+      <animated.section className={styles.modal} style={animatedStyles}>
         <Card border className={styles.card}>
           <section className={styles.title}>
             <Title style={{ textTransform: "capitalize" }}>
@@ -46,7 +52,7 @@ const ModalPage = (props) => {
           </Card>
         </Card>
         <div className={styles.shadow}></div>
-      </section>
+      </animated.section>
     </>
   );
 };

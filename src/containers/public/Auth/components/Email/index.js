@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Link,
   // useLocation,
@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+
+import { Creators as UserActions } from "store/ducks/User";
 
 import { InputGroup, Input, Checkbox } from "components/Inputs";
 import Button from "components/Button";
@@ -29,15 +31,19 @@ const Email = ({ title, desc, type }) => {
   const { error, loading } = useSelector((state) => state.token);
   const dispatch = useDispatch();
 
+  useState(() => {
+    dispatch(UserActions.logoutSuccess());
+  }, [dispatch, UserActions]);
+
   const onSubmit = async (data) => {
     const req = dispatch(login(type, data));
     await req
       .then((res) => history.push("/dashboard"))
-      .catch((err) => console.log(err, "erro"));
+      .catch((err) => console.log(err));
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.login}>
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className={styles.login}>
       <Button
         style={{ position: "absolute", top: 24, left: 12 }}
         type="transparent"
@@ -52,10 +58,14 @@ const Email = ({ title, desc, type }) => {
         <InputGroup>
           <Input
             disabled={loading}
-            ref={register({ required: true })}
+            ref={register({ required: true, pattern: /^\S+@\S+$/i })}
             type="email"
             name="email"
             errors={errors}
+            validate={
+              error?.data?.error === "E-mail não encontrado no sistema" &&
+              "E-mail não encontrado no sistema"
+            }
             errorMessage="Digite o seu e-mail"
             placeholder="Digite seu e-mail"
           >
@@ -70,16 +80,16 @@ const Email = ({ title, desc, type }) => {
             ref={register({ required: true })}
             name="password"
             errors={errors}
+            validate={
+              error?.data?.message === "Unauthorised." &&
+              "Verifique sua senha e tente novamente"
+            }
             errorMessage="Digite uma senha"
             placeholder="Digite sua senha"
           >
             senha
           </Input>
         </InputGroup>
-
-        {error ? (
-          <div className={styles.error}>Usuário ou senha incorretos</div>
-        ) : null}
 
         <div className={styles.sub}>
           <Checkbox type="checkbox" placeholder="Digite sua senha">

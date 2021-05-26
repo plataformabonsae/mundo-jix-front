@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 
 // Imports: Reducers
 import auth from "./Auth";
-import user from "./User";
+import user, { Types } from "./User";
 import token from "./Token";
 import usertype from "./UserType";
 import dashboard from "./Dashboard";
@@ -32,5 +32,14 @@ const ducks = combineReducers({
   subscribeChallenge,
 });
 
+const rootReducer = (state, action) => {
+  if (action.type === Types.LOGOUT_SUCCESS) {
+    window.localStorage.clear();
+    return ducks(undefined, action);
+  }
+
+  return ducks(state, action);
+};
+
 // Redux: Root Reducer
-export { ducks };
+export { rootReducer };

@@ -6,13 +6,13 @@ import Select from "react-select";
 
 import { Text } from "components/Text";
 import Button from "components/Button";
-import { ButtonGroup } from "components/ButtonGroup";
+// import { ButtonGroup } from "components/ButtonGroup";
 import { Dialog } from "components/Dialog";
 import { BASEURL } from "utils/api";
 
 import styles from "./styles.module.sass";
 
-import { cropImage, blobToFile } from "utils/etc";
+import { cropImage } from "utils/etc";
 
 import Photo from "assets/components/Input/PhotoUpload.svg";
 import search from "assets/components/Input/search.svg";
@@ -28,8 +28,8 @@ const Search = () => (
   </button>
 );
 
-const InputGroup = ({ children, name, ref }) => (
-  <fieldset ref={ref} name={name} className={styles.wrapper}>
+const InputGroup = ({ style, children, name, ref }) => (
+  <fieldset style={style} ref={ref} name={name} className={styles.wrapper}>
     {children}
   </fieldset>
 );
@@ -69,6 +69,7 @@ const InputFile = React.forwardRef(
       accept,
       validate,
       fontSize,
+      validation,
       ...rest
     },
     ref
@@ -134,11 +135,12 @@ const Input = React.forwardRef(
         style={{ fontSize: fontSize }}
         placeholder={placeholder}
         onChange={onChange}
+        onKeyUp={onKeyUp}
         ref={ref}
         {...rest}
       />
       <div className={styles.error}>
-        {(errors?.[name] || validate) && errorMessage}
+        {(errors?.[name] && errorMessage) || (validate ? validate : null)}
       </div>
     </label>
   )
@@ -186,7 +188,7 @@ const SelectInput = React.forwardRef((props, ref) => {
   const {
     name,
     // value,
-    // placeholder,
+    placeholder,
     // type,
     // onChange,
     children,
@@ -195,8 +197,11 @@ const SelectInput = React.forwardRef((props, ref) => {
     errorMessage,
     defaultValue,
     // options,
-    // isMulti,
+    control,
+    isMulti,
     options,
+    onChange,
+    value,
   } = props;
   return (
     <label
@@ -206,20 +211,25 @@ const SelectInput = React.forwardRef((props, ref) => {
     >
       <span className={styles.name}>{children}</span>
       <Controller
-        // isMulti={isMulti}
-        // name={name}
-        // control={control}
-        // options={options}
-        // placeholder={placeholder}
+        name={name}
+        control={control}
+        options={options}
         {...props}
-        as={
+        defaultValue={defaultValue}
+        // value={options.value}
+        isMulti={isMulti}
+        // as={
+        render={({ onChange, value, name, ref }) => (
           <Select
-            value={options.value}
-            defaultValue={defaultValue}
+            inputRef={ref}
+            isMulti={isMulti}
+            placeholder={placeholder}
+            options={options}
+            value={options.find((c) => c.value === value)}
+            onChange={(val) => onChange(val.value)}
             styles={{
               placeholder: (provided, state) => ({
                 ...provided,
-                // fontFamily: "Noto Sans",
                 fontSize: 12,
               }),
               option: (provided, state) => ({
@@ -253,7 +263,7 @@ const SelectInput = React.forwardRef((props, ref) => {
             }}
             innerRef={ref}
           />
-        }
+        )}
       />
       <div className={styles.error}>{errors?.[name] && errorMessage}</div>
     </label>
@@ -275,6 +285,9 @@ const InputWithMask = React.forwardRef((props, ref) => {
     errorMessage,
     onKeyPress,
     onKeyUp,
+    required,
+    rules,
+    ...rest
   } = props;
   // console.log(errors)
   return (
@@ -285,19 +298,21 @@ const InputWithMask = React.forwardRef((props, ref) => {
     >
       <span className={styles.name}>{children}</span>
       <Controller
-        as={<InputMask inputRef={ref} />}
+        as={<InputMask />}
+        // inputRef={ref}
         control={control}
         errors={errors}
-        // inputRef={ ref }
+        rules={rules}
         name={name}
         type={type ? type : "text"}
-        value={value}
+        value={value || ""}
         placeholder={placeholder}
         onChange={onChange}
         mask={mask}
-        defaultValue={defaultValue}
+        defaultValue={defaultValue || ""}
         onKeyPress={onKeyPress}
         onKeyUp={onKeyUp}
+        {...rest}
       />
       <div className={styles.error}>{errors?.[name] && errorMessage}</div>
     </label>
@@ -343,8 +358,8 @@ const PhotoUpload = React.forwardRef((props, ref) => {
   const [zoom, setZoom] = useState(1);
   const [photoSelected, setPhotoSelected] = useState();
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [croppedImage, setCroppedImage] = useState(null);
-  const { file, name, onChange, upload, image, dialog } = props;
+  // const [croppedImage, setCroppedImage] = useState(null);
+  const { file, name, upload, image, dialog } = props;
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -400,9 +415,9 @@ const PhotoUpload = React.forwardRef((props, ref) => {
       </div>
       {dialog && (
         <Dialog
-          style={{ maxWidth: "unset" }}
           header={"Selecione sua foto"}
           handleClose={props.onClick}
+          className={styles.PhotoUpload__dialog}
         >
           <Text style={{ marginBottom: 12 }}>
             Clique abaixo para selecionar
@@ -428,6 +443,7 @@ const PhotoUpload = React.forwardRef((props, ref) => {
                 <Cropper
                   image={photoSelected}
                   crop={crop}
+                  cropShape={`round`}
                   zoom={zoom}
                   aspect={1 / 1}
                   onCropChange={setCrop}

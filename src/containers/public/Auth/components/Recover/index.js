@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { Helmet } from "react-helmet";
 
 import styles from "./styles.module.sass";
 
@@ -18,6 +19,11 @@ const Recover = ({ type, action }) => {
 
   return (
     <SpaceBackground>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Mundo Jix - Recuperar senha</title>
+        {/* <link rel="canonical" href="http://mysite.com/example" /> */}
+      </Helmet>
       <section className={styles.wrapper}>
         <Logo
           color="white"
@@ -25,7 +31,11 @@ const Recover = ({ type, action }) => {
           desc={`${"Digite seu e-mail e enviaremos uma senha provisória."}`}
         />
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          noValidate
+          style={{ padding: "0 15px" }}
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <Card className={styles.card}>
             <Input
               ref={register({ required: true, pattern: /^\S+@\S+$/i })}

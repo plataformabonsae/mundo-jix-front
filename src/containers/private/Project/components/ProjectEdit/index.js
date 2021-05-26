@@ -104,7 +104,7 @@ const ProjectEdit = (props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.edit}>
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className={styles.edit}>
       <input
         type="hidden"
         name="challenge_id"

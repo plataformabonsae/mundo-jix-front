@@ -20,15 +20,15 @@ const InfoProfile = ({
 }) => {
   let history = useHistory();
   let { action } = useParams();
-  const { data: user, loading } = useSelector((state) => state.user);
+  const { data: user } = useSelector((state) => state.user);
 
   const joinType = (action, type) => {
     if (action === "pessoal") {
       return (
-        <Layout>
+        <Layout style={{ marginTop: 0, padding: 0, paddingBottom: 24 }}>
           <Pessoal
-            hasPassword
-            dontRedirect
+            hasPassword={hasPassword}
+            dontRedirect={dontRedirect}
             noShadow={noShadow}
             type={type}
             action={action}
@@ -37,9 +37,9 @@ const InfoProfile = ({
       );
     } else if (action === "academico") {
       return (
-        <Layout>
+        <Layout style={{ marginTop: 0, padding: 0 }}>
           <Academico
-            dontRedirect
+            dontRedirect={dontRedirect}
             noShadow={noShadow}
             type={type}
             action={action}
@@ -48,9 +48,9 @@ const InfoProfile = ({
       );
     } else if (action === "profissional") {
       return (
-        <Layout>
+        <Layout style={{ marginTop: 0, padding: 0 }}>
           <Profissional
-            dontRedirect
+            dontRedirect={dontRedirect}
             noShadow={noShadow}
             type={type}
             action={action}
@@ -62,9 +62,9 @@ const InfoProfile = ({
     } else {
       if (type === "empresa") {
         return (
-          <Layout>
+          <Layout style={{ marginTop: 0, padding: 0 }}>
             <Pessoal
-              dontRedirect
+              dontRedirect={dontRedirect}
               noShadow={noShadow}
               type={type}
               action={action}
@@ -72,7 +72,7 @@ const InfoProfile = ({
           </Layout>
         );
       } else {
-        history.push("/404");
+        history.push("/dashboard");
       }
     }
   };

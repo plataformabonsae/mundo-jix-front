@@ -24,11 +24,15 @@ export const tokenFetch =
       .then(function (response) {
         dispatch(UserTypeActions.userTypeSuccess(type));
         dispatch(TokenActions.tokenSuccess(response?.data?.data?.token));
+        if (response?.data?.data?.token && type) {
+          window.localStorage.setItem("token", response.data.data.token);
+          window.localStorage.setItem("usertype", type);
+        }
       })
-      .catch(function (response) {
+      .catch(function (error) {
         // handle error
-        dispatch(TokenActions.tokenFailure(response)) &&
-          dispatch(UserTypeActions.userTypeFailure(response));
+        dispatch(TokenActions.tokenFailure(error.response)) &&
+          dispatch(UserTypeActions.userTypeFailure(error));
         // console.log(response);
       });
     return call;

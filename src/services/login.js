@@ -4,6 +4,7 @@ import { TALENT, COMPANY } from "utils/api";
 import { store } from "store/configureStore";
 import axios from "axios";
 import { tokenFetch } from "services/token";
+import { get } from "services/auth";
 
 // import { useAuth } from 'utils/context/auth'
 
@@ -58,7 +59,7 @@ export const loginFetch =
     await res
       .then(function (response) {
         const user = response?.data?.data;
-        dispatch(UserActions.userSuccess(user));
+        dispatch(get(type, token));
         window.localStorage.setItem(
           "accepted_terms",
           user?.user?.accepted_terms

@@ -1,35 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+import { PasswordChecker } from "components/PasswordChecker";
 import { Input, InputGroup } from "components/Inputs";
 import Button from "components/Button";
 import Copyright from "components/Copyright";
 import { Logo } from "components/Logo";
 
-import { newuser } from "services/auth";
+import { newuser, logout } from "services/auth";
 import history from "utils/history";
+
+import { Creators as UserActions } from "store/ducks/User";
 
 // import Typography from 'utils/styles/Typography.module.sass'
 
 import styles from "./styles.module.sass";
 
 const Email = ({ title, desc, type }) => {
+  const [password, setPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
+  const [allValid, setAllValid] = useState();
+  const [emailError, setEmailError] = useState();
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+
   const { register, errors, handleSubmit } = useForm();
 
   const dispatch = useDispatch();
-  const { data: user } = useSelector((state) => state.user);
+  // const { data: user } = useSelector((state) => state.user);
   const { error, loading } = useSelector((state) => state.token);
 
-  const onSubmit = (data) => {
-    dispatch(newuser(type, data))
-      .catch((error) => console.log(error))
-      .then(() => history.push(`/join/${type}/terms`));
+  useEffect(() => {
+    dispatch(UserActions.logoutSuccess());
+  }, [dispatch]);
+
+  const onSubmit = async (data) => {
+    await dispatch(newuser(type, data))
+      .then(() => history.push(`/join/${type}/terms`))
+      .catch((error) => setEmailError(error.response.data.errors.email[0]));
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.login}>
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className={styles.login}>
       <div className={styles.content}>
         <Logo title={title} desc={desc} />
 
@@ -45,6 +61,7 @@ const Email = ({ title, desc, type }) => {
                 ? "Digite seu nome"
                 : "Digite o nome da empresa"
             }
+            onChange={(e) => setName(e.target.value)}
             placeholder={
               type === "talento"
                 ? "Digite seu nome"
@@ -60,6 +77,7 @@ const Email = ({ title, desc, type }) => {
               type="text"
               name="last_name"
               errors={errors}
+              onChange={(e) => setLastName(e.target.value)}
               errorMessage="Digite o seu sobrenome"
               placeholder="Digite seu sobrenome"
             >
@@ -71,45 +89,89 @@ const Email = ({ title, desc, type }) => {
         <InputGroup>
           <Input
             disabled={loading}
-            ref={register({ required: true })}
+            ref={register({
+              required: {
+                value: true,
+                message: "Digite o seu e-mail",
+              },
+            })}
             type="email"
             name="email"
             errors={errors}
-            errorMessage="Digite o seu e-mail"
+            validate={emailError && "Este e-mail já está em uso"}
+            errorMessage={errors?.email?.message}
             placeholder="Digite seu e-mail"
+            onChange={(e) => {
+              setEmailError(false);
+              setEmail(e.target.value);
+            }}
           >
             e-mail
           </Input>
         </InputGroup>
 
-        <InputGroup>
+        <InputGroup style={{ position: "relative" }}>
+          <div style={{ position: "relative", flex: "50% 1" }}>
+            <Input
+              disabled={loading}
+              ref={register({
+                required: {
+                  value: true,
+                  message: "Digite a senha",
+                },
+                minLength: {
+                  value: 8,
+                  message: "A senha precisa ter pelo menos 8 caracteres.",
+                },
+                pattern: {
+                  value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/,
+                  message:
+                    "A senha precisa conter 1 caractere especial, 1 letra miníscula, 1 letra maiúscula e um número.",
+                },
+              })}
+              type="password"
+              name="password"
+              errors={errors}
+              errorMessage={errors?.password?.message}
+              placeholder="Digite a senha"
+              onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setShowTooltip(true)}
+              onBlur={() => setShowTooltip(false)}
+            >
+              Senha
+            </Input>
+            {showTooltip && (
+              <PasswordChecker
+                password={password}
+                confirmPassword={confirmPassword}
+                setValid={setAllValid}
+                isValid={allValid}
+              />
+            )}
+          </div>
           <Input
             disabled={loading}
-            ref={register({ required: true })}
-            type="password"
-            name="password"
-            errors={errors}
-            errorMessage="Digite uma senha"
-            placeholder="Digite uma senha"
-          >
-            Senha
-          </Input>
-          <Input
-            disabled={loading}
-            ref={register({ required: true })}
+            ref={register({
+              required: {
+                value: true,
+                message: "Repita a senha",
+              },
+              validate: (e) => confirmPassword === password,
+            })}
             type="password"
             name="confirm_password"
             errors={errors}
-            errorMessage="Repita a senha"
-            placeholder="Repita a senha"
+            errorMessage={
+              errors?.confirm_password?.message ||
+              "As senhas precisam ser iguais."
+            }
+            onFocus={() => setShowTooltip(true)}
+            placeholder="Digite a senha novamente"
+            onChange={(e) => setConfirmPassword(e.target.value)}
           >
-            Confirmar senha
+            Confirme a senha
           </Input>
         </InputGroup>
-
-        {error ? (
-          <div className={styles.error}>Este e-mail já está cadastrado</div>
-        ) : null}
         {type !== "talento" ? (
           <>
             <input
@@ -136,7 +198,19 @@ const Email = ({ title, desc, type }) => {
         <input ref={register()} type="hidden" name="is_mentor" value="0" />
         <input ref={register()} type="hidden" name="is_judge" value="0" />
 
-        <Button disabled={loading} Tag={`button`} type="primary">
+        <Button
+          disabled={
+            loading ||
+            // error ||
+            !allValid ||
+            !name.length ||
+            !lastName.length ||
+            !email.length
+          }
+          Tag={`button`}
+          submit
+          type="primary"
+        >
           Continuar
         </Button>
 

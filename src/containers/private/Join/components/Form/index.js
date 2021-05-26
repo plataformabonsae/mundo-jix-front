@@ -9,7 +9,7 @@ import { InfoProfile } from "components/InfoProfile";
 const Form = ({ children, action, type }) => {
   return (
     <>
-      <InfoProfile center>
+      <InfoProfile center redirect>
         {type === "talento" && (
           <CardTabs>
             <TabFlat to={`/join/${type}/pessoal`}>Pessoal</TabFlat>

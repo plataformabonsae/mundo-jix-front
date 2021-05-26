@@ -149,7 +149,7 @@ const Subscription = (props) => {
           {step === "convidar" && "Quem você quer convidar para sua equipe?"}
         </Title>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <input
           type="hidden"
           name="challenge_id"

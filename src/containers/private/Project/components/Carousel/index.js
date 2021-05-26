@@ -12,7 +12,7 @@ import { Title, Text } from "components/Text";
 import { TabFlat } from "components/Tabs";
 // import { Dot } from "components/Dot";
 import Button from "components/Button";
-import { ButtonGroup } from "components/ButtonGroup";
+// import { ButtonGroup } from "components/ButtonGroup";
 
 import profileDefault from "assets/components/ProfileCard/default.png";
 import guardia from "assets/components/ProfileCard/guardia.svg";

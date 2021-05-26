@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useLocation, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
+import { removeLastPath } from "utils/etc";
 
 import { Card } from "components/Card";
 import { Title } from "components/Text";
@@ -15,7 +18,7 @@ import {
   Textarea,
   // AddGroup,
   RemoveGroup,
-  // InputWithMask,
+  InputWithMask,
   // Textarea
 } from "components/Inputs";
 import { Text } from "components/Text";
@@ -23,55 +26,109 @@ import Button from "components/Button";
 import { ButtonGroup } from "components/ButtonGroup";
 // import { cep, cepReset } from "services/adress";
 
-// import { edit } from "services/auth";
+import { edit } from "services/auth";
 
-// TODO
-// 1 - Adicionar e remover mais números
-// 2 - '' '' '' redes socias
-
-const Profissional = ({ action, type, noShadow }) => {
+const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   const history = useHistory();
-  // const { pathname } = useLocation()
-
-  // const dispatch = useDispatch();
-  // const { data: user } = useSelector((state) => state.login);
-  // const { data: usertype } = useSelector((state) => state.usertype);
-  // const { loading } = useSelector((state) => state.profile);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const { data: user, loading } = useSelector((state) => state.user);
+  const { data: usertype } = useSelector((state) => state.usertype);
 
   const { register, errors, control, handleSubmit } = useForm();
+  const [availableSkills, setAvailableSkills] = useState([]);
 
-  const [tels, setTels] = useState([0]);
-  const [emails, setEmails] = useState([0]);
-  const [socials, setSocials] = useState([0]);
+  const [portfolios, setPortfolios] = useState([]);
+  const [experiences, setExperiences] = useState([]);
+  const [links, setLinks] = useState([]);
 
-  // const onSubmit = async (data) => {
-  //     let {
-  //         name,
-  //         last_name,
-  //         cpf,
-  //         birthdate,
-  //         // file,
-  //     } = data
-  //     // console.log(data)
-  //     // console.log(file)
-  //     await dispatch(edit(type, {
-  //         name,
-  //         last_name,
-  //         cpf,
-  //         birthdate,
-  //         // file,
-  //     }))
-  //     .then(() => {
-  //         if( type === 'talento' ) {
-  //             history.push(`/join/${type}/academico`)
-  //         } else {
-  //             history.push(`/dashboard/${type}`)
-  //         }
-  //     })
-  // }
+  useEffect(() => {
+    const append = (skill) => {
+      setAvailableSkills((prev) => [...prev, skill]);
+    };
+    const skills = user?.types?.skills;
+    console.log(skills);
+    if (skills) {
+      for (let i = 0; i < skills.length; i++) {
+        append({ value: skills[i].id, label: skills[i].title });
+      }
+    }
+  }, [user?.types?.skills]);
 
-  const onSubmit = (data) => {
-    history.push(`/dashboard/${type}`);
+  useEffect(() => {
+    const append = (xp) => {
+      setExperiences((prev) => [...prev, xp]);
+    };
+    for (let i = 0; i < user.experiences.length; i++) {
+      append(user.experiences[i]);
+    }
+    return () => {
+      setExperiences([]);
+    };
+  }, [user]);
+
+  useEffect(() => {
+    const append = (link) => {
+      setLinks((prev) => [...prev, link]);
+    };
+    for (let i = 0; i < user.links.length; i++) {
+      append(user.links[i]);
+    }
+    return () => {
+      setLinks([]);
+    };
+  }, [user]);
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    // let { email, name, last_name, cpf, phones, birthdate } = data;
+    const {
+      current_situation,
+      looking_for,
+      curriculum,
+      portfolios,
+      experiences,
+      links,
+    } = data;
+    let filtered_portfolios;
+    let filtered_experiences;
+    let filtered_links;
+    for (let i = 0; i < portfolios.length; i++) {
+      filtered_portfolios = [...portfolios].filter((port) => port.link.length);
+    }
+    for (let i = 0; i < experiences.length; i++) {
+      filtered_experiences = [...experiences].filter((xp) => xp.role.length);
+    }
+    for (let i = 0; i < links.length; i++) {
+      filtered_links = [...links].filter((link) => link.link.length);
+    }
+    await dispatch(
+      edit(usertype, {
+        name: user?.user?.name,
+        email: user?.user?.email,
+
+        current_situation,
+        looking_for,
+        curriculum: curriculum[0],
+        portfolios: JSON.stringify(filtered_portfolios),
+        experiences: JSON.stringify(filtered_experiences),
+        links: JSON.stringify(filtered_links),
+      })
+    )
+      .then(() => {
+        toast.success("Informações atualizadas", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      })
+      .then(() => !dontRedirect && history.push("/dashboard"))
+      .catch((error) => {
+        console.log(error.response.data);
+        console.log(error.response.data.errors);
+
+        toast.error("Algum erro ocorreu. Tente novamente", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      });
   };
 
   const typeSituacao = [
@@ -95,13 +152,6 @@ const Profissional = ({ action, type, noShadow }) => {
     { value: "Outro", label: "Outro" },
   ];
 
-  const typeSkill = [
-    { value: "Programação", label: "Programação" },
-    { value: "Skill dois", label: "Skill dois" },
-    { value: "Skill três", label: "Skill três" },
-    { value: "Skill quatro", label: "Skill quatro" },
-  ];
-
   const typeLinks = [
     { value: "Youtube", label: "Youtube" },
     { value: "Blog", label: "Blog" },
@@ -109,14 +159,15 @@ const Profissional = ({ action, type, noShadow }) => {
   ];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form noValidate onSubmit={handleSubmit(onSubmit)}>
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Perspectivas</Title>
 
         <InputGroup>
           <SelectInput
-            ref={register({ required: true })}
-            name={`situacao-atual`}
+            defaultValue={user?.user?.current_situation}
+            ref={register()}
+            name={`current_situation`}
             control={control}
             errors={errors}
             errorMessage="Selecione um tipo"
@@ -129,8 +180,9 @@ const Profissional = ({ action, type, noShadow }) => {
 
         <InputGroup>
           <SelectInput
-            ref={register({ required: true })}
-            name={`o-que-busca`}
+            defaultValue={user?.user?.looking_for}
+            ref={register()}
+            name={`looking_for`}
             control={control}
             errors={errors}
             errorMessage="Selecione um tipo"
@@ -144,17 +196,18 @@ const Profissional = ({ action, type, noShadow }) => {
 
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Skills</Title>
+        {console.log(availableSkills)}
 
         <InputGroup>
           <SelectInput
-            ref={register({ required: true })}
+            ref={register()}
             name={`skills`}
             control={control}
-            isMulti
+            isMulti={true}
             errors={errors}
             errorMessage="Digite pelo menos uma skill"
             placeholder="Digite sua skill"
-            options={typeSkill}
+            options={availableSkills}
           />
         </InputGroup>
       </Card>
@@ -162,21 +215,22 @@ const Profissional = ({ action, type, noShadow }) => {
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Portfolio</Title>
 
-        {tels.map((_, index) => {
+        {portfolios.map((field, index) => {
           return (
             <InputGroup>
               <Input
                 ref={register()}
+                control={control}
                 errors={errors}
                 errorMessage="Máximo 20 caracteres"
-                name="plataforma.link"
+                name={`portfolios.${index}.link`}
                 placeholder="Colo aqui o link"
               >
                 Link
               </Input>
               <SelectInput
                 ref={register()}
-                name={`plafatorma.url`}
+                name={`portfolios.${index}.platform`}
                 control={control}
                 errors={errors}
                 errorMessage="Selecione pelo menos uma plataforma"
@@ -189,28 +243,56 @@ const Profissional = ({ action, type, noShadow }) => {
           );
         })}
 
-        {tels.length > 1 && (
-          <RemoveGroup
-            onClick={() => setTels((state) => [...state].slice(0, -1))}
-            text="Remover portfolio"
-          />
+        {!portfolios[0]?.link && (
+          <InputGroup>
+            <Input
+              ref={register()}
+              control={control}
+              errors={errors}
+              errorMessage="Máximo 20 caracteres"
+              name={`portfolios.0.link`}
+              placeholder="Colo aqui o link"
+            >
+              Link
+            </Input>
+            <SelectInput
+              ref={register()}
+              name={`portfolios.0.platform`}
+              control={control}
+              errors={errors}
+              errorMessage="Selecione pelo menos uma plataforma"
+              placeholder="Selecione a plataforma"
+              options={typePortifolio}
+            >
+              Plataforma
+            </SelectInput>
+          </InputGroup>
         )}
-        <AddGroup
-          onClick={() => setTels((state) => [...state, state++])}
-          text="Adicionar portfolio"
-        />
+
+        <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+          <AddGroup
+            onClick={() => setPortfolios((prev) => [...prev, prev++])}
+            text="Adicionar portfolio"
+          />
+          {portfolios?.length > 0 && (
+            <RemoveGroup
+              onClick={() => setPortfolios((state) => [...state].slice(0, -1))}
+              text="Remover portfolio"
+            />
+          )}
+        </InputGroup>
       </Card>
 
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Currículo</Title>
 
         <InputGroup>
-          <Text size={12} weight={"bold"}>
+          <Text style={{ width: "100%" }} size={12} weight={"bold"}>
             Anexe seu currículo em PDF ou Doc:
           </Text>
           <InputFile
             ref={register()}
-            name={`curriculo`}
+            name={`curriculum`}
             control={control}
             // errors={errors}
             // errorMessage="Selecione pelo menos uma plataforma"
@@ -223,16 +305,18 @@ const Profissional = ({ action, type, noShadow }) => {
       </Card>
 
       <Card noShadow={noShadow}>
-        <Title style={{ marginBottom: 32 }}>Experiência Porfissional</Title>
+        <Title style={{ marginBottom: 32 }}>Experiência Profissional</Title>
 
-        {emails.map((_, index) => {
+        {experiences.map((field, index) => {
           return (
             <>
               <InputGroup>
                 <Input
+                  defaultValue={field.role}
                   ref={register()}
-                  name="cargo"
+                  name={`experiences.${index}.role`}
                   errors={errors}
+                  control={control}
                   errorMessage="Campo necessário"
                   placeholder="Digite o cargo"
                 >
@@ -242,9 +326,11 @@ const Profissional = ({ action, type, noShadow }) => {
 
               <InputGroup>
                 <Input
+                  defaultValue={field.company}
                   ref={register()}
-                  name="empresa.nome"
+                  name={`experiences.${index}.company`}
                   errors={errors}
+                  control={control}
                   errorMessage="Campo necessário"
                   placeholder="Digite o nome da empresa"
                 >
@@ -253,35 +339,49 @@ const Profissional = ({ action, type, noShadow }) => {
               </InputGroup>
 
               <InputGroup>
-                <Input
+                <InputWithMask
+                  defaultValue={field.start_date}
                   ref={register()}
-                  name="empresa.inicio"
+                  name={`experiences.${index}.start_date`}
                   errors={errors}
+                  control={control}
                   errorMessage="Campo necessário"
                   placeholder="__/__/____"
+                  mask={`99/99/9999`}
                 >
                   Início
-                </Input>
-                <Input
+                </InputWithMask>
+                <InputWithMask
+                  defaultValue={field.end_date}
                   ref={register()}
-                  name="empresa.termino"
+                  name={`experiences.${index}.end_date`}
                   errors={errors}
+                  control={control}
+                  mask={`99/99/9999`}
                   errorMessage="Campo necessário"
                   placeholder="__/__/____"
                 >
                   Término
-                </Input>
+                </InputWithMask>
                 <div style={{ width: "100%", textAlign: "right" }}>
-                  <Checkbox>Meu Emprego atual</Checkbox>
+                  <Checkbox
+                  // defaultValue={field.current_job}
+                  // ref={register()}
+                  // name={`experiences.${index}.current_job`}
+                  >
+                    Meu Emprego atual
+                  </Checkbox>
                 </div>
               </InputGroup>
 
               <InputGroup>
                 <Textarea
+                  defaultValue={field.main_activities}
                   ref={register()}
                   errors={errors}
+                  control={control}
                   errorMessage="Máximo de 400 caracteres"
-                  name={`atividades`}
+                  name={`experiences.${index}.main_activities`}
                   placeholder="Digite suas principais atividades"
                 >
                   Principais atividades
@@ -291,16 +391,91 @@ const Profissional = ({ action, type, noShadow }) => {
           );
         })}
 
-        {emails.length > 1 && (
-          <RemoveGroup
-            onClick={() => setEmails((state) => [...state].slice(0, -1))}
-            text="Remover experiencia"
-          />
+        {!experiences[0]?.role && (
+          <>
+            <InputGroup>
+              <Input
+                ref={register()}
+                name={`experiences.0.role`}
+                errors={errors}
+                control={control}
+                errorMessage="Campo necessário"
+                placeholder="Digite o cargo"
+              >
+                Cargo
+              </Input>
+            </InputGroup>
+
+            <InputGroup>
+              <Input
+                ref={register()}
+                name={`experiences.0.company`}
+                errors={errors}
+                control={control}
+                errorMessage="Campo necessário"
+                placeholder="Digite o nome da empresa"
+              >
+                Empresa
+              </Input>
+            </InputGroup>
+
+            <InputGroup>
+              <InputWithMask
+                ref={register()}
+                name={`experiences.0.start_date`}
+                errors={errors}
+                control={control}
+                errorMessage="Campo necessário"
+                placeholder="__/__/____"
+                mask={`99/99/9999`}
+              >
+                Início
+              </InputWithMask>
+              <InputWithMask
+                ref={register()}
+                name={`experiences.0.end_date`}
+                errors={errors}
+                control={control}
+                mask={`99/99/9999`}
+                errorMessage="Campo necessário"
+                placeholder="__/__/____"
+              >
+                Término
+              </InputWithMask>
+              <div style={{ width: "100%", textAlign: "right" }}>
+                <Checkbox ref={register()} name={`experiences.0.current_job`}>
+                  Meu Emprego atual
+                </Checkbox>
+              </div>
+            </InputGroup>
+
+            <InputGroup>
+              <Textarea
+                ref={register()}
+                errors={errors}
+                control={control}
+                errorMessage="Máximo de 400 caracteres"
+                name={`experiences.0.main_activities`}
+                placeholder="Digite suas principais atividades"
+              >
+                Principais atividades
+              </Textarea>
+            </InputGroup>
+          </>
         )}
-        <AddGroup
-          onClick={() => setEmails((state) => [...state, state++])}
-          text="Adicionar experiencia"
-        />
+
+        <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+          <AddGroup
+            onClick={() => setExperiences((prev) => [...prev, prev++])}
+            text="Adicionar experiência"
+          />
+          {experiences?.length > 0 && (
+            <RemoveGroup
+              onClick={() => setExperiences((state) => [...state].slice(0, -1))}
+              text="Remover experiência"
+            />
+          )}
+        </InputGroup>
       </Card>
 
       <Card noShadow={noShadow}>
@@ -330,21 +505,24 @@ const Profissional = ({ action, type, noShadow }) => {
 
           <AddGroup text="Adicionar link" />
         </InputGroup> */}
-        {socials.map((_, index) => {
+        {links.map((field, index) => {
           return (
             <InputGroup key={index}>
               <Input
+                defaultValue={field.link}
                 ref={register()}
                 errors={errors}
+                control={control}
                 errorMessage="Somente números"
-                name={`social.${[index]}.link`}
+                name={`links.${index}.link`}
                 placeholder="Cole aqui o link"
               >
                 Link
               </Input>
               <SelectInput
+                defaultValue={field.platform}
                 ref={register()}
-                name={`social.${[index]}.type`}
+                name={`links.${index}.platform`}
                 control={control}
                 errors={errors}
                 errorMessage="Selecione um tipo"
@@ -357,24 +535,49 @@ const Profissional = ({ action, type, noShadow }) => {
           );
         })}
 
-        {socials.length > 1 && (
-          <RemoveGroup
-            onClick={() => setSocials((state) => [...state].slice(0, -1))}
-            text="Remover link"
-          />
+        {!links[0]?.link && (
+          <InputGroup>
+            <Input
+              ref={register()}
+              errors={errors}
+              control={control}
+              errorMessage="Somente números"
+              name={`links.0.link`}
+              placeholder="Cole aqui o link"
+            >
+              Link
+            </Input>
+            <SelectInput
+              ref={register()}
+              name={`links.0.platform`}
+              control={control}
+              errors={errors}
+              errorMessage="Selecione um tipo"
+              placeholder="Selecione a plataforma"
+              options={typeLinks}
+            >
+              Tipo de rede
+            </SelectInput>
+          </InputGroup>
         )}
-        <AddGroup
-          onClick={() => setSocials((state) => [...state, state++])}
-          text="Adicionar link"
-        />
+
+        <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+          <AddGroup
+            onClick={() => setLinks((prev) => [...prev, prev++])}
+            text="Adicionar link"
+          />
+          {links?.length > 0 && (
+            <RemoveGroup
+              onClick={() => setLinks((state) => [...state].slice(0, -1))}
+              text="Remover link"
+            />
+          )}
+        </InputGroup>
       </Card>
 
       <ButtonGroup>
-        <Button to={`/dashboard/${type}`} type="outlineWhite">
-          Salvar e sair
-        </Button>
-        <Button Tag="button" type="secondary">
-          Continuar
+        <Button Tag="button" submit type="secondary">
+          {dontRedirect ? "Salvar" : "Finalizar"}
         </Button>
       </ButtonGroup>
     </form>

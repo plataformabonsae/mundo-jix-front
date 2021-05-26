@@ -1,3 +1,4 @@
+@import 'utils/styles/colors'
 
 .wrapper
     padding: 12px
@@ -6,3 +7,27 @@
     justify-content: center
     align-items: center
     opacity: .8
+
+.full
+    position: fixed
+    display: flex
+    justify-content: center
+    align-items: center
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: white
+
+    &__content
+        max-width: 400px
+        display: flex
+        flex-direction: column
+        color: $LIGHT_GRAY
+        img
+            margin:
+                bottom: 12px
+
+    &__message
+        margin:
+            top: 128px

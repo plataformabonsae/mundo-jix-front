@@ -6,12 +6,12 @@ import {
   compose,
 } from "@reduxjs/toolkit";
 import { localStorage, thunk } from "./middleware";
-import { ducks } from "./ducks";
+import { rootReducer } from "./ducks";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const enhancer = composeEnhancers(applyMiddleware(thunk, localStorage));
-const reducer = ducks;
+const reducer = rootReducer;
 
 const store = createStore(reducer, enhancer);
 

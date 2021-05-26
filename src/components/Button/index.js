@@ -30,7 +30,7 @@ const Button = ({
       }}
       type={submit ? "submit" : ""}
       link={link}
-      to={to ? to : "/"}
+      to={to ? to : null}
       href={href}
       target={target}
       onClick={onClick}

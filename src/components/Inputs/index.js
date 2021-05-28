@@ -406,6 +406,7 @@ const InputWithMask = React.forwardRef((props, ref) => {
 
 const Checkbox = React.forwardRef((props, ref) => {
   const {
+    defaultValue,
     defaultChecked,
     disabled,
     onClick,
@@ -423,6 +424,7 @@ const Checkbox = React.forwardRef((props, ref) => {
     >
       <input
         defaultChecked={defaultChecked}
+        defaultValue={defaultValue}
         disabled={disabled}
         name={name}
         type="checkbox"

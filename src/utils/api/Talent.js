@@ -12,6 +12,11 @@ const TALENT = {
 
     //GET
     user: `${BASEURL}/user`,
+
+    //RESET
+    reset: `${BASEURL}/user/resetPassword`,
+    pin: `${BASEURL}/user/pinIsValid`,
+    change: `${BASEURL}/user/changePassword`,
   },
 
   DASHBOARD: {

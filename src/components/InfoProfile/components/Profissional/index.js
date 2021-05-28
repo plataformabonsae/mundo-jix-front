@@ -32,13 +32,16 @@ import { edit } from "services/auth";
 const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const location = useLocation();
+  // const location = useLocation();
   const { data: user, loading } = useSelector((state) => state.user);
   const { data: usertype } = useSelector((state) => state.usertype);
 
   const { register, errors, control, handleSubmit } = useForm();
   const [availableSkills, setAvailableSkills] = useState([]);
   const [skillsChange, setSkillsChange] = useState([]);
+
+  const [currentJob, setCurrentJob] = useState([]);
+  const [datesValidation, setDatesValidation] = useState([]);
 
   const [portfolios, setPortfolios] = useState([]);
   const [experiences, setExperiences] = useState([]);
@@ -49,7 +52,6 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
       setSkillsChange((prev) => [...prev, skill]);
     };
     const skills = user?.skills;
-    console.log(skills);
     if (skills) {
       for (let i = 0; i < skills.length; i++) {
         append({ value: skills[i].id, label: skills[i].title });
@@ -100,6 +102,34 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     };
   }, [user]);
 
+  useState(() => {
+    const appendCurrentJob = (link) => {
+      setCurrentJob((prev) => [...prev, link]);
+    };
+    const appendDates = (link) => {
+      setDatesValidation((prev) => [...prev, link]);
+    };
+    if (user.experiences.length) {
+      for (let i = 0; i < user.experiences.length; i++) {
+        appendCurrentJob({
+          status: user.experiences[i].current_job === 1 ? true : false,
+          id: user.experiences[i].id,
+        });
+        appendDates({
+          start: user.experiences[i].start_date,
+          end: user.experiences[i].end_date,
+        });
+      }
+    } else {
+      appendCurrentJob([]);
+      appendDates([]);
+    }
+    return () => {
+      setCurrentJob([]);
+      appendDates([]);
+    };
+  }, [user]);
+
   useEffect(() => {
     const append = (port) => {
       setPortfolios((prev) => [...prev, port]);
@@ -117,7 +147,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   }, [user]);
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     // let { email, name, last_name, cpf, phones, birthdate } = data;
     const {
       current_situation,
@@ -144,7 +174,8 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     for (let i = 0; i < links?.length; i++) {
       filtered_links = [...links].filter((link) => link.link.length);
     }
-    console.log(JSON.stringify(filtered_skills));
+    // console.log(JSON.stringify(filtered_experiences));
+    // console.log(JSON.stringify(filtered_skills));
     await dispatch(
       edit(usertype, {
         name: user?.user?.name,
@@ -205,6 +236,54 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     setSkillsChange(data);
   };
 
+  const handleCurrentJob = (index, status) => {
+    setCurrentJob((prev) => {
+      let array = [...prev];
+      array[index].status = status;
+      return array;
+    });
+    console.log(currentJob);
+  };
+
+  const handleValidateDate = (data) => {
+    // Ex: 10/01/1985
+    // var regex = "\\d{2}/\\d{2}/\\d{4}";
+    var dtArray = data.split("/");
+
+    if (dtArray == null) return false;
+
+    // Checks for dd/mm/yyyy format.
+    var dtDay = dtArray[0];
+    var dtMonth = dtArray[1];
+    var dtYear = dtArray[2];
+
+    if (dtMonth < 1 || dtMonth > 12) return false;
+    else if (dtDay < 1 || dtDay > 31) return false;
+    else if (
+      (dtMonth === 4 || dtMonth === 6 || dtMonth === 9 || dtMonth === 11) &&
+      dtDay === 31
+    )
+      return false;
+    else if (dtMonth === 2) {
+      var isleap =
+        dtYear % 4 === 0 && (dtYear % 100 !== 0 || dtYear % 400 === 0);
+      if (dtDay > 29 || (dtDay === 29 && !isleap)) return false;
+    }
+    return true;
+  };
+
+  const handleSetDate = (index, start, end) => {
+    setDatesValidation((prev) => {
+      let array = [...prev];
+      array[index] = {
+        start: start.length ? start : null,
+        end: end.length ? end : null,
+      };
+      return array;
+    });
+    console.log("datesValidation");
+  };
+
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>
       <Card noShadow={noShadow}>
@@ -254,7 +333,6 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
             onChange={handleSkillsChange}
           />
         </InputGroup>
-        {console.log(availableSkills)}
       </Card>
       {skillsChange.map((item, index) => (
         <input
@@ -400,29 +478,48 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
                   name={`experiences.${index}.start_date`}
                   errors={errors}
                   control={control}
+                  // validate={handleValidateDate()}
+                  onKeyUp={(e) => handleSetDate(index, e.target.value, "")}
                   errorMessage="Campo necessário"
                   placeholder="__/__/____"
                   mask={`99/99/9999`}
                 >
                   Início
                 </InputWithMask>
+
                 <InputWithMask
-                  defaultValue={field.end_date}
-                  ref={register()}
+                  disabled={currentJob[index].status}
+                  defaultValue={
+                    (currentJob[index].status && " ") || field.end_date
+                  }
+                  onKeyUp={(e) => handleSetDate(index, "", e.target.value)}
+                  ref={register({
+                    validate: {
+                      value:
+                        /(^(((0[1-9]|1[0-9]|2[0-8])[\/](0[1-9]|1[012]))|((29|30|31)[\/](0[13578]|1[02]))|((29|30)[\/](0[4,6,9]|11)))[\/](19|[2-9][0-9])\d\d$)|(^29[\/]02[\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)/i,
+                      message: "Data inválida",
+                    },
+                  })}
+                  validate={handleValidateDate("28/08/1996")}
                   name={`experiences.${index}.end_date`}
                   errors={errors}
                   control={control}
                   mask={`99/99/9999`}
-                  errorMessage="Campo necessário"
+                  errorMessage={errors?.end_date?.message}
                   placeholder="__/__/____"
                 >
                   Término
                 </InputWithMask>
+                {console.log(datesValidation)}
+
                 <div style={{ width: "100%", textAlign: "right" }}>
                   <Checkbox
-                  // defaultValue={field.current_job}
-                  // ref={register()}
-                  // name={`experiences.${index}.current_job`}
+                    defaultChecked={field.current_job === 1 ? true : false}
+                    onChange={() =>
+                      handleCurrentJob(index, !currentJob[index].status)
+                    }
+                    ref={register()}
+                    name={`experiences.${index}.current_job`}
                   >
                     Meu Emprego atual
                   </Checkbox>
@@ -521,7 +618,10 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
 
         <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
           <AddGroup
-            onClick={() => setExperiences((prev) => [...prev, prev++])}
+            onClick={() => {
+              setExperiences((prev) => [...prev, prev++]);
+              setCurrentJob((prev) => [...prev, { status: false }]);
+            }}
             text="Adicionar experiência"
           />
           {experiences?.length > 1 && (

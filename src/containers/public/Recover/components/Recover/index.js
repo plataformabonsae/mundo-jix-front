@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import styles from "./styles.module.sass";
+
+import {
+  request,
+  // logout
+} from "services/recover";
 
 import { Card } from "components/Card";
 import { Input } from "components/Inputs";
@@ -9,9 +16,21 @@ import { ButtonGroup } from "components/ButtonGroup";
 import Button from "components/Button";
 
 const Recover = ({ type }) => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [success, setSuccess] = useState(false);
+  const { error } = useSelector((state) => state.recover);
   const { register, errors, handleSubmit } = useForm();
 
-  const onSubmit = (data) => alert(JSON.stringify(data));
+  const onSubmit = async (data) => {
+    const req = dispatch(request(type, data));
+    await req
+      .then((res) => {
+        setSuccess(true);
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>

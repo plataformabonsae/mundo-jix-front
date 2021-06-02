@@ -25,9 +25,8 @@ export const request =
     await dispatch(RecoverActions.recoverRequest());
     await res
       .then(function (response) {
-        if (response.data.success) {
-          dispatch(RecoverActions.recoverSuccess(response.data.data));
-        }
+        console.log(response);
+        dispatch(RecoverActions.recoverSuccess(response));
       })
       .catch((error) => dispatch(RecoverActions.recoverFailure(error)));
     return res;
@@ -41,22 +40,28 @@ export const change =
     url = type === "empresa" ? COMPANY.AUTH.change : TALENT.AUTH.change
   ) =>
   async (dispatch) => {
-    // dispatch(UserActions.userUpdate());
+    const formData = new FormData();
+    for (var key in body) {
+      if (typeof key === "object") {
+        formData.append(key, JSON.stringify(body[key]));
+      } else {
+        formData.append(key, body[key]);
+      }
+    }
     const res = axios({
       url,
       method: "post",
-      data: body,
-      // headers: {
-      //   Authorization: `Bearer ${token}`,
-      //   Accept: "application/json",
-      // },
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        // "Content-Type": "application/json",
+        // Authorization: `Bearer ${token}`,
+      },
     });
     await dispatch(RecoverActions.recoverRequest());
     await res
       .then(function (response) {
-        if (response.data.success) {
-          dispatch(RecoverActions.recoverSuccess(response.data.data));
-        }
+        dispatch(RecoverActions.recoverSuccess(response));
       })
       .catch((error) => dispatch(RecoverActions.recoverFailure(error)));
     return res;

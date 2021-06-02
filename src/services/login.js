@@ -8,7 +8,7 @@ import { get } from "services/auth";
 
 // import { useAuth } from 'utils/context/auth'
 
-import history from "utils/history";
+// import history from "utils/history";
 
 export const login = (type, user) => async (dispatch) => {
   // const auth = useAuth()
@@ -34,11 +34,9 @@ export const logout = () => async (dispatch) => {
 export const autoLogin = (from) => async (dispatch, getState) => {
   // const auth = useAuth()
   const { token, usertype } = store.getState();
-  if (token?.data && usertype?.data) {
-    const data = await dispatch(loginFetch(usertype.data, token.data));
-    from && history.replace(from);
-    if (!data) dispatch(logout());
-  }
+  // return new Promise((resolve, reject) => )
+  const data = await dispatch(loginFetch(usertype?.data, token?.data));
+  return data;
 };
 
 export const loginFetch =

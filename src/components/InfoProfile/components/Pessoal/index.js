@@ -32,12 +32,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import * as colors from "utils/styles/Colors";
 
-// import history from "utils/history";
-// import { isRejected } from "@reduxjs/toolkit";
-
-// TODO
-// errors in masked inputs
-
 const Pessoal = ({
   type,
   noShadow,
@@ -62,7 +56,7 @@ const Pessoal = ({
   });
   const [tels, setTels] = useState([]);
   const [emails, setEmails] = useState([]);
-  const [emailError, setEmailError] = useState();
+  // const [emailError, setEmailError] = useState();
   const [socials, setSocials] = useState([]);
 
   useEffect(() => {
@@ -188,7 +182,7 @@ const Pessoal = ({
     let value = val;
     let array = value.split("/").map((x) => +x);
 
-    return new Date(array[2] + 18, array[1] - 1, array[0]) <= new Date();
+    return new Date(array[2] + 16, array[1] - 1, array[0]) <= new Date();
   };
 
   const typeTel = [
@@ -306,7 +300,7 @@ const Pessoal = ({
                 }}
                 name="birthdate"
                 errors={errors}
-                errorMessage="Você precisa ter mais que 18 anos"
+                errorMessage="Você precisa ter mais que 16 anos"
                 placeholder="Somente números"
                 control={control}
                 mask={`99/99/9999`}

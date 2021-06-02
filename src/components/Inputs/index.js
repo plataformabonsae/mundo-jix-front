@@ -372,6 +372,7 @@ const InputWithMask = React.forwardRef((props, ref) => {
     onKeyUp,
     required,
     rules,
+    validate,
     ...rest
   } = props;
   // console.log(errors)
@@ -399,7 +400,9 @@ const InputWithMask = React.forwardRef((props, ref) => {
         onKeyUp={onKeyUp}
         {...rest}
       />
-      <div className={styles.error}>{errors?.[name] && errorMessage}</div>
+      <div className={styles.error}>
+        {(errors?.[name] && errorMessage) || (validate ? validate : null)}
+      </div>
     </label>
   );
 });

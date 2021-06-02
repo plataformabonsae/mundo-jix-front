@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import * as yup from "yup";
+// import { removeLastPath } from "utils/etc";
 
-import { removeLastPath } from "utils/etc";
+import { validationSchema } from "utils/etc";
 
+import { File } from "components/Downloads";
 import { Card } from "components/Card";
 import { Title } from "components/Text";
 import {
@@ -29,6 +32,16 @@ import { ButtonGroup } from "components/ButtonGroup";
 
 import { edit } from "services/auth";
 
+const curriculumSchema = yup.object().shape({
+  curriculum: yup
+    .mixed()
+    .test(
+      "",
+      "O arquivo deve ter até 8MB",
+      (value) => !value.length || value[0].size <= 8000000
+    ),
+});
+
 const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -36,7 +49,8 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   const { data: user, loading } = useSelector((state) => state.user);
   const { data: usertype } = useSelector((state) => state.usertype);
 
-  const { register, errors, control, handleSubmit } = useForm();
+  const resolver = validationSchema(curriculumSchema);
+  const { register, errors, control, handleSubmit } = useForm({ resolver });
   const [availableSkills, setAvailableSkills] = useState([]);
   const [skillsChange, setSkillsChange] = useState([]);
 
@@ -64,7 +78,6 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
       setAvailableSkills((prev) => [...prev, skill]);
     };
     const skills = user.types.skills;
-    console.log(skills);
     for (let i = 0; i < skills.length; i++) {
       append({ value: skills[i].id, label: skills[i].title });
     }
@@ -147,7 +160,8 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   }, [user]);
 
   const onSubmit = async (data) => {
-    // console.log(data);
+    console.log(data);
+    console.log(data.curriculum.length);
     // let { email, name, last_name, cpf, phones, birthdate } = data;
     const {
       current_situation,
@@ -203,6 +217,8 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       });
+
+    console.log(errors);
   };
 
   const typeSituacao = [
@@ -245,44 +261,28 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     console.log(currentJob);
   };
 
-  const handleValidateDate = (data) => {
-    // Ex: 10/01/1985
-    // var regex = "\\d{2}/\\d{2}/\\d{4}";
-    var dtArray = data.split("/");
-
-    if (dtArray == null) return false;
-
-    // Checks for dd/mm/yyyy format.
-    var dtDay = dtArray[0];
-    var dtMonth = dtArray[1];
-    var dtYear = dtArray[2];
-
-    if (dtMonth < 1 || dtMonth > 12) return false;
-    else if (dtDay < 1 || dtDay > 31) return false;
-    else if (
-      (dtMonth === 4 || dtMonth === 6 || dtMonth === 9 || dtMonth === 11) &&
-      dtDay === 31
-    )
-      return false;
-    else if (dtMonth === 2) {
-      var isleap =
-        dtYear % 4 === 0 && (dtYear % 100 !== 0 || dtYear % 400 === 0);
-      if (dtDay > 29 || (dtDay === 29 && !isleap)) return false;
-    }
-    return true;
-  };
-
-  const handleSetDate = (index, start, end) => {
+  const handleSetStartDate = (index, start) => {
     setDatesValidation((prev) => {
       let array = [...prev];
-      array[index] = {
-        start: start.length ? start : null,
-        end: end.length ? end : null,
-      };
+      array[index].start = start.length ? start : null;
       return array;
     });
-    console.log("datesValidation");
+    console.log(index, start);
   };
+
+  const handleSetEndDate = (index, end) => {
+    setDatesValidation((prev) => {
+      let array = [...prev];
+      array[index].end = end.length ? end : null;
+      return array;
+    });
+    console.log(index, end);
+  };
+
+  const handleParseDate = (date) =>
+    date && !!Number(date.split("/")[2]) && date.split("/")[2].length === 4
+      ? new Date(date.split("/").reverse().join("-")).getTime()
+      : false;
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -376,32 +376,6 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
           );
         })}
 
-        {/* {!portfolios[0]?.link && (
-          <InputGroup>
-            <Input
-              ref={register()}
-              control={control}
-              errors={errors}
-              errorMessage="Máximo 20 caracteres"
-              name={`portfolios.0.link`}
-              placeholder="Colo aqui o link"
-            >
-              Link
-            </Input>
-            <SelectInput
-              ref={register()}
-              name={`portfolios.0.platform`}
-              control={control}
-              errors={errors}
-              errorMessage="Selecione pelo menos uma plataforma"
-              placeholder="Selecione a plataforma"
-              options={typePortifolio}
-            >
-              Plataforma
-            </SelectInput>
-          </InputGroup>
-        )} */}
-
         <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
           <AddGroup
             onClick={() => setPortfolios((prev) => [...prev, prev++])}
@@ -420,15 +394,23 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
         <Title style={{ marginBottom: 32 }}>Currículo</Title>
 
         <InputGroup>
+          {user?.user?.curriculum_file && (
+            <File
+              file={user.user.curriculum_file}
+              name={user.user.curriculum_filename}
+              extension={user.user.curriculum_fileextension}
+            />
+          )}
           <Text style={{ width: "100%" }} size={12} weight={"bold"}>
-            Anexe seu currículo em PDF ou Doc:
+            Anexe um currículo em PDF ou Doc (limite de 8mb):
           </Text>
           <InputFile
             ref={register()}
             name={`curriculum`}
             control={control}
-            // errors={errors}
-            // errorMessage="Selecione pelo menos uma plataforma"
+            accept="application/msword, application/pdf"
+            errors={errors}
+            errorMessage={errors?.curriculum?.message}
             // placeholder="Selecione a plataforma"
             options={typePortifolio}
           >
@@ -442,7 +424,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
 
         {experiences.map((field, index) => {
           return (
-            <>
+            <div key={index}>
               <InputGroup>
                 <Input
                   defaultValue={field.role}
@@ -478,29 +460,32 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
                   name={`experiences.${index}.start_date`}
                   errors={errors}
                   control={control}
-                  // validate={handleValidateDate()}
-                  onKeyUp={(e) => handleSetDate(index, e.target.value, "")}
-                  errorMessage="Campo necessário"
+                  validate={
+                    !handleParseDate(datesValidation[index]?.start) &&
+                    "Digite uma data válida"
+                  }
+                  onKeyUp={(e) => handleSetStartDate(index, e.target.value)}
+                  errorMessage="Data invalida"
                   placeholder="__/__/____"
                   mask={`99/99/9999`}
                 >
                   Início
                 </InputWithMask>
+                {/* {console.log(currentJob[index].status)} */}
 
                 <InputWithMask
-                  disabled={currentJob[index].status}
+                  disabled={currentJob[index]?.status}
                   defaultValue={
                     (currentJob[index].status && " ") || field.end_date
                   }
-                  onKeyUp={(e) => handleSetDate(index, "", e.target.value)}
-                  ref={register({
-                    validate: {
-                      value:
-                        /(^(((0[1-9]|1[0-9]|2[0-8])[\/](0[1-9]|1[012]))|((29|30|31)[\/](0[13578]|1[02]))|((29|30)[\/](0[4,6,9]|11)))[\/](19|[2-9][0-9])\d\d$)|(^29[\/]02[\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)/i,
-                      message: "Data inválida",
-                    },
-                  })}
-                  validate={handleValidateDate("28/08/1996")}
+                  onKeyUp={(e) => handleSetEndDate(index, e.target.value)}
+                  ref={register()}
+                  validate={
+                    !currentJob[index].status &&
+                    handleParseDate(datesValidation[index]?.start) >
+                      handleParseDate(datesValidation[index]?.end) &&
+                    "A data de término deve ser maior que de início"
+                  }
                   name={`experiences.${index}.end_date`}
                   errors={errors}
                   control={control}
@@ -510,13 +495,12 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
                 >
                   Término
                 </InputWithMask>
-                {console.log(datesValidation)}
 
                 <div style={{ width: "100%", textAlign: "right" }}>
                   <Checkbox
                     defaultChecked={field.current_job === 1 ? true : false}
                     onChange={() =>
-                      handleCurrentJob(index, !currentJob[index].status)
+                      handleCurrentJob(index, !currentJob[index]?.status)
                     }
                     ref={register()}
                     name={`experiences.${index}.current_job`}
@@ -539,86 +523,17 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
                   Principais atividades
                 </Textarea>
               </InputGroup>
-            </>
+            </div>
           );
         })}
-
-        {/* {!experiences[0]?.role && (
-          <>
-            <InputGroup>
-              <Input
-                ref={register()}
-                name={`experiences.0.role`}
-                errors={errors}
-                control={control}
-                errorMessage="Campo necessário"
-                placeholder="Digite o cargo"
-              >
-                Cargo
-              </Input>
-            </InputGroup>
-
-            <InputGroup>
-              <Input
-                ref={register()}
-                name={`experiences.0.company`}
-                errors={errors}
-                control={control}
-                errorMessage="Campo necessário"
-                placeholder="Digite o nome da empresa"
-              >
-                Empresa
-              </Input>
-            </InputGroup>
-
-            <InputGroup>
-              <InputWithMask
-                ref={register()}
-                name={`experiences.0.start_date`}
-                errors={errors}
-                control={control}
-                errorMessage="Campo necessário"
-                placeholder="__/__/____"
-                mask={`99/99/9999`}
-              >
-                Início
-              </InputWithMask>
-              <InputWithMask
-                ref={register()}
-                name={`experiences.0.end_date`}
-                errors={errors}
-                control={control}
-                mask={`99/99/9999`}
-                errorMessage="Campo necessário"
-                placeholder="__/__/____"
-              >
-                Término
-              </InputWithMask>
-              <div style={{ width: "100%", textAlign: "right" }}>
-                <Checkbox ref={register()} name={`experiences.0.current_job`}>
-                  Meu Emprego atual
-                </Checkbox>
-              </div>
-            </InputGroup>
-
-            <InputGroup>
-              <Textarea
-                ref={register()}
-                errors={errors}
-                control={control}
-                errorMessage="Máximo de 400 caracteres"
-                name={`experiences.0.main_activities`}
-                placeholder="Digite suas principais atividades"
-              >
-                Principais atividades
-              </Textarea>
-            </InputGroup>
-          </>
-        )} */}
 
         <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
           <AddGroup
             onClick={() => {
+              setDatesValidation((prev) => [
+                ...prev,
+                { start: null, end: null },
+              ]);
               setExperiences((prev) => [...prev, prev++]);
               setCurrentJob((prev) => [...prev, { status: false }]);
             }}
@@ -635,31 +550,6 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
 
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Outros links</Title>
-
-        {/* <InputGroup>
-          <Input
-            ref={register()}
-            errors={errors}
-            errorMessage="Máximo 20 caracteres"
-            name="plataforma.link"
-            placeholder="Cole aqui o link"
-          >
-            Link
-          </Input>
-          <SelectInput
-            ref={register({ required: true })}
-            name={`plafatorma.url`}
-            control={control}
-            errors={errors}
-            errorMessage="Selecione pelo menos uma plataforma"
-            placeholder="Selecione a plataforma"
-            options={typeLinks}
-          >
-            Plataforma
-          </SelectInput>
-
-          <AddGroup text="Adicionar link" />
-        </InputGroup> */}
         {links.map((field, index) => {
           return (
             <InputGroup key={index}>
@@ -689,32 +579,6 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
             </InputGroup>
           );
         })}
-
-        {/* {!links[0]?.link && (
-          <InputGroup>
-            <Input
-              ref={register()}
-              errors={errors}
-              control={control}
-              errorMessage="Somente números"
-              name={`links.0.link`}
-              placeholder="Cole aqui o link"
-            >
-              Link
-            </Input>
-            <SelectInput
-              ref={register()}
-              name={`links.0.platform`}
-              control={control}
-              errors={errors}
-              errorMessage="Selecione um tipo"
-              placeholder="Selecione a plataforma"
-              options={typeLinks}
-            >
-              Tipo de rede
-            </SelectInput>
-          </InputGroup>
-        )} */}
 
         <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
           <AddGroup

@@ -4,8 +4,10 @@ import { useForm } from "react-hook-form";
 import { useHistory, useLocation } from "react-router-dom";
 // import { cpf } from 'cpf-cnpj-validator'
 import { useSelector, useDispatch } from "react-redux";
+// import * as yup from "yup";
 
 import { removeLastPath } from "utils/etc";
+import { validationSchema } from "utils/etc";
 
 import { Card } from "components/Card";
 import { Title } from "components/Text";
@@ -24,6 +26,16 @@ import { ButtonGroup } from "components/ButtonGroup";
 
 import { edit } from "services/auth";
 
+// const dateSchema = yup.object().shape({
+//   academic_formations: yup.array().when({
+//     is: (value) => value === "start_date",
+//     then: yup.number(),
+//     // otherwise: yup.array().nullable(),
+//   }),
+//   // .when('end_date',
+//   //   (eventStartDate, schema) => eventStartDate && schema.min(eventStartDate))
+// });
+
 const Academico = ({
   action,
   type,
@@ -39,6 +51,8 @@ const Academico = ({
   const { data: user, loading } = useSelector((state) => state.user);
   const { data: usertype } = useSelector((state) => state.usertype);
   const [academic, setAcademic] = useState([]);
+
+  // const resolver = validationSchema(dateSchema);
   const { register, errors, control, handleSubmit } = useForm();
 
   useEffect(() => {
@@ -225,6 +239,7 @@ const Academico = ({
                   mask={`99/99/9999`}
                   errorMessage="Campo necessário"
                   placeholder="__/__/____"
+                  // onChange={e => handleStartDate(e.target.value)}
                 >
                   Término
                 </InputWithMask>

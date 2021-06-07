@@ -26,7 +26,7 @@ export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
       {...rest}
       render={(props) => (
         <>
-          {width > 762 ? (
+          {!!width && width > 762 ? (
             <Menu
               user={user?.data?.user ? user?.data?.user : user?.data?.data}
             />

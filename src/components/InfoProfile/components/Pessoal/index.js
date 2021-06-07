@@ -559,7 +559,7 @@ const Pessoal = ({
           </ButtonGroup>
           {modalChangeEmail && (
             <Dialog
-              style={{ minWidth: 400 }}
+              // style={{ minWidth: 400 }}
               header={"Email principal"}
               handleClose={handleEmailModal}
             >
@@ -575,6 +575,7 @@ const Pessoal = ({
                   Tag={"span"}
                   disabled={loading}
                   type="tertiary"
+                  style={{marginRight: 12}}
                   onClick={() => handleEmailModal()}
                 >
                   Cancelar

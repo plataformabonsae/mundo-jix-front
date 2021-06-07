@@ -1,6 +1,6 @@
 import React, {
   // useState
-  useEffect,
+  useEffect, useState,
 } from "react";
 // import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -31,15 +31,29 @@ const MenuMobile = ({
   // const location = useLocation();
   let { data: type } = useSelector((state) => state.usertype);
 
-  // const [ isOpen, setIsOpen ] = useState(false)
+  // const [ height, setHeigth ] = useState(false)
   // const [ props, set ] = useSpring(
   //     {
   //         width: !isOpen ? 4 : 20
   //     }
   // )
 
+  // useState(() => {
+  //   document.getElementById('menu')?.clientHeight && 
+  //   setHeigth(document.getElementById('menu').clientHeight)
+  //   console.log(height, 'height')
+  // }, [document.getElementById('menu').clientHeight, height])
+
+  useEffect(() => {
+    const body = document.getElementsByTagName("body")[0];
+    body.style.paddingBottom = `${100}px`;
+    return () => (body.style.paddingBottom = 0);
+  }, []);
+
   return (
+    <>
     <nav
+    id="menu"
       // style={{ width: `${props.width}vw` }}
       // style={ props }
       // onMouseEnter={() => setIsOpen( true )}
@@ -89,6 +103,8 @@ const MenuMobile = ({
         </>
       )}
     </nav>
+    {/* <div style={{height: 120, position: 'relative'}}></div> */}
+    </>
   );
 };
 

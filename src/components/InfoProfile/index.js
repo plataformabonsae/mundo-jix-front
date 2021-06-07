@@ -81,6 +81,7 @@ const InfoProfile = ({
     <>
       {children}
       {user && joinType(action, type)}
+      <div style={{height: 60}}></div>
     </>
   );
 };

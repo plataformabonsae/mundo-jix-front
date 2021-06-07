@@ -49,9 +49,12 @@ const ChallengeCard = (props) => {
           </div>
         </header>
       )}
+      {!props.noImage && (
       <div style={{ margin: -20 }}>
         <MainImage noName data={props.item} logoPosition={`right`} />
       </div>
+
+      )}
       <Text
         color={colors.MEDIUM_GRAY}
         size={12}

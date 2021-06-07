@@ -11,9 +11,12 @@ import { ChallengeCard } from "components/ChallengeCard";
 import styles from "./styles.module.sass";
 import "swiper/swiper.scss";
 
+import { WindowSize } from 'utils/etc'
+
 // TODO
 
 const RecommendedChallenges = () => {
+  const { width } = WindowSize()
   const location = useLocation();
   const { data } = useSelector((state) => state.dashboard);
   const [challengeType, setChallengeType] = useState();
@@ -73,11 +76,12 @@ const RecommendedChallenges = () => {
 
       {challengeType?.length ? (
         <article className={styles.slider}>
-          <Swiper observer={challengeType} spaceBetween={24} slidesPerView={2}>
+          <Swiper observer={challengeType} spaceBetween={24} slidesPerView={width > 762 ? 2 : 1}>
             {challengeType.map((item, index) => {
               return (
                 <SwiperSlide key={item.id}>
                   <ChallengeCard
+                    noImage={width > 762 ? false : true}
                     item={item}
                     to={`${location.pathname}/modal/desafio/${item.id}`}
                   />

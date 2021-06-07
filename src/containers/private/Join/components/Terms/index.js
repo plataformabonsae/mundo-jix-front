@@ -65,7 +65,7 @@ const Terms = ({ children, type, id = 1 }) => {
 
   return (
     <section>
-      <Card>
+      <Card style={{maxHeight: 400, overflow: 'auto'}}>
         {termsLoading ? <Loading /> : parse(terms?.data?.data?.terms || "")}
       </Card>
 

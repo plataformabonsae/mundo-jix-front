@@ -23,6 +23,7 @@ import { InCompany } from "./components/InCompany";
 import { Ultradesafio } from "./components/Ultradesafio";
 import { DesafiosCadastrados } from "./components/DesafiosCadastrados";
 
+
 import { dashboardFetch } from "services/dashboard";
 
 import styles from "./styles.module.sass";

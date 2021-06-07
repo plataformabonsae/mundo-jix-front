@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet";
-import { useParams } from "react-router-dom";
+import { useParams,  Link } from "react-router-dom";
 
 import { TabFlat } from "components/Tabs";
 import { SubHeader } from "components/Header";
 import { Title } from "components/Text";
 import { InfoProfile } from "components/InfoProfile";
 
-// import styles from './styles.module.sass'
+import styles from './styles.module.sass'
 
 const Profile = () => {
   const { data: usertype } = useSelector((state) => state.usertype);
@@ -40,13 +40,14 @@ const Profile = () => {
         </>
       )}
 
-      <section style={{ margin: "48px 24px" }}>
+      <section className={styles.container}>
         {action !== "insignias" && (
           <Title size={28} style={{ marginLeft: 20, marginBottom: 36 }}>
             Perfil
           </Title>
         )}
         <InfoProfile type={usertype} noShadow hasPassword dontRedirect />
+        <Link to={`auth/${usertype}/logout`} style={{color: "#05B1A8"}}>Sair da conta</Link>
       </section>
     </>
   );

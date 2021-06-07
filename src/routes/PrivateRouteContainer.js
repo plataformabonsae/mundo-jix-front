@@ -3,16 +3,22 @@ import { useSelector } from "react-redux";
 import { Route } from "react-router-dom";
 
 import { Menu } from "components/Menu";
+import { MenuMobile } from "components/MenuMobile";
 import { Header } from "components/Header";
 import { ToastContainer } from "react-toastify";
 
 // import { useAuth } from 'utils/context/auth'
+
+// import styles from "./styles.module.sass";
+
+import { WindowSize } from "utils/etc";
 
 // import { autoLogin } from 'services/login'
 
 export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
   // const location = useLocation();
   // const { data: usertype } = useSelector((state) => state.usertype);
+  const { width } = WindowSize();
   const user = useSelector((state) => state.user);
 
   return (
@@ -20,7 +26,15 @@ export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
       {...rest}
       render={(props) => (
         <>
-          <Menu user={user?.data?.user ? user?.data?.user : user?.data?.data} />
+          {width > 762 ? (
+            <Menu
+              user={user?.data?.user ? user?.data?.user : user?.data?.data}
+            />
+          ) : (
+            <MenuMobile
+              user={user?.data?.user ? user?.data?.user : user?.data?.data}
+            />
+          )}
           <Header
             user={user?.data?.user ? user?.data?.user : user?.data?.data}
           />

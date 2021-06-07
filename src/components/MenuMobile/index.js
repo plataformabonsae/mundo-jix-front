@@ -17,21 +17,19 @@ import { Profile } from "./components/Profile";
 import { Points } from "./components/Points";
 import { Button } from "./components/Button";
 
-// import styles from './styles.module.sass'
+import styles from "./styles.module.sass";
 
 // TODO
 // 1 - Animation on open e close aside
 // 2 - social
 
-const Menu = ({ active, className, user = { name: "", last_name: "" } }) => {
+const MenuMobile = ({
+  active,
+  className,
+  user = { name: "", last_name: "" },
+}) => {
   // const location = useLocation();
   let { data: type } = useSelector((state) => state.usertype);
-
-  useEffect(() => {
-    const body = document.getElementsByTagName("body")[0];
-    body.style.paddingLeft = `${18}vw`;
-    return () => (body.style.paddingLeft = 0);
-  }, []);
 
   // const [ isOpen, setIsOpen ] = useState(false)
   // const [ props, set ] = useSpring(
@@ -41,30 +39,15 @@ const Menu = ({ active, className, user = { name: "", last_name: "" } }) => {
   // )
 
   return (
-    <Aside
+    <nav
       // style={{ width: `${props.width}vw` }}
       // style={ props }
       // onMouseEnter={() => setIsOpen( true )}
       // onMouseLeave={() => setIsOpen( false )}
-      className={className}
+      className={styles.nav}
     >
-      <Profile
-        image={`${
-          (user?.file || user?.data?.file) &&
-          BASEURL + (user.file || user.data.file)
-        }`}
-        name={`${user?.name || user?.data?.name} ${
-          user?.last_name || user?.data?.last_name
-            ? user.last_name || user.data.last_name
-            : ""
-        }`}
-        location={8}
-      />
-
       {type === "talento" && (
         <>
-          <Points points={0} />
-
           <Button to={`/dashboard`} dashboard>
             Dashboard
           </Button>
@@ -77,9 +60,9 @@ const Menu = ({ active, className, user = { name: "", last_name: "" } }) => {
           <Button to={`/perfil`} perfil>
             Perfil
           </Button>
-          <Button to={`/auth/${type}/logout`} sair>
+          {/* <Button to={`/auth/${type}/logout`} sair>
             Sair
-          </Button>
+          </Button> */}
         </>
       )}
       {type === "empresa" && (
@@ -105,8 +88,8 @@ const Menu = ({ active, className, user = { name: "", last_name: "" } }) => {
           </Button>
         </>
       )}
-    </Aside>
+    </nav>
   );
 };
 
-export { Menu };
+export { MenuMobile };

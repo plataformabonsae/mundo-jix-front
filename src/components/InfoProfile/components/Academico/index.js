@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 // import * as yup from "yup";
 
 import { removeLastPath } from "utils/etc";
-import { validationSchema } from "utils/etc";
 
 import { Card } from "components/Card";
 import { Title } from "components/Text";
@@ -50,6 +49,8 @@ const Academico = ({
   const location = useLocation();
   const { data: user, loading } = useSelector((state) => state.user);
   const { data: usertype } = useSelector((state) => state.usertype);
+
+  const [datesValidation, setDatesValidation] = useState([]);
   const [academic, setAcademic] = useState([]);
 
   // const resolver = validationSchema(dateSchema);
@@ -59,15 +60,24 @@ const Academico = ({
     const append = (tel) => {
       setAcademic((prev) => [...prev, tel]);
     };
+    const appendDates = (link) => {
+      setDatesValidation((prev) => [...prev, link]);
+    };
     if (user.academicformations.length) {
       for (let i = 0; i < user.academicformations.length; i++) {
         append(user.academicformations[i]);
+        appendDates({
+          start: user.academicformations[i].start_date,
+          end: user.academicformations[i].end_date,
+        });
       }
     } else {
       append({});
+      appendDates([]);
     }
 
     return () => {
+      appendDates([]);
       setAcademic([]);
     };
   }, [user]);
@@ -137,6 +147,29 @@ const Academico = ({
     { value: "Em andamento", label: "Em andamento" },
     { value: "Incompleto", label: "Incompleto" },
   ];
+
+  const handleSetStartDate = (index, start) => {
+    setDatesValidation((prev) => {
+      let array = [...prev];
+      array[index].start = start.length ? start : null;
+      return array;
+    });
+    console.log(index, start);
+  };
+
+  const handleSetEndDate = (index, end) => {
+    setDatesValidation((prev) => {
+      let array = [...prev];
+      array[index].end = end.length ? end : null;
+      return array;
+    });
+    console.log(index, end);
+  };
+
+  const handleParseDate = (date) =>
+    date && !!Number(date.split("/")[2]) && date.split("/")[2].length === 4
+      ? new Date(date.split("/").reverse().join("-")).getTime()
+      : false;
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -226,6 +259,11 @@ const Academico = ({
                   control={control}
                   mask={`99/99/9999`}
                   errorMessage="Campo necessário"
+                  validate={
+                    !handleParseDate(datesValidation[index]?.start) &&
+                    "Digite uma data válida"
+                  }
+                  onKeyUp={(e) => handleSetStartDate(index, e.target.value)}
                   placeholder="__/__/____"
                 >
                   Início
@@ -237,6 +275,12 @@ const Academico = ({
                   errors={errors}
                   control={control}
                   mask={`99/99/9999`}
+                  onKeyUp={(e) => handleSetEndDate(index, e.target.value)}
+                  validate={
+                    handleParseDate(datesValidation[index]?.start) >
+                      handleParseDate(datesValidation[index]?.end) &&
+                    "A data de término deve ser maior que de início"
+                  }
                   errorMessage="Campo necessário"
                   placeholder="__/__/____"
                   // onChange={e => handleStartDate(e.target.value)}

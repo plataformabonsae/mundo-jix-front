@@ -54,6 +54,10 @@ const TALENT = {
     my_invites: `${BASEURL}/team/my_invites`,
     invite: (id) => `${BASEURL}/team/invite/${id}`,
   },
+
+  TERMS: {
+    terms: `${BASEURL}/terms-of-use`,
+  },
 };
 
 export { TALENT };

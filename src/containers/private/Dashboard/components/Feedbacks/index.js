@@ -20,7 +20,7 @@ const Feedbacks = () => {
         <Search />
       </header>
 
-      <div style={{ overflow: "auto", height: "100%", position: "absolute" }}>
+      <div className={styles.container}>
         {false ? (
           <>
             <Card noShadow>

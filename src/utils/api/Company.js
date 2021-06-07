@@ -39,6 +39,10 @@ const COMPANY = {
     // GET
     project_edit: (id) => `${BASEURL}/project/edit/${id}`,
   },
+
+  TERMS: {
+    terms: `${BASEURL}/terms-of-use`,
+  },
 };
 
 export { COMPANY };

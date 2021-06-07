@@ -75,7 +75,7 @@ const Dashboard = () => {
           </section>
 
           {/* grid 1 - 2 */}
-          <section style={{ gridArea: "desafios", marginRight: 24 }}>
+          <section className={styles.group}>
             <Trail open={!loading}>
               <Challenges />
               <MyChallenges />

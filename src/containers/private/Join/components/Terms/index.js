@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "react-spring";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import parse from "html-react-parser";
 
 import { useDispatch, useSelector } from "react-redux";
 
 import { Card } from "components/Card";
+import { Loading } from "components/Loading";
 import { Checkbox } from "components/Inputs";
 import Button from "components/Button";
 import { ButtonGroup } from "components/ButtonGroup";
@@ -13,6 +15,7 @@ import { ButtonGroup } from "components/ButtonGroup";
 import styles from "./styles.module.sass";
 
 import { edit } from "services/auth";
+import { getTerms } from "services/terms";
 
 const Terms = ({ children, type, id = 1 }) => {
   const [accept, setAccept] = useState(false);
@@ -23,6 +26,13 @@ const Terms = ({ children, type, id = 1 }) => {
   const dispatch = useDispatch();
   const { data: user, loading } = useSelector((state) => state.user);
   const { data: usertype } = useSelector((state) => state.usertype);
+  const { data: terms, loading: termsLoading } = useSelector(
+    (state) => state.terms
+  );
+
+  useEffect(() => {
+    dispatch(getTerms(usertype));
+  }, [dispatch, usertype]);
 
   useEffect(() => {
     setAccept(Number(user?.user?.accepted_terms) === 1 ? true : false);
@@ -55,7 +65,9 @@ const Terms = ({ children, type, id = 1 }) => {
 
   return (
     <section>
-      <Card>{children}</Card>
+      <Card>
+        {termsLoading ? <Loading /> : parse(terms?.data?.data?.terms || "")}
+      </Card>
 
       <Card>
         <Checkbox
@@ -68,6 +80,8 @@ const Terms = ({ children, type, id = 1 }) => {
           Concordo e desejo continuar
         </Checkbox>
       </Card>
+
+      {console.log(terms)}
 
       {accept ? (
         usertype === "empresa" || usertype === "talento" ? (

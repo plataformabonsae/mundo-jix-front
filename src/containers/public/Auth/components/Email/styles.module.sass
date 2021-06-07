@@ -66,3 +66,23 @@
     margin:
         bottom: 12px
     color: $ERROR
+
+.goback
+    position: absolute
+    top: 24px
+    left: 12px
+
+@media only screen and (max-width: 762px)
+    .login
+        flex-direction: column
+    .goback
+        position: static
+        align-self: flex-start
+        margin: 24px 12px
+        margin:
+            top: 0
+
+        > *
+            display: inline-block
+            min-width: inherit
+            padding: 12px

@@ -16,6 +16,7 @@ import myChallenges from "./MyChallenges";
 import project from "./Project";
 import cep from "./Cep";
 import recover from "./Recover";
+import terms from "./Terms";
 
 const ducks = combineReducers({
   auth,
@@ -32,6 +33,7 @@ const ducks = combineReducers({
   project,
   subscribeChallenge,
   recover,
+  terms,
 });
 
 const rootReducer = (state, action) => {

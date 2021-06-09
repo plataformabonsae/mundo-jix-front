@@ -5,6 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Title, Text } from "components/Text";
 import { TabFlat } from "components/Tabs";
 import { SubHeader } from "components/Header";
+import { TrilhaItem } from "components/TrilhaItem";
+
+import { Video } from "./components/Video";
+import { Question } from "./components/Question";
+import { Material } from "./components/Material";
+
+import { normal, premium } from "services/trail";
+import { get } from "services/challenges";
 
 // import { Header } from "./components/Header";
 // import { TrilhaItem } from "./components/TrilhaItem";
@@ -12,15 +20,48 @@ import { SubHeader } from "components/Header";
 import styles from "./styles.module.sass";
 
 const TrilhaWatch = (props) => {
-  const [activeTab, setActiveTab] = useState("normal");
+  const dispatch = useDispatch();
+  const { data: trail, loading } = useSelector((state) => state.trail);
+  const { data: usertype } = useSelector((state) => state.usertype);
+  const { data: challenge } = useSelector((state) => state.challenge);
+  const { type, id, trail_type, trail_id } = useParams();
+  const [trailPreview, setTrailPreview] = useState({});
 
-  const { type, id, page } = useParams();
+  useEffect(() => {
+    dispatch(get(usertype, { challenge_id: id }))
+      .then((res) => {
+        console.log("then");
+      })
+      .catch((err) => {
+        console.log("catch");
+      });
+  }, [dispatch, usertype, id]);
 
-  const handleTabs = (tab) => {
-    setActiveTab(tab);
+  useEffect(() => {
+    trail_type === "normal" && dispatch(normal(usertype, { challenge_id: id }));
+    trail_type === "premium" &&
+      dispatch(premium(usertype, { challenge_id: id }));
+  }, [dispatch, usertype, id, trail_type]);
+
+  useEffect(() => {
+    if (trail === (undefined || null)) {
+      return;
+    } else {
+      const trailByUrl = [...trail].filter(
+        (item) => item.id === parseInt(trail_id)
+      )[0];
+      console.log(trailByUrl, trail_id);
+      setTrailPreview({
+        id: trailByUrl[trailByUrl.type].id,
+        premium: trailByUrl.premium,
+        type: trailByUrl.type,
+      });
+    }
+  }, [trail, trail_id]);
+
+  const handlePreview = (id, premium, type) => {
+    setTrailPreview({ id, premium, type });
   };
-
-  const { data, loading } = useSelector((state) => state.challenge);
 
   return (
     <>
@@ -31,7 +72,10 @@ const TrilhaWatch = (props) => {
         <TabFlat to={`/meus-desafios/${type}/${id}/projeto`} color={"white"}>
           Projeto
         </TabFlat>
-        <TabFlat to={`/meus-desafios/${type}/${id}/trilha`} color={"white"}>
+        <TabFlat
+          to={`/meus-desafios/${type}/${id}/trilha/normal`}
+          color={"white"}
+        >
           Trilha
         </TabFlat>
         <TabFlat to={`/meus-desafios/${type}/${id}/forum`} color={"white"}>
@@ -40,14 +84,44 @@ const TrilhaWatch = (props) => {
       </SubHeader>
       <section className={styles.trilhawatch}>
         <section className={styles.trilhawatch__player}>
-          <div className={styles.trilhawatch__content}></div>
+          <div className={styles.trilhawatch__content}>
+            {trailPreview.type === "video" && <Video item={trailPreview} />}
+            {trailPreview.type === "question" && (
+              <Question item={trailPreview} />
+            )}
+            {trailPreview.type === "material" && (
+              <Material item={trailPreview} />
+            )}
+          </div>
           <div className={styles.trilhawatch__selector}>
-            <Title>Nome do desafio</Title>
-            <Text size={12}>2/5</Text>
-            <div lassName={styles.trilhawatch__preview}>
-              <Text>1</Text>
-              <div lassName={styles.trilhawatch__preview__image}></div>
-              <Title size={14}>Aula 01: Título do vídeo</Title>
+            <Title className={styles.trilhawatch__title}>
+              {challenge?.challenge?.name}
+            </Title>
+            {/* <Text size={12}>{item.ord}/{trail.length}</Text> */}
+            <div className={styles.trilhawatch__preview}>
+              {trail?.map((item, index) => (
+                <div
+                  style={{
+                    background: parseInt(trail_id) === item.id && "#e9eced",
+                    padding: "0 32px",
+                  }}
+                >
+                  <TrilhaItem
+                    small
+                    to={`/meus-desafios/${type}/${id}/trilha/normal/${item.id}`}
+                    // onClick={() =>
+                    //   handlePreview(item[item.type].id, item.premium, item.type)
+                    // }
+                    locked={item.premium === 1 ? true : false}
+                    item={item}
+                    trailType={item.type}
+                    key={item.id}
+                    video={item.video}
+                    file={item.material}
+                    question={item.question}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </section>

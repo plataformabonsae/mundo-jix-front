@@ -15,7 +15,7 @@ import lockedImage from "assets/components/Trilha/locked.svg";
 import * as colors from "utils/styles/Colors";
 import { Item } from "containers/private/Challenge/components/Infos";
 
-const TrilhaItem = (props) => {
+const TrilhaItem = ({ Tag = Link, ...props }) => {
   const {
     locked,
     bar,
@@ -26,24 +26,52 @@ const TrilhaItem = (props) => {
     watched,
     item,
     trailType,
+    onClick,
   } = props;
   const { type, id, page } = useParams();
 
-  const small = {
-    height: "150",
-    width: "230",
+  const normal = {
+    height: 150,
+    width: 230,
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
     },
   };
 
+  const small = {
+    height: 90,
+    width: 170,
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 0,
+    },
+  };
+
+  // const order =
+
   return (
-    <Link style={{ textDecoration: "none" }} to={props.to}>
-      <section className={styles.trilhaitem}>
+    <Tag onClick={onClick} style={{ textDecoration: "none" }} to={props.to}>
+      <section
+        className={`${styles.trilhaitem} ${
+          !!props.small ? styles.trilhaitem__small : styles.trilhaitem__normal
+        }`}
+      >
         <div className={styles.trilhaitem__image}>
-          <Title color={colors.MEDIUM_GRAY}>0{item.order}</Title>
-          <div className={styles.trilhaitem__image__content}>
+          {!props.small ? (
+            <Title color={colors.MEDIUM_GRAY}>0{item.order}</Title>
+          ) : (
+            <Text
+              className={styles.trilhaitem__number}
+              color={colors.MEDIUM_GRAY}
+            >
+              0{item.order}
+            </Text>
+          )}
+          <div
+            className={`${styles.trilhaitem__image__content}`}
+            style={props.small ? small : normal}
+          >
             <img
               src={
                 (locked && lockedImage) ||
@@ -56,7 +84,7 @@ const TrilhaItem = (props) => {
             {video && (
               <YouTube
                 videoId={item?.video_id}
-                opts={small}
+                opts={props.small ? small : normal}
                 // onReady={handleOnReady}
               />
             )}
@@ -68,9 +96,12 @@ const TrilhaItem = (props) => {
         </div>
         <div className={styles.trilhaitem__content}>
           <Title size={16}>
-            <span style={{ textTransform: "capitalize" }}>{trailType}</span>{" "}
-            {item.order}: {item[trailType].name}
+            <span style={{ textTransform: "capitalize" }}>
+              {trailType === "question" ? "questão" : trailType}
+            </span>
+            : {item[trailType].name}
           </Title>
+          {/* {item.id} */}
           {!!item[trailType].duration && (
             <Text
               size={14}
@@ -80,13 +111,15 @@ const TrilhaItem = (props) => {
               {item[trailType].duration}
             </Text>
           )}
-          <Text>
-            {!!item[trailType].description &&
-              parse(item[trailType].description)}
-          </Text>
+          {!props.small && (
+            <Text>
+              {!!item[trailType].description &&
+                parse(item[trailType].description)}
+            </Text>
+          )}
         </div>
       </section>
-    </Link>
+    </Tag>
   );
 };
 

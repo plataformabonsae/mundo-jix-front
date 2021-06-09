@@ -1,5 +1,54 @@
+@import 'utils/styles/colors'
 
 .trilhawatch
-  padding: 32px
-  margin:
-    top: 32px
+  // padding: 32px
+  margin: 32px
+  // max-height: 500px
+  border: 1px solid $LIGHT_GRAY
+  background: #f9f9f9
+  // overflow: hidden
+
+  &__player
+    display: grid
+    grid: auto / 3fr 2fr
+
+  &__content
+    position: relative
+    width: 100%
+    height: 100%
+    border:
+      right: 1px solid #f9f9f9
+    // background: white
+    > *
+      position: absolute
+      height: 100%
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      width: 100%
+      border:
+        right: 1px solid #f9f9f9
+
+  &__selector
+    // border:
+    //   left: 1px solid #f9f9f9
+  &__title
+    padding: 32px
+
+  &__preview
+    padding: 32px
+    height: 500px
+    overflow: auto
+
+@media only screen and (max-width: 762px)
+
+  .trilhawatch
+    &__player
+      display: block
+
+    &__preview
+      padding: 0
+
+    &__content
+      height: 300px

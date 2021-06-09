@@ -78,7 +78,12 @@ const RoutesConfig = () => {
                     />
                     <PrivateRouteContainer
                       exact
-                      path="/meus-desafios/:type/:id/trilha/:trilha_id"
+                      path="/meus-desafios/:type/:id/:page/:trail_type"
+                      component={Challenge}
+                    />
+                    <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
                       component={TrilhaWatch}
                     />
                     <Route

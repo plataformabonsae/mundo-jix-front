@@ -55,6 +55,15 @@ const TALENT = {
     invite: (id) => `${BASEURL}/team/invite/${id}`,
   },
 
+  TRAIL: {
+    normal: (id) => `${BASEURL}/trail/${id}`,
+    premium: (id) => `${BASEURL}/trail_premium/${id}`,
+    question: (id, type) => `${BASEURL}/question/${id}/${type}`,
+    answer: (id, type) => `${BASEURL}/question/answer/${id}/${type}`,
+    video: (id, type) => `${BASEURL}/video/${id}/${type}`,
+    material: (id, type) => `${BASEURL}/material/${id}/${type}`,
+  },
+
   TERMS: {
     terms: `${BASEURL}/terms-of-use`,
   },

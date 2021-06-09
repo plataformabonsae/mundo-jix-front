@@ -17,6 +17,7 @@ import project from "./Project";
 import cep from "./Cep";
 import recover from "./Recover";
 import terms from "./Terms";
+import trail from "./Trail";
 
 const ducks = combineReducers({
   auth,
@@ -34,6 +35,7 @@ const ducks = combineReducers({
   subscribeChallenge,
   recover,
   terms,
+  trail,
 });
 
 const rootReducer = (state, action) => {

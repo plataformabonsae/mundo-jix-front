@@ -8,6 +8,9 @@
   margin:
     top: 12px
 
+  &__number
+    margin-top: 30px
+
   &__bar
     position: absolute
     bottom: 0
@@ -60,3 +63,28 @@
         top: 50%
         left: 50%
         transform: translate(-50%, -50%)
+
+@media only screen and (max-width: 762px)
+  .trilhaitem
+    &__normal
+      flex-direction: column
+
+      .trilhaitem
+        &__content
+          margin:
+            top: 16px
+            left: 38px
+
+@media only screen and (max-width: 490px)
+  .trilhaitem
+    &__small
+      flex-direction: column
+
+      .trilhaitem
+        &__image
+          &__content
+            display: none
+
+      .trilhaitem
+        &__number
+          margin-top: 0

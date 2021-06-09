@@ -11,6 +11,7 @@
     "cpf-cnpj-validator": "^1.0.3",
     "html-react-parser": "^1.2.6",
     "node-sass": "^5.0.0",
+    "pdf-viewer-reactjs": "^2.2.3",
     "react": "^17.0.1",
     "react-circular-progressbar": "^2.0.3",
     "react-dom": "^17.0.1",

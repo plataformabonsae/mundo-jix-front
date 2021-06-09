@@ -81,7 +81,10 @@ const Challenge = (props) => {
           <TabFlat to={`/meus-desafios/${type}/${id}/projeto`} color={"white"}>
             Projeto
           </TabFlat>
-          <TabFlat to={`/meus-desafios/${type}/${id}/trilha`} color={"white"}>
+          <TabFlat
+            to={`/meus-desafios/${type}/${id}/trilha/normal`}
+            color={"white"}
+          >
             Trilha
           </TabFlat>
           <TabFlat to={`/meus-desafios/${type}/${id}/forum`} color={"white"}>

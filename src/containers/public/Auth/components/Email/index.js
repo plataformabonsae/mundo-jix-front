@@ -90,7 +90,12 @@ const Email = ({ title, desc, type }) => {
         </InputGroup>
 
         <div className={styles.sub}>
-          <Checkbox type="checkbox" placeholder="Digite sua senha">
+          <Checkbox
+            ref={register()}
+            name={"remember_me"}
+            type="checkbox"
+            placeholder="Digite sua senha"
+          >
             Lembrar-me
           </Checkbox>
           <span className={styles.subSpan}>

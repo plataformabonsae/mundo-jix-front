@@ -81,6 +81,8 @@ export const loginFetch =
     //   dispatch(UserActions.userFailure(error));
     //   dispatch(logout());
     // }
+
+    // remember_me:
   };
 
 export const logoutFetch =

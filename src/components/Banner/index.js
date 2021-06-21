@@ -5,7 +5,7 @@ import Button from "components/Button";
 
 import styles from "./styles.module.sass";
 
-const Banner = ({ title, desc, to, button, full }) => (
+const Banner = ({ title, desc, to, button, full, Tag, onClick }) => (
   <section className={styles.banner}>
     {full ? (
       <>
@@ -15,7 +15,16 @@ const Banner = ({ title, desc, to, button, full }) => (
         <Text color={"white"} style={{ margin: "12px 0" }}>
           {desc}
         </Text>
-        <Button type={"green"}>{button ? button : "Criar desafio"}</Button>
+        {!!button && (
+          <Button
+            onClick={() => onClick()}
+            Tag={Tag}
+            to={to ? to : null}
+            type={"green"}
+          >
+            {button}
+          </Button>
+        )}
       </>
     ) : (
       <article className={styles.content}>
@@ -25,7 +34,16 @@ const Banner = ({ title, desc, to, button, full }) => (
         <Text color={"white"} style={{ margin: "12px 0" }}>
           {desc}
         </Text>
-        <Button type={"green"}>{button ? button : "Criar desafio"}</Button>
+        {!!button && (
+          <Button
+            onClick={() => onClick()}
+            Tag={Tag}
+            to={to ? to : null}
+            type={"green"}
+          >
+            {button}
+          </Button>
+        )}
       </article>
     )}
   </section>

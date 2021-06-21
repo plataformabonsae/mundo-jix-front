@@ -53,11 +53,8 @@ const Menu = ({ active, className, user = { name: "", last_name: "" } }) => {
           (user?.file || user?.data?.file) &&
           BASEURL + (user.file || user.data.file)
         }`}
-        name={`${user?.name || user?.data?.name} ${
-          user?.last_name || user?.data?.last_name
-            ? user.last_name || user.data.last_name
-            : ""
-        }`}
+        name={user?.name || user?.data?.name}
+        lastName={user?.last_name || user?.data?.last_name}
         location={8}
       />
 
@@ -100,6 +97,9 @@ const Menu = ({ active, className, user = { name: "", last_name: "" } }) => {
       )}
       {(type === "jurado" || type === "mentor") && (
         <>
+          <Button to={`/meus-desafios/`} meusDesafios>
+            Meus desafios
+          </Button>
           <Button to={`/auth/${type}/logout`} sair>
             Sair
           </Button>

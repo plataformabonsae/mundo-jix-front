@@ -1,16 +1,19 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { Card } from "components/Card";
 import { Title, Text } from "components/Text";
 import { Dot } from "components/Dot";
 import Button from "components/Button";
 import { Search } from "components/Inputs";
+import { FeedbackCard } from "components/FeedbackCard";
 
 import * as colors from "utils/styles/Colors";
 
 import styles from "./styles.module.sass";
 
-const Feedbacks = () => {
+const Feedbacks = (props) => {
+  const { data: dashboard } = useSelector((state) => state.dashboard);
   return (
     <section className={styles.feedbacks}>
       <header className={styles.header}>
@@ -19,41 +22,22 @@ const Feedbacks = () => {
         </Title>
         <Search />
       </header>
-
-      <div className={styles.container}>
-        {false ? (
-          <>
-            <Card noShadow>
-              <header className={styles.header}>
-                <Title size={16}>
-                  <Dot color={colors.ERROR} /> Mentor tal
-                </Title>
-                <Text size={14} color={colors.MEDIUM_GRAY}>
-                  03 / Dez
-                </Text>
-              </header>
-              <Text size={14} color={colors.MEDIUM_GRAY}>
-                Nome da empresa >> Nome do desafio{" "}
-              </Text>
-              <Text size={14} style={{ marginTop: 12 }}>
-                Etiam et sapien a massa lacinia ultricies. Morbi posuere
-                ultricies vulputate. Nulla pellentesque laoreet nunc, dictum...
-              </Text>
-              <Button
-                style={{
-                  color: colors.DARK_GRAY,
-                  paddingLeft: 0,
-                  fontSize: 14,
-                }}
-                transparent
-              >
-                Ler mais
-              </Button>
-            </Card>
-          </>
-        ) : (
-          <Text>Sem feedbacks cadastradas</Text>
-        )}
+      <div className={styles.wrapper}>
+        <div className={styles.container}>
+          {dashboard?.feedbacks?.length ? (
+            dashboard?.feedbacks?.map((item) => (
+              <>
+                <FeedbackCard
+                  challengeId={item.challenge_id}
+                  projectId={item.project_id}
+                  data={item}
+                />
+              </>
+            ))
+          ) : (
+            <Text>Sem feedbacks cadastradas</Text>
+          )}
+        </div>
       </div>
     </section>
   );

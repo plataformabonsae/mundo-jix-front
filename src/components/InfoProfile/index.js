@@ -5,13 +5,14 @@ import { useSelector } from "react-redux";
 import { Layout } from "components/Layout";
 
 import { Pessoal } from "./components/Pessoal";
+import { Empresa } from "./components/Empresa";
 import { Academico } from "./components/Academico";
 import { Profissional } from "./components/Profissional";
 
 import { Badges } from "./components/Badges";
 
 const InfoProfile = ({
-  center,
+  // center,
   noShadow,
   children,
   hasPassword,
@@ -23,47 +24,12 @@ const InfoProfile = ({
   const { data: user } = useSelector((state) => state.user);
 
   const joinType = (action, type) => {
-    if (action === "pessoal") {
-      return (
-        <Layout style={{ marginTop: 0, padding: 0, paddingBottom: 24 }}>
-          <Pessoal
-            hasPassword={hasPassword}
-            dontRedirect={dontRedirect}
-            noShadow={noShadow}
-            type={type}
-            action={action}
-          />
-        </Layout>
-      );
-    } else if (action === "academico") {
-      return (
-        <Layout style={{ marginTop: 0, padding: 0 }}>
-          <Academico
-            dontRedirect={dontRedirect}
-            noShadow={noShadow}
-            type={type}
-            action={action}
-          />
-        </Layout>
-      );
-    } else if (action === "profissional") {
-      return (
-        <Layout style={{ marginTop: 0, padding: 0 }}>
-          <Profissional
-            dontRedirect={dontRedirect}
-            noShadow={noShadow}
-            type={type}
-            action={action}
-          />
-        </Layout>
-      );
-    } else if (action === "insignias") {
-      return <Badges />;
-    } else {
-      if (type === "empresa") {
+    if (type === "talento") {
+      if (action === "pessoal") {
         return (
-          <Layout style={{ marginTop: 0, padding: 0 }}>
+          <Layout style={{ marginTop: 0, padding: 0, paddingBottom: 24 }}>
             <Pessoal
+              hasPassword={hasPassword}
               dontRedirect={dontRedirect}
               noShadow={noShadow}
               type={type}
@@ -71,9 +37,46 @@ const InfoProfile = ({
             />
           </Layout>
         );
-      } else {
-        history.push("/dashboard");
+      } else if (action === "academico") {
+        return (
+          <Layout style={{ marginTop: 0, padding: 0 }}>
+            <Academico
+              dontRedirect={dontRedirect}
+              noShadow={noShadow}
+              type={type}
+              action={action}
+            />
+          </Layout>
+        );
+      } else if (action === "profissional") {
+        return (
+          <Layout style={{ marginTop: 0, padding: 0 }}>
+            <Profissional
+              dontRedirect={dontRedirect}
+              noShadow={noShadow}
+              type={type}
+              action={action}
+            />
+          </Layout>
+        );
+      } else if (action === "insignias") {
+        return <Badges />;
       }
+    } else {
+      // if (type === "empresa") {
+      return (
+        <Layout style={{ marginTop: 0, padding: 0 }}>
+          <Empresa
+            dontRedirect={dontRedirect}
+            noShadow={noShadow}
+            type={type}
+            action={action}
+          />
+        </Layout>
+      );
+      // } else {
+      // history.push("/dashboard");
+      // }
     }
   };
 
@@ -81,7 +84,7 @@ const InfoProfile = ({
     <>
       {children}
       {user && joinType(action, type)}
-      <div style={{height: 60}}></div>
+      <div style={{ height: 60 }}></div>
     </>
   );
 };

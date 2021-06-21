@@ -1,4 +1,4 @@
-const BASEURL = "http://104.131.46.30/api";
+const BASEURL = process.env.REACT_APP_TALENT_API;
 
 const TALENT = {
   API: BASEURL,
@@ -6,6 +6,7 @@ const TALENT = {
   AUTH: {
     // POST
     login: `${BASEURL}/login`,
+    loginExternal: `${BASEURL}/login-external`,
     update: `${BASEURL}/user/update`,
     register: `${BASEURL}/register`,
     logout: `${BASEURL}/logout`,
@@ -49,10 +50,20 @@ const TALENT = {
     update: (id) => `${BASEURL}/project/update/${id}`,
   },
 
+  PROJECTS: {
+    projects: (id) => `${BASEURL}/mentor/challenge/${id}/projects`,
+    project: (id, project_id) =>
+      `${BASEURL}/mentor/challenge/${id}/project/${project_id}`,
+  },
+
   TEAM: {
     search: (id, query) => `${BASEURL}/team/search/${id}?name=${query}`,
+    teams: (id) => `${BASEURL}/challenge/${id}/teams`,
     my_invites: `${BASEURL}/team/my_invites`,
     invite: (id) => `${BASEURL}/team/invite/${id}`,
+    kick: (id) => `${BASEURL}/team/kickout/${id}`,
+    leave: (id) => `${BASEURL}/team/leave/${id}`,
+    transfer: (id) => `${BASEURL}/team/give-leadership/${id}`,
   },
 
   TRAIL: {
@@ -64,8 +75,39 @@ const TALENT = {
     material: (id, type) => `${BASEURL}/material/${id}/${type}`,
   },
 
+  FORUM: {
+    forum: (id) => `${BASEURL}/forum/${id}`,
+    publication: (id) => `${BASEURL}/forum-get/${id}`,
+    create: `${BASEURL}/forum/create`,
+    comment: `${BASEURL}/forum/comment`,
+  },
+
+  FEEDBACK: {
+    comment: (challenge_id, project_id) =>
+      `${BASEURL}/mentor/challenge/${challenge_id}/project/${project_id}/feedback/comment`,
+    create: (challenge_id, project_id) =>
+      `${BASEURL}/mentor/challenge/${challenge_id}/project/${project_id}/feedback/send`,
+    get: (challenge_id, project_id) =>
+      `${BASEURL}/mentor/challenge/${challenge_id}/project/${project_id}/feedbacks`,
+    getOne: (challenge_id, feedback_id) =>
+      `${BASEURL}/mentor/feedback/${challenge_id}/${feedback_id}`,
+  },
+
   TERMS: {
     terms: `${BASEURL}/terms-of-use`,
+  },
+
+  NOTIFICATIONS: {
+    unread: `${BASEURL}/notifications/unread`,
+    all: `${BASEURL}/notifications/all`,
+    readAll: `${BASEURL}/notifications/read`,
+    readOne: `${BASEURL}/notifications/read-one`,
+  },
+
+  INVITES: {
+    invites: `${BASEURL}/team/my_invites`,
+    accept: (id) => `${BASEURL}/team/accept/${id}`,
+    refuse: (id) => `${BASEURL}/team/refuse/${id}`,
   },
 };
 

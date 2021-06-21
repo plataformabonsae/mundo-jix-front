@@ -33,7 +33,7 @@ const Badges = () => {
           <Swiper
             observer={width}
             spaceBetween={24}
-            slidesPerView={width > 762 ? 5 : 1}
+            slidesPerView={(width > 1366 && 5) || (width > 762 && 3) || 1}
           >
             {data?.badges.map((item, index) => (
               <SwiperSlide>

@@ -13,7 +13,7 @@ import { Invites } from "./components/Invites";
 
 import { TitleAndBack } from "components/TitleAndBack";
 import { Title } from "components/Text";
-import { Input, InputGroup, InputFile } from "components/Inputs";
+import { Input, InputGroup } from "components/Inputs";
 import { Dialog } from "components/Dialog";
 // import { BlueCard, BlueCardContainer } from "components/BlueCard";
 import Button from "components/Button";
@@ -47,7 +47,7 @@ const Subscription = (props) => {
   // Fetch
   useEffect(() => {
     dispatch(all(usertype));
-    append({ value: "3" }); // temporary
+    // append({ value: "3" }); // temporary
     // console.log(fields)
   }, [dispatch, usertype, append]);
 
@@ -82,13 +82,19 @@ const Subscription = (props) => {
     setNewTeamDialog((prev) => !prev);
   };
 
-  const handleAppendInvite = (ids) => {
+  // diferenca entre montar equipe e comvidar depois
+  const handleAppendInvite = async (ids) => {
     console.log(ids.map((item) => `${item}`));
-    dispatch(
-      invite(usertype, {
-        team_id: window.localStorage.getItem("current_team"),
-        user_id: ids.toString(),
-      })
+    console.log(ids.toString());
+    Promise.all(
+      ids.map((id) =>
+        dispatch(
+          invite(usertype, {
+            team_id: window.localStorage.getItem("current_team"),
+            user_id: id,
+          })
+        )
+      )
     )
       .then((res) => console.log(res, "enviado"))
       .then(() =>
@@ -105,42 +111,46 @@ const Subscription = (props) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
     const req = dispatch(subscribe(usertype, data));
     await req
       .then(() =>
-        data.team?.invites?.length
+        !aloneDialog
           ? handleStep("convidar")
           : history.push(
               `/meus-desafios/${currentChallenge?.challenge_type}/${currentChallenge?.id}`
             )
       )
-      .catch((error) => {
-        toast.error("Algum erro ocorreu ao criar entrar no desafio", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
-        console.log(error);
-      })
       .then((res) => {
         toast.success("Inscrito com sucesso", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
         console.log(res);
+      })
+      .catch((error) => {
+        toast.error("Algum erro ocorreu ao criar entrar no desafio", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        console.log(error);
       });
   };
 
   return (
     <section className={styles.wrapper}>
-      {!(step === "convidar") && (
-        <TitleAndBack
-          data={currentChallenge}
-          to={
-            (step === "1" && `/desafios/${currentChallenge?.challenge_type}`) ||
-            (step === "2" &&
-              `/desafios/${currentChallenge?.challenge_type}/inscricao/${currentChallenge?.id}/1`)
-          }
-        />
-      )}
+      {/* {!(step === "convidar") && ( */}
+      <TitleAndBack
+        data={currentChallenge}
+        backText={"Ir para o desafio"}
+        to={
+          (step === "1" && `/desafios/${currentChallenge?.challenge_type}`) ||
+          (step === "2" &&
+            `/desafios/${currentChallenge?.challenge_type}/inscricao/${currentChallenge?.id}/1`) ||
+          (step === "equipes" &&
+            `/desafios/${currentChallenge?.challenge_type}/inscricao/${currentChallenge?.id}/2`) ||
+          (step === "convidar" &&
+            `/meus-desafios/${currentChallenge?.challenge_type}/${currentChallenge?.id}`)
+        }
+      />
+      {/* )} */}
       <div className={styles.title__container}>
         <Title size={28} className={styles.title}>
           {step === "1" && "Como será sua participação?"}
@@ -166,21 +176,26 @@ const Subscription = (props) => {
             {aloneDialog && (
               <Dialog
                 title={"Tem certeza?"}
+                handleClose={handleAloneDialog}
                 desc={
                   "Não será possível participar de uma equipe após confirmar esta opção."
                 }
               >
-                <Button
-                  style={{ marginRight: 12 }}
-                  Tag="button"
-                  type="gray"
-                  onClick={() => handleAloneDialog()}
+                <div
+                  style={{ display: "flex", justifyContent: "space-around" }}
                 >
-                  Cancelar
-                </Button>
-                <Button submit Tag="button" type={"tertiary"}>
-                  Confirmar
-                </Button>
+                  <Button
+                    style={{ minWidth: 120 }}
+                    Tag="button"
+                    type="gray"
+                    onClick={() => handleAloneDialog()}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button submit Tag="button" type={"tertiary"}>
+                    Confirmar
+                  </Button>
+                </div>
               </Dialog>
             )}
           </>
@@ -194,11 +209,11 @@ const Subscription = (props) => {
             />
             {newTeamDialog && (
               <Dialog
+                style={{ minWidth: 300 }}
                 header={"Criar uma equipe"}
                 handleClose={handleNewTeamDialog}
               >
                 {fields.map((field, index) => {
-                  // console.log(field);
                   return (
                     <input
                       type="hidden"
@@ -209,24 +224,18 @@ const Subscription = (props) => {
                     />
                   );
                 })}
-                {/* <input
-                  type="hidden"
-                  name="team[invites][1]"
-                  value={3}
+                {/* <InputGroup> */}
+                <Input
                   ref={register({ required: true })}
-                /> */}
-                <InputGroup>
-                  <Input
-                    ref={register({ required: true })}
-                    errors={errors}
-                    errorMessage={"Digite o nome da equipe para continuar"}
-                    placeholder={"Digite o nome da equipe"}
-                    name={"team[name]"}
-                  >
-                    Nome do time
-                  </Input>
-                </InputGroup>
-                <InputGroup>
+                  errors={errors}
+                  errorMessage={"Digite o nome da equipe para continuar"}
+                  placeholder={"Digite o nome da equipe"}
+                  name={"team[name]"}
+                >
+                  Nome do time
+                </Input>
+                {/* </InputGroup> */}
+                {/* <InputGroup>
                   <InputFile
                   // ref={register({required: true})}
                   // errors={errors}
@@ -234,34 +243,39 @@ const Subscription = (props) => {
                   >
                     Capa da equipe
                   </InputFile>
-                </InputGroup>
-                <Button
-                  Tag="button"
-                  type="gray"
-                  style={{ marginRight: 12 }}
-                  onClick={() => handleNewTeamDialog()}
+                </InputGroup> */}
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  Cancelar
-                </Button>
-                <Button
-                  // disabled={!(newTeamData?.team?.name?.length > 3)}
-                  submit
-                  Tag="button"
-                  type={"tertiary"}
-                  // onClick={() =>
-                  //   newTeamData?.team?.name?.length > 3 &&
-                  //   handleStep("convidar")
-                  // }
-                >
-                  Confirmar
-                </Button>
+                  <Button
+                    style={{ minWidth: 120 }}
+                    Tag="button"
+                    type="gray"
+                    onClick={() => handleNewTeamDialog()}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    // disabled={!(newTeamData?.team?.name?.length > 3)}
+                    style={{ minWidth: 100 }}
+                    submit
+                    Tag="button"
+                    type={"tertiary"}
+                    // onClick={() =>
+                    //   newTeamData?.team?.name?.length > 3 &&
+                    //   handleStep("convidar")
+                    // }
+                  >
+                    Confirmar
+                  </Button>
+                </div>
               </Dialog>
             )}
           </>
         )}
         {step === "equipes" && (
           <>
-            <TeamSearch />
+            <TeamSearch usertype={usertype} />
           </>
         )}
         {step === "convidar" && (

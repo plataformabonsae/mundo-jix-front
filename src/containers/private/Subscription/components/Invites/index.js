@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-// import {useParams} from 'react-redux'
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { InviteCard } from "components/InviteCard";
+import { Loading } from "components/Loading";
 import Button from "components/Button";
 import { Input } from "components/Inputs";
 
 import { searchPerson } from "services/team";
+import { get } from "services/project";
 
 import styles from "./styles.module.sass";
 
@@ -14,12 +16,24 @@ const Invites = (props) => {
   const dispatch = useDispatch();
   const [users, setUsers] = useState();
   const [invites, setInvites] = useState([]);
+  const [excludes, setExcludes] = useState([]);
   const [addedText, setAddedText] = useState("Adicionado");
   const { data, loading } = useSelector((state) => state.team);
+  const { data: usertype } = useSelector((state) => state.usertype);
+  const { data: project } = useSelector((state) => state.project);
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    dispatch(get(usertype, { challenge_id: id }));
+  }, [dispatch, usertype, id]);
 
   useEffect(() => {
     dispatch(
-      searchPerson(props.usertype, { challenge_id: props.id, name: "" })
+      searchPerson(props.usertype, {
+        challenge_id: window.localStorage.getItem("current_team"),
+        name: "",
+      })
     );
   }, [dispatch, props.usertype, props.id]);
 
@@ -28,8 +42,11 @@ const Invites = (props) => {
   }, [data]);
 
   useEffect(() => {
-    console.log(invites);
-  }, [invites]);
+    project?.teammates.length &&
+      setExcludes(
+        [...project?.teammates].filter((item) => item.id).map((user) => user.id)
+      );
+  }, [project?.teammates]);
 
   const handleSearch = (event) => {
     setUsers((state) =>
@@ -45,7 +62,7 @@ const Invites = (props) => {
   };
 
   const handleInvites = (invite) => {
-    if (!invites.includes(invite) && invites.length < 5) {
+    if (!invites.includes(invite) && excludes.length + invites.length < 4) {
       setInvites((prev) => [...prev, invite]);
     } else {
       setInvites((prev) => [...prev].filter((i) => i !== invite));
@@ -56,8 +73,7 @@ const Invites = (props) => {
     <>
       <section className={styles.search}>
         <Input
-          fontSize={20}
-          style={{ fontSize: 34 }}
+          style={{ fontSize: 20 }}
           disabled={loading}
           onChange={handleSearch}
           placeholder={"Digite para procurar usuários"}
@@ -66,6 +82,7 @@ const Invites = (props) => {
         </Input>
       </section>
       <section className={styles.invites}>
+        {loading && <Loading />}
         {users &&
           users.map((item, index) => (
             <InviteCard key={item.id} data={item}>
@@ -87,12 +104,17 @@ const Invites = (props) => {
           ))}
         {users?.length === 0 && <>Não encontramos esta pessoa</>}
       </section>
-      {!!invites.length && (
+      {(!!invites.length || !!excludes.length) && (
         <section className={styles.banner}>
-          {invites.length < 5 ? (
+          {invites.length + excludes.length < 4 ? (
             <>
-              Você selecionou {invites.length} pessoas. Ainda restam{" "}
-              {5 - invites.length} vagas
+              Você selecionou {invites.length}{" "}
+              {!!excludes.length
+                ? `e já convidou ${excludes.length} pessoa${
+                    excludes.length !== 1 ? `s` : ``
+                  }`
+                : `pessoas`}
+              . Ainda restam {4 - (invites.length + excludes.length)} vagas
             </>
           ) : (
             <>Seu time está completo!</>

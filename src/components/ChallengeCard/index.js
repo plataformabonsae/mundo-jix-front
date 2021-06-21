@@ -10,6 +10,7 @@ import { Title, Text } from "components/Text";
 import * as colors from "utils/styles/Colors";
 
 import cool from "assets/components/Challenge/cool.svg";
+import deadline from "assets/components/Card/deadline.svg";
 
 import styles from "./styles.module.sass";
 
@@ -50,10 +51,9 @@ const ChallengeCard = (props) => {
         </header>
       )}
       {!props.noImage && (
-      <div style={{ margin: -20 }}>
-        <MainImage noName data={props.item} logoPosition={`right`} />
-      </div>
-
+        <div style={{ margin: -20 }}>
+          <MainImage noName data={props.item} logoPosition={`right`} />
+        </div>
       )}
       <Text
         color={colors.MEDIUM_GRAY}
@@ -72,54 +72,80 @@ const ChallengeCard = (props) => {
         {props.item.name}
       </Title>
       <div>{parse(props.item.resume)}</div>
-      <hr style={{ opacity: 0.5, margin: "12px 0" }} />
-      <Text
-        color={colors.LIGHT_BLACK}
-        size={16}
-        style={{ margin: "12px 0 6px" }}
-      >
-        Pontos
-      </Text>
-      <Text size={14}>
-        {props.item.badge_points ? props.item.badge_points : "Sem pontos"}
-      </Text>
-      <Text
-        color={colors.LIGHT_BLACK}
-        size={16}
-        style={{ margin: "12px 0 6px" }}
-      >
-        Skill desenvolvida
-      </Text>
-      <Text size={14}>{props.item.grade ? props.item.grade : "Sem skill"}</Text>
-      <Text
-        color={colors.LIGHT_BLACK}
-        size={16}
-        style={{ margin: "12px 0 6px" }}
-      >
-        Insígnias
-      </Text>
-      <Text size={14}>
-        {props.item.grade ? props.item.grade : "Sem insígnia"}
-      </Text>
-      <hr style={{ opacity: 0.5, margin: "12px 0" }} />
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          justifyContent: "flex-end",
-        }}
-      >
-        {!props.noButton && (
-          <Button
-            style={{ color: colors.BLUE_1, fontSize: 14 }}
-            arrow
-            transparent
-            Tag={Link}
-            to={props.to}
-          >
-            Ver desafio
-          </Button>
+      <div style={{ position: "relative" }}>
+        <hr style={{ opacity: 0.5, margin: "24px 0" }} />
+        {props.item.deadline && (
+          <span className={styles.deadline}>
+            <img src={deadline} alt={"deadline"} />
+            <div className={styles.deadline__content}>
+              <div className={styles.deadline__title}>Encerra em</div>
+              <div className={styles.deadline__data}>{props.item.deadline}</div>
+            </div>
+          </span>
         )}
+        {props.item.badge_points && (
+          <>
+            <Text
+              color={colors.LIGHT_BLACK}
+              size={16}
+              style={{ margin: "12px 0 6px" }}
+            >
+              Pontos
+            </Text>
+
+            <Text size={14}>
+              {props.item.badge_points ? props.item.badge_points : "Sem pontos"}
+            </Text>
+          </>
+        )}
+        {props.item.skills && (
+          <>
+            <Text
+              color={colors.LIGHT_BLACK}
+              size={16}
+              style={{ margin: "12px 0 6px" }}
+            >
+              Skill desenvolvida
+            </Text>
+            <Text size={14}>
+              {props.item.skills?.map(
+                (item, index) => `${!!index ? " -" : ""} ${item.title}`
+              )}
+            </Text>
+          </>
+        )}
+        <Text
+          color={colors.LIGHT_BLACK}
+          size={16}
+          style={{ margin: "12px 0 6px" }}
+        >
+          Insígnias
+        </Text>
+        <Text size={14}>
+          {props.item.grade ? props.item.grade : "Sem insígnia"}
+        </Text>
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "flex-end",
+          }}
+        >
+          {!props.noButton && (
+            <>
+              <hr style={{ opacity: 0.5, margin: "12px 0" }} />
+              <Button
+                style={{ color: colors.BLUE_1, fontSize: 14 }}
+                arrow
+                transparent
+                Tag={Link}
+                to={props.to}
+              >
+                Ver desafio
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </Card>
   );

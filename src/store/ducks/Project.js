@@ -2,11 +2,15 @@ const Types = {
   PROJECT_REQUEST: "project/REQUEST",
   PROJECT_SUCCESS: "project/SUCCESS",
   PROJECT_FAILURE: "project/FAILURE",
+  PROJECT_CURRENT_REQUEST: "projectCurrent/REQUEST",
+  PROJECT_CURRENT_SUCCESS: "projectCurrent/SUCCESS",
+  PROJECT_CURRENT_FAILURE: "projectCurrent/FAILURE",
 };
 
 const INITIAL_STATE = {
   loading: false,
   data: null,
+  current: null,
   error: null,
 };
 
@@ -30,6 +34,23 @@ export default function reducer(state = INITIAL_STATE, action) {
         data: null,
         error: action.payload,
       };
+    case Types.PROJECT_CURRENT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case Types.PROJECT_CURRENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        current: action.payload,
+      };
+    case Types.PROJECT_CURRENT_FAILURE:
+      return {
+        ...state,
+        current: null,
+        error: action.payload,
+      };
     default:
       return state;
   }
@@ -46,6 +67,17 @@ export const Creators = {
   }),
   projectFailure: (payload) => ({
     type: Types.PROJECT_FAILURE,
+    payload,
+  }),
+  projectCurrentRequest: () => ({
+    type: Types.PROJECT_CURRENT_REQUEST,
+  }),
+  projectCurrentSuccess: (payload) => ({
+    type: Types.PROJECT_CURRENT_SUCCESS,
+    payload,
+  }),
+  projectCurrentFailure: (payload) => ({
+    type: Types.PROJECT_CURRENT_FAILURE,
     payload,
   }),
 };

@@ -21,7 +21,7 @@ import { Loading } from "components/Loading";
 
 // import history from 'utils/history'
 
-import { store } from "store/configureStore";
+// import { store } from "store/configureStore";
 import { autoLogin } from "services/login";
 // import { useAuth } from 'utils/context/auth'
 
@@ -31,15 +31,23 @@ import { Creators as UserActions } from "store/ducks/User";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(autoLogin())
-      .then(() => console.log("autologin succeeded"))
+      .then(() => {
+        if (user?.user?.is_mentor || user?.user?.is_judge) {
+          window.location.pathname.split("/")[1] === "auth" &&
+            history.push("/meus-desafios");
+        } else {
+          window.location.pathname.split("/")[1] === "auth" &&
+            history.push("/dashboard");
+        }
+      })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         dispatch(UserActions.logoutSuccess());
-        history.push("/");
+        // history.push("/auth/mentor/login");
       });
   }, [dispatch]);
 

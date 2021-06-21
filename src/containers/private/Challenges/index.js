@@ -85,7 +85,7 @@ const Challenges = (props) => {
         <section className={styles.content}>
           {loading && !data && <Loading />}
           {type === "autodesafio" &&
-            autodesafio.length &&
+            !!autodesafio.length &&
             autodesafio?.map((item, index) => (
               <ChallengeCard
                 canSubscribe
@@ -96,8 +96,11 @@ const Challenges = (props) => {
                 to={`${location.pathname}/modal/desafio/${item.id}`}
               />
             ))}
+          {type === "autodesafio" && !autodesafio?.length && !loading && (
+            <>Sem Autodesafios cadastrados.</>
+          )}
           {type === "in_company" &&
-            inCompany.length &&
+            !!inCompany.length &&
             inCompany?.map((item, index) => (
               <ChallengeCard
                 canSubscribe
@@ -108,9 +111,12 @@ const Challenges = (props) => {
                 to={`${location.pathname}/modal/desafio/${item.id}`}
               />
             ))}
+          {type === "in_company" && !inCompany.length && !loading && (
+            <>Sem desafios In Company cadastrados</>
+          )}
 
           {type === "ultradesafio" &&
-            ultradesafio.length &&
+            !!ultradesafio.length &&
             ultradesafio?.map((item, index) => (
               <ChallengeCard
                 canSubscribe
@@ -121,6 +127,9 @@ const Challenges = (props) => {
                 to={`${location.pathname}/modal/desafio/${item.id}`}
               />
             ))}
+          {type === "ultradesafio" && !ultradesafio.length && !loading && (
+            <>Sem Ultradesafios cadastrados</>
+          )}
         </section>
       </section>
     </>

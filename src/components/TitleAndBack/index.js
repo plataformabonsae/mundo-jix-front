@@ -9,7 +9,7 @@ import styles from "./styles.module.sass";
 
 const TitleAndBack = (props) => {
   const location = useLocation();
-  const { data, to, noBack } = props;
+  const { data, to, noBack, backText } = props;
   return (
     <>
       {!noBack && (
@@ -17,7 +17,7 @@ const TitleAndBack = (props) => {
           className={styles.goback}
           to={to || removeLastPath(location.pathname)}
         >
-          Voltar
+          {backText || "Voltar"}
         </Link>
       )}
       <header className={styles.header}>

@@ -42,10 +42,25 @@ const Infos = (props) => {
   const { data } = props;
   return (
     <section className={styles.infos}>
-      <Item type="calendar" desc={data?.deadline} />
-      <Item type="points" desc={data?.price} />
-      <Item type="insignia" desc={data?.prize} />
-      <Item type="skill" />
+      {data?.deadline && <Item type="calendar" desc={data?.deadline} />}
+      {data?.prize && <Item type="award" desc={data?.prize} />}
+      {data?.badge_points && <Item type="points" desc={data?.badge_points} />}
+      {!!data?.badges?.length && (
+        <Item
+          type="insignia"
+          desc={data?.badges?.map(
+            (item, index) => `${!!index ? " -" : ""} ${item.title}`
+          )}
+        />
+      )}
+      {!!data?.skills?.length && (
+        <Item
+          type="skill"
+          desc={data?.skills?.map(
+            (item, index) => `${!!index ? " -" : ""} ${item.title}`
+          )}
+        />
+      )}
     </section>
   );
 };

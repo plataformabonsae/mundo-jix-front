@@ -1,4 +1,5 @@
 import { Creators as TokenActions } from "store/ducks/Token";
+import { Creators as TokenExternalActions } from "store/ducks/TokenExternal";
 import { Creators as UserTypeActions } from "store/ducks/UserType";
 import { TALENT, COMPANY } from "utils/api";
 import axios from "axios";
@@ -61,6 +62,44 @@ export const tokenFetch =
     //   dispatch(TokenActions.tokenFailure(error)) &&
     //     dispatch(UserTypeActions.userTypeFailure(error));
     // }
+  };
+
+export const tokenFetchExternal =
+  (
+    type = `talento`,
+    body,
+    url = type === `empresa`
+      ? COMPANY.AUTH.loginExternal
+      : TALENT.AUTH.loginExternal
+  ) =>
+  async (dispatch) => {
+    dispatch(TokenActions.tokenRequest());
+    const call = axios({
+      url,
+      method: "post",
+      data: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "*/*",
+      },
+    });
+    await call
+      .then(function (response) {
+        dispatch(UserTypeActions.userTypeSuccess(type));
+        // console.log(response, "login external");
+        dispatch(TokenActions.tokenSuccess(response?.data?.data?.token));
+        if (response?.data?.data?.token && type) {
+          window.localStorage.setItem("token", response.data.data.token);
+          window.localStorage.setItem("usertype", type);
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        dispatch(TokenExternalActions.tokenExternalFailure(error)) &&
+          dispatch(TokenExternalActions.userTypeFailure(error));
+        // console.log(response);
+      });
+    return call;
   };
 
 export const tokenReset = () => async (dispatch) => {

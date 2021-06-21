@@ -291,6 +291,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
 
         <InputGroup>
           <SelectInput
+            disabled={!loading}
             defaultValue={user?.user?.current_situation}
             ref={register()}
             name={`current_situation`}

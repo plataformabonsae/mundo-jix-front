@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { BlueCard, BlueCardContainer } from "components/BlueCard";
 
 // import styles from "./styles.module.sass";
 
 const AloneOrTeam = (props) => {
+  const dispatch = useDispatch();
+  const { data: usertype } = useSelector((state) => state.usertype);
+  // Fetch
+  useEffect(() => {
+    window.localStorage.removeItem("current_team");
+  }, [dispatch, usertype]);
+
   return (
     <BlueCardContainer style={{ height: "100%" }}>
       <BlueCard

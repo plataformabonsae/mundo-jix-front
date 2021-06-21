@@ -21,9 +21,9 @@ const Loading = (props) => {
       <div
         className={`${styles.content} ${
           props.full ? styles.full__content : ""
-        }`}
+        } ${props.inline ? styles.inline__content : ""}`}
       >
-        <DisappearedLoading />
+        <DisappearedLoading color={props.color} size={props.size} />
         {/* Carregando ... */}
         <span className={styles.full__message}>{props.children}</span>
       </div>

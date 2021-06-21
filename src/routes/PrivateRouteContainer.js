@@ -1,8 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 
 import { Menu } from "components/Menu";
+import { Loading } from "components/Loading";
 import { MenuMobile } from "components/MenuMobile";
 import { Header } from "components/Header";
 import { ToastContainer } from "react-toastify";
@@ -19,28 +20,30 @@ export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
   // const location = useLocation();
   // const { data: usertype } = useSelector((state) => state.usertype);
   const { width } = WindowSize();
-  const user = useSelector((state) => state.user);
-
+  const mobileOffset = window.localStorage.getItem("mobile_offset");
+  const { data: user } = useSelector((state) => state.user);
   return (
     <Route
       {...rest}
       render={(props) => (
+        // loading ? (
+        //   <Loading />
+        // ) : user ? (
         <>
           {!!width && width > 762 ? (
-            <Menu
-              user={user?.data?.user ? user?.data?.user : user?.data?.data}
-            />
+            <Menu user={user?.user ? user?.user : user?.data} />
           ) : (
-            <MenuMobile
-              user={user?.data?.user ? user?.data?.user : user?.data?.data}
-            />
+            <MenuMobile user={user?.user ? user?.user : user?.data} />
           )}
-          <Header
-            user={user?.data?.user ? user?.data?.user : user?.data?.data}
-          />
+          <Header user={user?.user ? user?.user : user?.data} />
           <Component {...props} />
           <ToastContainer />
+          {!!width && width < 762 && (
+            <div style={{ minHeight: mobileOffset + "px" }}></div>
+          )}
         </>
+        // ) : (
+        //   <Redirect to={`/auth/talento/login`} />
       )}
     />
   );

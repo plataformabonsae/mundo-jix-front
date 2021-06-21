@@ -34,6 +34,10 @@ const Question = (props) => {
     );
   }, [dispatch, usertype, item]);
 
+  useEffect(() => {
+    props.previewData(current);
+  }, [current, props]);
+
   const handleSetAnswer = (answer_id) => setChoice(answer_id);
 
   const handleSendAnswer = (answer_id) =>
@@ -57,6 +61,9 @@ const Question = (props) => {
       <div className={styles.wrapper}>
         <div className={styles.content}>
           <Title size={18}>{current?.question?.name}</Title>
+          <Text style={{ marginTop: 12 }}>
+            {current?.question?.description}
+          </Text>
           <div className={styles.options}>
             {current?.question?.options.map((item, index) => (
               <div

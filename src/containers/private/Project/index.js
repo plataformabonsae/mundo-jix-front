@@ -13,36 +13,28 @@ import { Carousel } from "./components/Carousel";
 
 import { removeLastPath } from "utils/etc";
 
-import { get } from "services/project";
+import { get as getProject } from "services/project";
+import { project as getProjectAsMentor } from "services/projects";
 
 import styles from "./styles.module.sass";
 
 const Project = (props) => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { id, trail_type } = useParams();
   const [hasProject, setHasProject] = useState();
   const [modalEditProject, setModalEditProject] = useState(false);
 
   const { data: usertype } = useSelector((state) => state.usertype);
+  const { data: user } = useSelector((state) => state.user);
   const { data, loading } = useSelector((state) => state.project);
+  const { current: mentorProject, loading: mentorLoading } = useSelector(
+    (state) => state.projects
+  );
 
-  // Fetch specific
   useEffect(() => {
-    dispatch(get(usertype, { challenge_id: id }))
-      .then((res) => {
-        console.log(res);
-        (res.data.data.project || res.data.data.challenge_id) &&
-          setHasProject(true);
-      })
-      .catch((err) => {
-        setHasProject(false);
-      });
-  }, [dispatch, usertype, id]);
-
-  // useEffect(() => {
-  //   !hasProject && history.push(`${location.pathname}/modal/cadastro`);
-  // }, [hasProject, history, location]);
+    setHasProject(!!mentorProject?.project || !!data?.project);
+  }, [mentorProject?.project, data?.project]);
 
   const handleEditModal = () => {
     setModalEditProject((prev) => !prev);
@@ -50,49 +42,42 @@ const Project = (props) => {
 
   return (
     <>
-      {hasProject && data && (
-        <section className={styles.project}>
-          <Header data={data.challenge} />
-          <Resume data={data.project || data} />
-          <Carousel data={data.project || data} modal={handleEditModal} />
-        </section>
-      )}
-      {!hasProject && !loading && (
+      {(data?.project || mentorProject?.project) &&
+        (data?.challenge || mentorProject?.challenge) && (
+          <section className={styles.project}>
+            <Header data={data?.challenge || mentorProject?.challenge} />
+            <Resume data={data?.project || mentorProject?.project} />
+            <Carousel data={data || mentorProject} modal={handleEditModal} />
+          </section>
+        )}
+      {!hasProject && (!loading || !mentorLoading) && (
         <ModalPage
-          title={"cadastrar projeto"}
+          title={"Cadastrar projeto"}
           close={removeLastPath(location.pathname)}
         >
-          <ProjectEdit />
+          <ProjectEdit team={data?.team?.id} user={data?.user?.id} />
+          {console.log(data)}
         </ModalPage>
       )}
-      {modalEditProject && (
+      {modalEditProject && data?.project && (
         <ModalPage
           title={"Editar projeto"}
           data={data?.project || data}
           handleClose={handleEditModal}
         >
-          <ProjectEdit edit />
+          <ProjectEdit
+            id={data?.project?.id}
+            team={data?.team?.id}
+            handleClose={handleEditModal}
+            user={data?.pivot?.user_id || data?.project?.user_id}
+            edit
+          />
         </ModalPage>
       )}
       {loading && <Loading />}
+      {mentorLoading && <Loading />}
     </>
   );
-
-  // if (owned && data) {
-  //   return (
-  //     <section className={styles.project}>
-  //       <Link className={styles.goback} to={location.pathname.slice(0, -1)}>
-  //         Voltar
-  //       </Link>
-  //       <Header data={current} />
-  //       <TeamInfo data={current} />
-  //       <Resume data={current} />
-  //       <Carousel data={current} />
-  //     </section>
-  //   );
-  // } else {
-  //   <Loading />;
-  // }
 };
 
 export { Project };

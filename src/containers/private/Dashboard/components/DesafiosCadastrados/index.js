@@ -1,85 +1,108 @@
-import React from "react";
-// import Slider from "@farbenmeer/react-spring-slider"
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useLocation } from "react-router-dom";
 
 import { Card } from "components/Card";
-// import Button from "components/Button";
-import { Title } from "components/Text";
+import { Title, Text } from "components/Text";
 import { Filter } from "components/Filter";
-
-// import star from "assets/components/Card/star.svg";
-// import check from "assets/components/Card/check.svg";
+import { ChallengeCard } from "components/ChallengeCard";
 
 import styles from "./styles.module.sass";
-// import * as colors from "utils/styles/Colors";
+import "swiper/swiper.scss";
+
+import { WindowSize } from "utils/etc";
 
 // TODO
 
 const DesafiosCadastrados = () => {
+  const { width } = WindowSize();
+  const location = useLocation();
+  const { data } = useSelector((state) => state.dashboard);
+  const [challengeType, setChallengeType] = useState();
+  const [activeTab, setActiveTab] = useState("todos");
+
+  useEffect(() => {
+    data?.my_challenges && setChallengeType(data.my_challenges);
+  }, [data?.my_challenges]);
+
+  useEffect(() => {
+    console.log(width);
+  }, [width]);
+
+  const handleFilter = (filterTo) => {
+    const challenges = data?.my_challenges;
+    setActiveTab(filterTo);
+    if (filterTo !== "todos") {
+      setChallengeType(() =>
+        challenges.filter((item) => item.challenge_type === filterTo)
+      );
+    } else {
+      setChallengeType(challenges);
+    }
+  };
+
   return (
     <Card border gray style={{ gridArea: "insignia", marginBottom: 24 }}>
       <header className={styles.header}>
         <Title size={18} style={{ margin: "12px 0" }}>
           Desafios cadastrados
         </Title>
-        <div className="filters">
-          <Filter active>Todos</Filter>
-          <Filter>In company</Filter>
-          <Filter>Ultradesafio</Filter>
-        </div>
+        {data?.challenges && (
+          <div className="filters">
+            <Filter
+              active={activeTab === "todos"}
+              onClick={() => handleFilter("todos")}
+            >
+              Todos
+            </Filter>
+            <Filter
+              active={activeTab === "autodesafio"}
+              onClick={() => handleFilter("autodesafio")}
+            >
+              Autodesafio
+            </Filter>
+            <Filter
+              active={activeTab === "in_company"}
+              onClick={() => handleFilter("in_company")}
+            >
+              In company
+            </Filter>
+            <Filter
+              active={activeTab === "ultradesafio"}
+              onClick={() => handleFilter("ultradesafio")}
+            >
+              Ultradesafio
+            </Filter>
+          </div>
+        )}
       </header>
 
-      <article className={styles.slider}>
-        {/* <Slider
-                    slidesAtOnce={2}> */}
-        {/* <Card border noShadow className={styles.card}>
-          <Text
-            color={"white"}
-            className={styles.card__header}
-            size={12}
-            weight="bold"
-            style={{
-              letterSpacing: 1,
-              textTransform: "uppercase",
-            }}
+      {challengeType?.length ? (
+        <article className={styles.slider}>
+          <Swiper
+            observer={challengeType}
+            spaceBetween={24}
+            slidesPerView={width > 762 ? 2 : 1}
           >
-            In company
-          </Text>
-          <Title size={18} style={{ margin: "24px 0" }}>
-            Nome do desafio
-          </Title>
-          <Text>
-            Etiam et sapien a massa lacinia ultricies. Morbi posuere ultricies
-            vulputate. Nulla pellentesque laoreet nunc, dictum...
-          </Text>
-          <hr style={{ opacity: 0.5, margin: "24px 0" }} />
-          <Text size={14} color={colors.LIGHT_BLACK}>
-            <img src={star} alt={"348 participantes "} />
-            <b>348</b> participantes
-          </Text>
-          <Text size={14} color={colors.LIGHT_BLACK}>
-            <img src={check} alt={"15 projetos entregues "} />
-            <b>15</b> projetos entregues
-          </Text>
-          <hr style={{ opacity: 0.5, margin: "24px 0" }} />
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Button
-              style={{ color: colors.BLUE_1, fontSize: 14 }}
-              arrow
-              transparent
-            >
-              Ver desafio
-            </Button>
-          </div>
-        </Card> */}
-        Sem desafios cadastrados
-        {/* </Slider> */}
-      </article>
+            {challengeType.map((item, index) => {
+              return (
+                <SwiperSlide key={item.id}>
+                  <ChallengeCard
+                    noImage={width > 762 ? false : true}
+                    item={item}
+                    to={`${location.pathname}/modal/desafio/${item.id}`}
+                  />
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </article>
+      ) : (
+        <Text style={{ padding: "12px 0" }}>
+          Sem novo desafios por enquanto
+        </Text>
+      )}
     </Card>
   );
 };

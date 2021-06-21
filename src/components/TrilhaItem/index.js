@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import YouTube from "react-youtube";
 import parse from "html-react-parser";
 
@@ -13,7 +13,7 @@ import fileImage from "assets/components/Trilha/file.svg";
 import lockedImage from "assets/components/Trilha/locked.svg";
 
 import * as colors from "utils/styles/Colors";
-import { Item } from "containers/private/Challenge/components/Infos";
+// import { Item } from "containers/private/Challenge/components/Infos";
 
 const TrilhaItem = ({ Tag = Link, ...props }) => {
   const {
@@ -22,13 +22,13 @@ const TrilhaItem = ({ Tag = Link, ...props }) => {
     file,
     question,
     video,
-    index,
+    // index,
     watched,
     item,
     trailType,
     onClick,
   } = props;
-  const { type, id, page } = useParams();
+  // const { type, id, page } = useParams();
 
   const normal = {
     height: 150,

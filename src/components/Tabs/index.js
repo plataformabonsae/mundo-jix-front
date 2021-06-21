@@ -23,8 +23,12 @@ const TabBox = ({
   </Tag>
 );
 
-const TabBoxContent = ({ children }) => {
-  return <section className={styles.content}>{children}</section>;
+const TabBoxContent = ({ children, style }) => {
+  return (
+    <section style={style || null} className={styles.content}>
+      {children}
+    </section>
+  );
 };
 
 const TabBoxWrapper = ({ children }) => (

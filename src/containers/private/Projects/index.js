@@ -9,45 +9,34 @@ import { TitleAndBack } from "components/TitleAndBack";
 
 import { ProjectCard } from "./components/ProjectCard";
 
-import { all } from "services/challenges";
+import { projects as allProjects } from "services/projects";
 
 import styles from "./styles.module.sass";
 
 const Projects = (props) => {
-  const [currentChallenge, setCurrentChallenge] = useState(null);
   const [projects, setProjects] = useState(null);
   const [challengeExists, setChallengeExists] = useState(true);
   const dispatch = useDispatch();
   const { data: usertype } = useSelector((state) => state.usertype);
-  const { data, loading } = useSelector((state) => state.challenges);
+  const { data: challenge } = useSelector((state) => state.challenge);
+  const { data: projectsStore, loading } = useSelector(
+    (state) => state.projects
+  );
 
-  const { id } = useParams();
+  const { id, type } = useParams();
 
   // Fetch
   useEffect(() => {
-    dispatch(all(usertype));
-  }, [dispatch, usertype]);
-
-  // choose the right challenge data
-  useEffect(() => {
-    if (data)
-      setCurrentChallenge(
-        () => [...data].filter((challenge) => challenge.id === parseInt(id))[0]
-      );
-  }, [data, id]);
-
-  // if empty
-  useEffect(() => {
-    if (currentChallenge === undefined) setChallengeExists(false);
-  }, [currentChallenge]);
+    dispatch(allProjects(usertype, { challenge_id: id }));
+  }, [dispatch, usertype, id]);
 
   useEffect(() => {
-    setProjects((state) => data);
-  }, [data]);
+    setProjects((state) => projectsStore?.projects);
+  }, [projectsStore]);
 
   const handleSearch = (event) => {
     setProjects((state) =>
-      [...data].filter(
+      [...state].filter(
         (challenge) =>
           challenge.name
             .toLowerCase()
@@ -62,7 +51,7 @@ const Projects = (props) => {
   if (challengeExists) {
     return (
       <div>
-        <TitleAndBack data={currentChallenge} noBack />
+        <TitleAndBack data={challenge?.challenge} noBack />
         <section className={styles.search}>
           <Input
             disabled={loading}
@@ -74,7 +63,13 @@ const Projects = (props) => {
         </section>
         <section className={styles.projects}>
           {projects?.length > 0
-            ? projects.map((item) => <ProjectCard data={item} key={item.id} />)
+            ? projects.map((item) => (
+                <ProjectCard
+                  to={`/meus-desafios/${type}/${id}/projeto/${item.id}`}
+                  data={item}
+                  key={item.id}
+                />
+              ))
             : "Sem resultados"}
         </section>
       </div>

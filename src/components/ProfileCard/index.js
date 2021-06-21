@@ -9,8 +9,9 @@ import profile from "assets/logo/JixProfile.png";
 
 import { BASEURL } from "utils/api";
 
-import profileDefault from "assets/components/ProfileCard/default.png";
+// import profileDefault from "assets/components/ProfileCard/default.png";
 import guardia from "assets/components/ProfileCard/guardia.svg";
+import parse from "html-react-parser";
 
 const ProfileCard = (props) => {
   const { data } = props;
@@ -24,43 +25,51 @@ const ProfileCard = (props) => {
       {!props.small ? (
         <>
           <div className={styles.image}>
-            <img src={props.img || profileDefault} alt={props.name} />
-            {props.keeper && (
+            <img
+              src={data?.file ? BASEURL + data.file : profile}
+              alt={data?.name}
+            />
+            {!!props.keeper && (
               <img className={styles.keeper} src={guardia} alt="Guardiã(o)" />
             )}
           </div>
-          <Title size={18}>{props.name || "Nome e Sobrenome"}</Title>
-          <Text>{props.desc || "(Guardiã e Dev FullStack)"}</Text>
-          <div className={styles.section}>
-            <Title size={12} className={styles.title}>
-              Skills
-            </Title>
-            <Text>
-              {props.skills || "skillum • skilldois • skilltrês • skillquatro"}
-            </Text>
-          </div>
-          <div className={styles.section}>
-            <Title size={12} className={styles.title}>
-              Biografia
-            </Title>
-            <Text style={{ textAlign: "justify" }}>
-              {props.bio ||
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non at vulputate tempus proin. Ultricies nibh feugiat sed duis. Adipiscing turpis donec dictum commodo."}
-            </Text>
-          </div>
+          <Title size={18}>{data?.name || ""}</Title>
+          {!!data?.skills?.length && (
+            <div className={styles.section}>
+              <Title size={12} className={styles.title}>
+                Skills
+              </Title>
+              <Text>
+                {!!data?.skills &&
+                  data?.skills.map(
+                    (item, index) => `${!!index ? " •" : ""} ${item.title}`
+                  )}
+              </Text>
+            </div>
+          )}
+          {!!data?.description && (
+            <div className={styles.section}>
+              <Title size={12} className={styles.title}>
+                Biografia
+              </Title>
+              <Text style={{ textAlign: "justify" }}>
+                {!!data?.description &&
+                  (parse(data?.description) || data?.description)}
+              </Text>
+            </div>
+          )}
         </>
       ) : (
         <>
           <div className={styles.imagename}>
             <img
-              src={data.file ? BASEURL + data.file : profile}
-              alt={data.name}
+              src={data?.file ? BASEURL + data.file : profile}
+              alt={data?.name}
             />
-            <Title size={16}>{data.name || "Nome e Sobrenome"}</Title>
+            <Title size={16}>{data?.name || ""}</Title>
           </div>
           <Text style={{ textAlign: "justify" }}>
-            {data.bio ||
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non at vulputate tempus proin. Ultricies nibh feugiat sed duis. Adipiscing turpis donec dictum commodo."}
+            {data?.description || ""}
           </Text>
         </>
       )}

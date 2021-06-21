@@ -16,6 +16,8 @@ import date from "assets/components/Challenge/date.svg";
 
 import styles from "./styles.module.sass";
 
+import { WindowSize } from "utils/etc";
+
 // TODO
 // insignia
 // date
@@ -23,6 +25,7 @@ import styles from "./styles.module.sass";
 
 const Presentation = (props) => {
   const { data, handleClickToSubscribe, buttonContent } = props;
+  const { width } = WindowSize();
 
   const opts = {
     height: "360",
@@ -34,8 +37,8 @@ const Presentation = (props) => {
   };
 
   const small = {
-    height: "180",
-    width: "320",
+    height: "260",
+    width: "100%",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
@@ -68,9 +71,9 @@ const Presentation = (props) => {
                   </Text>
                 )}
               </div>
-              <div>
+              {/* <div>
                 Por <a href="#0">Nome da Marca</a>
-              </div>
+              </div> */}
             </>
           )}
           <div className={styles.content}>
@@ -107,7 +110,13 @@ const Presentation = (props) => {
                   </li>
                 )}
               </ul>
-              <div style={{ display: "flex", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: 24,
+                }}
+              >
                 {/* {!buttonContent && <Button type={"outline"}>Favoritar</Button>} */}
                 <Button
                   Tag={buttonContent ? Link : "button"}
@@ -129,7 +138,7 @@ const Presentation = (props) => {
         {!props.isModal && (
           <YouTube
             videoId={data?.video_id}
-            opts={opts}
+            opts={width > 768 ? opts : small}
             onReady={handleOnReady}
           />
         )}
@@ -143,50 +152,13 @@ const Presentation = (props) => {
                 {data?.description && parse(data?.description)}
               </div>
             </Card>
-            <YouTube
-              videoId={data?.video_id}
-              opts={small}
-              onReady={handleOnReady}
-            />
-          </section>
-          <section>
-            {/* <Card noShadow> */}
-            <ul className={styles.info}>
-              {data?.deadline && (
-                <li className={styles.info__list}>
-                  <img src={date} alt={`Prazo`} /> Prazo:{" "}
-                  <span style={{ fontWeight: "normal" }}>{data?.deadline}</span>
-                </li>
-              )}
-              {data?.insignia && (
-                <li className={styles.info__list}>
-                  <img src={insignia} alt={`Prazo`} /> Prazo:{" "}
-                  <span style={{ fontWeight: "normal" }}>{data?.insignia}</span>
-                </li>
-              )}
-              {data?.badge_points && (
-                <li className={styles.info__list}>
-                  <img src={date} alt={`Prazo`} /> Ponto
-                  {data?.badge_points.length < 1 ? "" : "s"}:{" "}
-                  <span style={{ fontWeight: "normal" }}>
-                    {data?.badge_points}
-                  </span>
-                </li>
-              )}
-              {data?.skills && (
-                <li className={styles.info__list}>
-                  <img src={person} alt={`Skills`} /> Skills:{" "}
-                  <span style={{ fontWeight: "normal" }}>{data?.skills}</span>
-                </li>
-              )}
-              {data?.prize && (
-                <li className={styles.info__list}>
-                  <img src={prize} alt={`Prêmio`} /> Prêmio:{" "}
-                  <span style={{ fontWeight: "normal" }}>{data?.prize}</span>
-                </li>
-              )}
-            </ul>
-            {/* </Card> */}
+            <div>
+              <YouTube
+                videoId={data?.video_id}
+                opts={small}
+                onReady={handleOnReady}
+              />
+            </div>
           </section>
         </>
       )}

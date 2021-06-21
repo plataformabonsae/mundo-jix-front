@@ -4,6 +4,8 @@ import { Title } from "components/Text";
 
 import styles from "./styles.module.sass";
 
+import { BASEURL } from "utils/api";
+
 import defaultImage from "assets/components/MainImage/image.png";
 import defaultLogo from "assets/components/MainImage/logo.png";
 
@@ -12,7 +14,10 @@ const MainImage = (props) => {
   return (
     <main className={styles.wrapper}>
       <div className={styles.image}>
-        <img src={data?.files || defaultImage} alt={data?.name} />
+        <img
+          src={props.data.file ? BASEURL + props.data.file : defaultImage}
+          alt={data?.name}
+        />
       </div>
       {!props.noName && (
         <Title color={"white"} className={styles.title}>
@@ -20,7 +25,14 @@ const MainImage = (props) => {
         </Title>
       )}
       <div style={{ textAlign: props.logoPosition }} className={styles.logo}>
-        <img src={props.logo || defaultLogo} alt={data?.name} />
+        <img
+          src={
+            props.data.company_photo_file
+              ? BASEURL + data.company_photo_file
+              : defaultLogo
+          }
+          alt={data?.name}
+        />
       </div>
     </main>
   );

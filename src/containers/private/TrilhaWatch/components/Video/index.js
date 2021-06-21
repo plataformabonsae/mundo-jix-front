@@ -31,6 +31,10 @@ const Video = (props) => {
       });
   }, [dispatch, usertype, item]);
 
+  useEffect(() => {
+    props.previewData(current);
+  }, [current, props]);
+
   const opts = {
     height: "100%",
     width: "100%'",

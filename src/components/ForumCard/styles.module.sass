@@ -1,0 +1,62 @@
+.post
+  margin:
+    bottom: 24px
+  &__header
+    display: flex
+    align-items: center
+    img
+      height: 30px
+      width: 30px
+      object-fit: cover
+      margin:
+        right: 12px
+      border-radius: 300px
+
+  &__date
+    margin:
+      left: 12px
+    color: #8a9298
+    font:
+      size: 14px
+    line-height: 1
+
+  &__content
+    margin:
+      left: 42px
+      top: 36px
+
+  &__extras
+    margin:
+      left: 42px
+      top: 24px
+
+  &__link
+    display: flex
+    align-items: center
+    margin:
+      top: 12px
+    a
+      display: inline-block
+      margin:
+        left: 6px
+      color: #30b1a8
+
+  &__comment
+    transitiom: 300ms
+    text-decoration: none
+    display: block
+    color: #8a9298
+    margin:
+      top: 36px
+      left: 42px
+    &:hover
+      opacity: .8
+
+    &:active
+      opacity: .6
+
+@media screen and (max-width: 768px)
+  .post
+    &__content
+      margin:
+        left: 0

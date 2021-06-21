@@ -5,7 +5,7 @@
     margin:
         right: -36px
     padding: 24px
-        bottom: 0
+        bottom: 128px
     border:
         top-left-radius: 50px
     background: #F8F9FB
@@ -13,12 +13,22 @@
     overflow: hidden
 
 .header
+    position: relative
+    z-index: 2
     display: flex
     justify-content: space-between
+    background: #F8F9FB
+
+.wrapper
+    position: relative
+    height: 100%
 
 .container
     overflow: auto
-    height: 100%
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
     position: absolute
 
 @media only screen and (max-width: 762px)
@@ -27,7 +37,11 @@
         border:
             radius: 8px
         order: 0
+        padding: 12px
     .container
         position: static
         margin:
             bottom: 120px
+
+    // .wrapper
+    //     height: 400px

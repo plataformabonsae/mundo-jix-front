@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Title, Text } from "components/Text";
 import { TabFlat } from "components/Tabs";
+import { Downloads } from "components/Downloads";
 import { SubHeader } from "components/Header";
 import { TrilhaItem } from "components/TrilhaItem";
 
@@ -26,6 +27,7 @@ const TrilhaWatch = (props) => {
   const { data: challenge } = useSelector((state) => state.challenge);
   const { type, id, trail_type, trail_id } = useParams();
   const [trailPreview, setTrailPreview] = useState({});
+  const [trailPreviewData, setTrailPreviewData] = useState({});
 
   useEffect(() => {
     dispatch(get(usertype, { challenge_id: id }))
@@ -59,6 +61,10 @@ const TrilhaWatch = (props) => {
     }
   }, [trail, trail_id]);
 
+  const handlePreviewData = (data) => {
+    setTrailPreviewData(data);
+  };
+
   const handlePreview = (id, premium, type) => {
     setTrailPreview({ id, premium, type });
   };
@@ -85,12 +91,14 @@ const TrilhaWatch = (props) => {
       <section className={styles.trilhawatch}>
         <section className={styles.trilhawatch__player}>
           <div className={styles.trilhawatch__content}>
-            {trailPreview.type === "video" && <Video item={trailPreview} />}
+            {trailPreview.type === "video" && (
+              <Video previewData={handlePreviewData} item={trailPreview} />
+            )}
             {trailPreview.type === "question" && (
-              <Question item={trailPreview} />
+              <Question previewData={handlePreviewData} item={trailPreview} />
             )}
             {trailPreview.type === "material" && (
-              <Material item={trailPreview} />
+              <Material previewData={handlePreviewData} item={trailPreview} />
             )}
           </div>
           <div className={styles.trilhawatch__selector}>
@@ -125,6 +133,19 @@ const TrilhaWatch = (props) => {
             </div>
           </div>
         </section>
+      </section>
+      <section className={styles.trailcontent}>
+        {trailPreviewData && (
+          <div className={styles.trailcontent__data}>
+            {trailPreviewData?.video && (
+              <>
+                <Title>{trailPreviewData?.video.title}</Title>
+                <Text>{trailPreviewData?.video.description}</Text>
+                {/* <Downloads data={} /> */}
+              </>
+            )}
+          </div>
+        )}
       </section>
     </>
   );

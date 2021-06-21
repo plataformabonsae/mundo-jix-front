@@ -70,6 +70,7 @@ const InputFile = React.forwardRef(
       validate,
       fontSize,
       validation,
+      multiple,
       ...rest
     },
     ref
@@ -89,6 +90,7 @@ const InputFile = React.forwardRef(
           style={{ fontSize: fontSize }}
           // style={{ display: "none" }}
           onChange={onChange}
+          multiple={multiple && "multiple"}
           {...rest}
         />
         {/* <button type="button">Escolher arquivo</button> */}
@@ -200,8 +202,6 @@ const SelectInput = React.forwardRef((props, ref) => {
     control,
     isMulti,
     options,
-    onChange,
-    value,
   } = props;
   return (
     <label
@@ -283,8 +283,8 @@ const SelectInputMulti = React.forwardRef((props, ref) => {
     errorMessage,
     defaultValue,
     // options,
-    control,
-    isMulti,
+    // control,
+    // isMulti,
     options,
     onChange,
     value,

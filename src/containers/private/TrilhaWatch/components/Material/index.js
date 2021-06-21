@@ -28,6 +28,10 @@ const Material = (props) => {
     );
   }, [dispatch, usertype, item]);
 
+  useEffect(() => {
+    props.previewData(current);
+  }, [current, props]);
+
   return (
     <>
       {loading && <Loading />}

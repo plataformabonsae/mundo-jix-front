@@ -3,6 +3,7 @@ import React from "react";
 import { Card } from "components/Card";
 import { Title, Text } from "components/Text";
 // import { ProfileCard } from "components/ProfileCard";
+import parse from "html-react-parser";
 
 import profile from "assets/logo/JixProfile.png";
 
@@ -29,15 +30,16 @@ const InviteCard = (props) => {
           </>
         )}
       </div>
-      <div className={styles.section}>
-        <Text size={12} className={styles.title}>
-          Biografia
-        </Text>
-        <Text style={{ textAlign: "justify" }}>
-          {data.bio ||
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non at vulputate tempus proin. Ultricies nibh feugiat sed duis. Adipiscing turpis donec dictum commodo."}
-        </Text>
-      </div>
+      {!!data.description && (
+        <div className={styles.section}>
+          <Text size={12} className={styles.title}>
+            Biografia
+          </Text>
+          <Text Tag={"span"} style={{ textAlign: "justify" }}>
+            {parse(data.description)}
+          </Text>
+        </div>
+      )}
       <div className={styles.content}>{props.children}</div>
     </Card>
   );

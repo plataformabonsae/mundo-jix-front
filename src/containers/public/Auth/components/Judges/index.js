@@ -1,33 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import { SpaceBackground } from "components/SpaceBackground";
 import { Card } from "components/Card";
+import { Dialog } from "components/Dialog";
+import { Loading } from "components/Loading";
 import { Logo } from "components/Logo";
 import { Input } from "components/Inputs";
+import { Text } from "components/Text";
 import Button from "components/Button";
 import { ButtonGroup } from "components/ButtonGroup";
 import Copyright from "components/Copyright";
 
 import styles from "./styles.module.sass";
 
-import { login } from "services/login";
+import { login, logout } from "services/login";
 
 const Judges = (props) => {
+  const { error, loading } = useSelector((state) => state.token);
   const { type, id = 1 } = props;
   const { register, errors, handleSubmit } = useForm();
   const history = useHistory();
   const dispatch = useDispatch();
+  const [notMentor, setNotMentor] = useState(false);
 
   // const onSubmit = (data) => alert(JSON.stringify(data));
+
+  const handleIsNotMentor = () => {
+    setNotMentor((prev) => !prev);
+    dispatch(logout());
+  };
 
   const onSubmit = async (data) => {
     const req = dispatch(login(type, data));
     await req
-      .then((res) => history.push(`/${type}/desafio/${id}`))
+      .then((res) => {
+        if (!(res.data.data.user.is_judge || res.data.data.user.is_mentor)) {
+          handleIsNotMentor();
+        } else {
+          history.push(`/meus-desafios`);
+        }
+      })
       .catch((error) => console.log(error, "caiu no catch"));
   };
 
@@ -49,12 +65,17 @@ const Judges = (props) => {
           desc={"Preencha com seus dados os campos abaixo."}
         />
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
+          {loading && <Loading />}
           <Card className={styles.card}>
             <Input
               ref={register({ required: true, pattern: /^\S+@\S+$/i })}
               name={"email"}
               type={"text"}
               errors={errors}
+              validate={
+                error?.data?.error === "E-mail não encontrado no sistema" &&
+                "E-mail não encontrado no sistema"
+              }
               placeholder="Digite o seu e-mail"
               errorMessage={"Digite um e-mail válido para continuar"}
             >
@@ -62,6 +83,10 @@ const Judges = (props) => {
             </Input>
             <Input
               ref={register({ required: true })}
+              validate={
+                error?.data?.message === "Unauthorised." &&
+                "Verifique sua senha e tente novamente"
+              }
               name={"password"}
               type={"password"}
               errors={errors}
@@ -86,6 +111,27 @@ const Judges = (props) => {
 
         <Copyright color="white" />
       </section>
+      {notMentor && (
+        <Dialog
+          handleClose={() => setNotMentor((prev) => !prev)}
+          title={`Esse e-mail pertence a uma conta de talento.`}
+        >
+          <Text>
+            Por favor, efetue digite as credenciais de
+            {type === "mentor" ? " mentor" : " jurado"}.
+          </Text>
+          <ButtonGroup style={{ justifyContent: "center" }}>
+            <Button
+              // style={{ minWidth: 120 }}
+              Tag={"span"}
+              type={"green"}
+              onClick={() => setNotMentor((prev) => !prev)}
+            >
+              Voltar
+            </Button>
+          </ButtonGroup>
+        </Dialog>
+      )}
     </SpaceBackground>
   );
 };

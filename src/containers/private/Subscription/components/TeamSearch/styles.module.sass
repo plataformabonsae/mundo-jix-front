@@ -14,3 +14,26 @@
       background: $LIGHT_GRAY
       margin:
         left: 32px
+
+.teams
+  display: grid
+  grid-template: auto / 1fr 1fr 1fr 1fr
+  padding: 32px
+
+.search
+  padding: 0 32px
+
+@media only screen and (max-width: 1444px)
+  .teams
+    grid-template: auto / 1fr 1fr 1fr
+
+@media only screen and (max-width: 960px)
+  .teams
+    grid-template: auto / 1fr 1fr
+
+@media only screen and (max-width: 768px)
+  .search
+    padding: 0 12px
+  .teams
+    padding: 12px
+    display: block

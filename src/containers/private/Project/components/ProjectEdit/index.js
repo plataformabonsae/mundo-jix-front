@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { toast } from "react-toastify";
+// import { removeLastPath } from "utils/etc";
+
+import { validationSchema } from "utils/etc";
 
 import { Text, Title } from "components/Text";
 import Button from "components/Button";
@@ -15,91 +20,208 @@ import {
   SelectInput,
 } from "components/Inputs";
 
-import { sanitize } from "utils/etc";
+// import { sanitize } from "utils/etc";
 
-import { get, post, update } from "services/project";
+import { get, getEdit, post, update } from "services/project";
 
 import styles from "./styles.module.sass";
+
+const fileSchema = yup.object().shape({
+  materials_1: yup
+    .mixed()
+    .test(
+      "",
+      "O arquivo deve ter até 8MB",
+      (value) => !value.length || value[0].size <= 8000000
+    ),
+});
 
 const ProjectEdit = (props) => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { data: usertype } = useSelector((state) => state.usertype);
-  const { data: project, loading } = useSelector((state) => state.project);
+  const {
+    current: project,
+    data,
+    loading,
+  } = useSelector((state) => state.project);
   const [countResume, setCountResume] = useState(
     props?.data?.resume?.length || 0
   );
   const [materials, setMaterials] = useState([]);
   const [links, setLinks] = useState([]);
+  const [pitch, setPitchs] = useState([]);
   const { register, errors, control, handleSubmit } = useForm();
+  // const resolver = validationSchema(fileSchema);
 
-  // useEffect(() => {
-  //   dispatch(get(usertype, { challenge_id: id }));
-  // }, [dispatch, usertype, id]);
+  useEffect(() => {
+    props.id &&
+      dispatch(getEdit(usertype, { project_id: props.id }))
+        .then((res) => {})
+        .catch((err) => {});
+  }, [dispatch, usertype, id, props.id, data]);
+
+  useEffect(() => {
+    const append = (link) => {
+      setLinks((prev) => [...prev, link]);
+    };
+    if (project?.project?.links.length) {
+      for (let i = 0; i < project.project.links.length; i++) {
+        append({
+          link: project.project.links[i].link,
+          type: project.project.links[i].type,
+        });
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setLinks([]);
+    };
+  }, [project?.project]);
+
+  useEffect(() => {
+    const append = (material) => {
+      setMaterials((prev) => [...prev, material]);
+    };
+    if (project?.project?.links.length) {
+      for (let i = 0; i < project.project.links.length; i++) {
+        append({
+          // link: project.project.links[i].link,
+          // name: project.project.links[i].type,
+        });
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setMaterials([]);
+    };
+  }, [project?.project]);
+
+  useEffect(() => {
+    const append = (link) => {
+      setPitchs((prev) => [...prev, link]);
+    };
+    if (project?.project?.videos?.length) {
+      for (let i = 0; i <= project.project.videos.length; i++) {
+        append(project.project.videos[i]);
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setPitchs([]);
+    };
+  }, [project?.project]);
 
   const handleCountChar = (e) => {
     setCountResume(e.target.value.length);
   };
 
-  const handleAddMaterial = (el) => {
-    setMaterials((prev) => [...prev, el]);
-  };
-
-  const handleRemoveMaterial = (index) => {
-    setMaterials((prev) => [...prev].slice(0, -1));
-  };
-
-  const handleAddLink = (el) => {
-    setLinks((prev) => [...prev, el]);
-  };
-
-  const handleRemoveLink = (index) => {
-    setLinks((prev) => [...prev].slice(0, -1));
-  };
-
   const typeSocial = [
-    { value: 1, label: "Facebook" },
-    { value: 2, label: "Youtube" },
-    { value: 3, label: "Google Drive" },
-    { value: 4, label: "One Drive" },
-    { value: 5, label: "Twitter" },
-    { value: 6, label: "Instagram" },
-    { value: 7, label: "Outro" },
+    { value: "Facebook", label: "Facebook" },
+    { value: "Youtube", label: "Youtube" },
+    { value: "Google Drive", label: "Google Drive" },
+    { value: "One Drive", label: "One Drive" },
+    { value: "Twitter", label: "Twitter" },
+    { value: "Instagram", label: "Instagram" },
+    { value: "Outro", label: "Outro" },
   ];
 
   const onSubmit = async (data) => {
-    const { challenge_id, challenge, description, links, name, resume } = data;
+    const {
+      challenge_id,
+      challenge,
+      description,
+      links,
+      videos,
+      file,
+      name,
+      resume,
+      user_id,
+      team_id,
+    } = data;
+    const materialsConter = {};
+    for (let i = 0; i < 10; i++) {
+      if (data[`materials_${i}`])
+        materialsConter[`materials_${i}`] = data[`materials_${i}`][0];
+    }
+    console.log({
+      challenge_id,
+      project_id: props.id,
+      challenge,
+      user_id,
+      file: file[0],
+      team_id,
+      description,
+      videos: JSON.stringify(videos),
+      links: JSON.stringify(links),
+      name,
+      resume,
+      ...materialsConter,
+    });
     if (props.edit) {
+      console.log(!!videos[0].length);
       const req = dispatch(
         update(usertype, {
           challenge_id,
+          project_id: props.id,
           challenge,
+          user_id,
+          file: file[0],
+          team_id,
           description,
-          links: [{ link: "", type: "" }],
-          links_edit: [{ link: "", type: "" }],
+          videos: JSON.stringify(videos),
+          links: JSON.stringify(links),
           name,
           resume,
+          ...materialsConter,
           _method: "PUT",
         })
       );
       await req
-        .then((res) => console.log(res, "res"))
+        .then((res) => {
+          toast.success("Projeto editado com sucesso!", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+          console.log(res);
+        })
+        .then((res) => dispatch(get(usertype, { challenge_id })))
+        .then(() => props.handleClose())
         .catch((err) => console.log(err, "erro"));
     } else {
       const req = dispatch(
         post(usertype, {
           challenge_id,
+          project_id: props.id,
           challenge,
+          user_id,
+          file: file[0] || undefined,
+          team_id,
           description,
-          // links: [{ link: "", type: "" }],
-          // links_edit: [{ link: "", type: "" }],
+          videos: videos[0] !== "" ? JSON.stringify(videos) : null,
+          links: links[0].link !== "" ? JSON.stringify(links) : null,
           name,
           resume,
+          ...materialsConter,
         })
       );
       await req
-        .then((res) => console.log(res, "res"))
-        .catch((err) => console.log(err, "erro"));
+        .then((res) => {
+          toast.success("Projeto criado com sucesso!", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+        })
+        .then(() => dispatch(get(usertype, { challenge_id })))
+        .then(() => props.handleClose())
+        .catch((error) => {
+          console.log(error);
+          toast.error("Um erro ocorreu ao criar o projeto, tente novamente.", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+          console.log(error);
+        });
     }
   };
 
@@ -117,30 +239,32 @@ const ProjectEdit = (props) => {
         value={id}
         ref={register({ required: true })}
       />
+      <input type="hidden" name="team_id" value={props.team} ref={register()} />
+      <input type="hidden" name="user_id" value={props.user} ref={register()} />
       <div className={styles.title__container}>
         <Text className={styles.title}>
           Você poderá editar esse projeto até o prazo do desafio terminar.
         </Text>
       </div>
       <InputGroup>
-        <label className={styles.label}>
+        <div className={styles.label}>
           <Title size={18}>Capa do projeto</Title>
           <InputFile
             disabled={loading}
             ref={register()}
             // type="text"
-            name="thumbnail"
+            name="file"
             errors={errors}
             errorMessage="Selecione uma imagem para a capa"
             placeholder="Selecione uma imagem para a capa"
           />
-        </label>
+        </div>
       </InputGroup>
       <InputGroup>
-        <label className={styles.label}>
+        <div className={styles.label}>
           <Title size={18}>Título da solução</Title>
           <Input
-            defaultValue={props?.data?.name}
+            defaultValue={project?.project?.name || data?.project?.name}
             disabled={loading}
             ref={register({ required: true })}
             type="text"
@@ -149,13 +273,13 @@ const ProjectEdit = (props) => {
             errorMessage="Digite o nome da solução"
             placeholder="Digite o nome da solução"
           />
-        </label>
+        </div>
       </InputGroup>
       <InputGroup>
-        <label className={styles.label}>
+        <div className={styles.label}>
           <Title size={18}>Resumo sobre o projeto</Title>
           <Textarea
-            defaultValue={props?.data?.resume}
+            defaultValue={project?.project?.resume}
             disabled={loading}
             ref={register({ required: true })}
             name="resume"
@@ -167,13 +291,13 @@ const ProjectEdit = (props) => {
             placeholder="Escreva aqui o que é o seu projeto"
           />
           <div className={styles.counter}>{countResume}/140</div>
-        </label>
+        </div>
       </InputGroup>
       <InputGroup>
-        <label className={styles.label}>
+        <div className={styles.label}>
           <Title size={18}>Descreva sua solução</Title>
           <Textarea
-            defaultValue={props?.data?.description}
+            defaultValue={project?.project?.description}
             disabled={loading}
             ref={register()}
             name="description"
@@ -182,113 +306,120 @@ const ProjectEdit = (props) => {
             errorMessage="Descreva sua solução"
             placeholder="Descreva sua solução"
           />
-        </label>
+        </div>
       </InputGroup>
       <InputGroup>
-        <label className={styles.label}>
+        <div className={styles.label}>
           <Title size={18}>Pitch</Title>
-          <Input
-            defaultValue={props?.data?.link}
-            disabled={loading}
-            ref={register()}
-            type="text"
-            name="link"
-            errors={errors}
-            errorMessage="Cole aqui o seu link do youtube com o vídeo do pitch"
-            placeholder="Cole aqui o seu link do youtube com o vídeo do pitch"
-          />
-        </label>
-      </InputGroup>
-      <InputGroup>
-        <label className={styles.label}>
-          <Title size={18}>Materiais</Title>
-          <InputFile
-            disabled={loading}
-            ref={register()}
-            type="text"
-            name={`materials[0]`}
-            errors={errors}
-            errorMessage="Cole aqui o seu link do youtube com o vídeo do pitch"
-            placeholder="Cole aqui o seu link do youtube com o vídeo do pitch"
-          />
-          {materials.map((item, index) => (
-            <>
-              <InputFile
-                key={index}
-                disabled={loading}
-                // ref={register()}
-                name={`materials[${index++}]`}
-                errors={errors}
-                errorMessage="Cole aqui o seu link do youtube com o vídeo do pitch"
-                placeholder="Cole aqui o seu link do youtube com o vídeo do pitch"
-              />
-            </>
-          ))}
-          {!!materials.length && (
-            <RemoveGroup
-              onClick={() => handleRemoveMaterial()}
-              text="Remover anexo"
+          {console.log(pitch, "pitch")}
+          {pitch?.map((field, index) => {
+            return (
+              <div className={styles.duo}>
+                <Input
+                  defaultValue={field?.link}
+                  disabled={loading}
+                  ref={register({
+                    validation: {
+                      value:
+                        /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?‌​[\w?‌​=]*)?/,
+                      message: "Digite um link do Youtube válido",
+                    },
+                  })}
+                  type="text"
+                  name={`videos.${index}`}
+                  errors={errors}
+                  errorMessage="Cole o link do youtube do pitch"
+                  // errorMessage={errors?.videos?.[index]?.message}
+                  placeholder="Cole o link do youtube do pitch"
+                />
+              </div>
+            );
+          })}
+          <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+            <AddGroup
+              onClick={() => setPitchs((prev) => [...prev, prev++])}
+              text="Adicionar vídeo do youtube"
             />
-          )}
-          <AddGroup
-            onClick={() => handleAddMaterial()}
-            text="Adicionar anexo"
-          />
-        </label>
+            {pitch?.length > 1 && (
+              <RemoveGroup
+                onClick={() => setPitchs((state) => [...state].slice(0, -1))}
+                text="Remover vídeo do youtube"
+              />
+            )}
+          </InputGroup>
+        </div>
       </InputGroup>
       <InputGroup>
-        <label className={styles.label}>
-          <Title size={18}>Links</Title>
-          <div className={styles.duo}>
-            <Input
+        <div className={styles.label}>
+          <Title size={18}>Materiais</Title>
+          {materials.map((item, index) => (
+            <InputFile
               disabled={loading}
               ref={register()}
-              type="text"
-              name="links[0][link]"
-              errors={errors}
-              errorMessage="Cole o link"
-              placeholder="Cole o link"
-            />
-            <SelectInput
-              ref={register()}
-              name={`links[0][type]`}
+              name={`materials_${index}`}
               control={control}
               errors={errors}
-              errorMessage="Selecione a plataforma"
-              placeholder="Selecione a plataforma"
-              options={typeSocial}
+              errorMessage="Descreva sua solução"
+              placeholder="Descreva sua solução"
             />
-          </div>
-          {links.map((item, index) => (
-            <div className={styles.duo}>
-              <Input
-                disabled={loading}
-                ref={register()}
-                type="text"
-                name={`links[${index++}][link]`}
-                errors={errors}
-                errorMessage="Cole o link"
-                placeholder="Cole o link"
-              />
-              <SelectInput
-                ref={register()}
-                name={`links[${index++}][type]`}
-                control={control}
-                errors={errors}
-                errorMessage="Selecione a plataforma"
-                placeholder="Selecione a plataforma"
-                options={typeSocial}
-              />
-            </div>
           ))}
-          {!!links.length && (
-            <RemoveGroup
-              onClick={() => handleRemoveLink()}
-              text="Remover anexo"
+          <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+            <AddGroup
+              onClick={() => setMaterials((prev) => [...prev, prev++])}
+              text="Adicionar material"
             />
-          )}
-          <AddGroup onClick={() => handleAddLink()} text="Adicionar anexo" />
-        </label>
+            {materials?.length > 1 && (
+              <RemoveGroup
+                onClick={() => setMaterials((state) => [...state].slice(0, -1))}
+                text="Remover material"
+              />
+            )}
+          </InputGroup>
+        </div>
+      </InputGroup>
+      <InputGroup>
+        <div className={styles.label}>
+          <Title size={18}>Links</Title>
+          {links.map((field, index) => {
+            return (
+              <div className={styles.duo}>
+                <Input
+                  defaultValue={field.link}
+                  disabled={loading}
+                  ref={register()}
+                  type="text"
+                  name={`links.${index}.link`}
+                  errors={errors}
+                  errorMessage="Cole o link"
+                  placeholder="Cole o link"
+                />
+                <SelectInput
+                  defaultValue={field.type}
+                  ref={register()}
+                  name={`links.${index}.type`}
+                  control={control}
+                  errors={errors}
+                  errorMessage="Selecione a plataforma"
+                  placeholder="Selecione a plataforma"
+                  options={typeSocial}
+                />
+              </div>
+            );
+          })}
+
+          <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
+            <AddGroup
+              onClick={() => setLinks((prev) => [...prev, prev++])}
+              text="Adicionar link"
+            />
+            {links?.length > 1 && (
+              <RemoveGroup
+                onClick={() => setLinks((state) => [...state].slice(0, -1))}
+                text="Remover link"
+              />
+            )}
+          </InputGroup>
+        </div>
       </InputGroup>
       <div className={styles.button__wrapper}>
         <Button submit style={{ width: "100%" }} Tag={"button"} type="green">

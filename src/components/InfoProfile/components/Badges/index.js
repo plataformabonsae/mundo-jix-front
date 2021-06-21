@@ -19,10 +19,10 @@ const Badges = () => {
 
   return (
     <section className={styles.container}>
-      <BadgeSection title={"Gerais"} data={data} />
-      <BadgeSection title={"Autodesafio"} />
+      <BadgeSection title={"Minhas insígnias"} data={data} />
+      {/* <BadgeSection title={"Autodesafio"} />
       <BadgeSection title={"In Company"} />
-      <BadgeSection title={"Ultradesafio"} />
+      <BadgeSection title={"Ultradesafio"} /> */}
     </section>
   );
 };

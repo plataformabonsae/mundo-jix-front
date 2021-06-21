@@ -75,7 +75,7 @@ const MyChallenges = (props) => {
                 to={`/meus-desafios/${item.challenge_type}/${item.id}`}
               />
             ))}
-          {type === "autodesafio" && !autodesafio.length && (
+          {type === "autodesafio" && !autodesafio?.length && !loading && (
             <>Sem Autodesafios cadastrados.</>
           )}
 
@@ -90,7 +90,7 @@ const MyChallenges = (props) => {
                 to={`/meus-desafios/${item.challenge_type}/${item.id}`}
               />
             ))}
-          {type === "in_company" && !inCompany.length && (
+          {type === "in_company" && !inCompany.length && !loading && (
             <>Sem desafios In Company cadastrados</>
           )}
 
@@ -105,7 +105,7 @@ const MyChallenges = (props) => {
                 to={`/meus-desafios/${item.challenge_type}/${item.id}`}
               />
             ))}
-          {type === "ultradesafio" && !ultradesafio.length && (
+          {type === "ultradesafio" && !ultradesafio.length && !loading && (
             <>Sem Ultradesafios cadastrados</>
           )}
         </section>

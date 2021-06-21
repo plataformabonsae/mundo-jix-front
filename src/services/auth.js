@@ -3,7 +3,7 @@ import { Creators as UserActions } from "store/ducks/User";
 // import { Creators as ProfileActions } from "store/ducks/Profile";
 import { TALENT, COMPANY } from "utils/api";
 import { loginFetch } from "services/login";
-import { tokenFetch } from "services/token";
+import { tokenFetch, tokenFetchExternal } from "services/token";
 // import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -39,6 +39,17 @@ export const get =
 
 export const login = (type, user) => async (dispatch) => {
   const { token } = await dispatch(tokenFetch(type, user));
+  if (token && type) {
+    window.localStorage.setItem("token", token);
+    window.localStorage.setItem("usertype", type);
+    await dispatch(loginFetch(type, token));
+  }
+};
+
+export const loginExternal = (type, user) => async (dispatch) => {
+  const data = await dispatch(tokenFetchExternal(type, user));
+  console.log(user);
+  const token = data?.data?.data?.token;
   if (token && type) {
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("usertype", type);

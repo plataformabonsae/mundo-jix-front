@@ -51,6 +51,17 @@ const Dialog = (props) => {
               )}
             </div>
           )}
+          {!props.header && props.handleClose && (
+            // <section className={styles.title}>
+            //   <Title size={28}>{props.title}</Title>
+            <span
+              onClick={() => props.handleClose()}
+              className={styles.close__noheader}
+            >
+              <img src={close} alt="Fechar modal" />
+            </span>
+            // </section>
+          )}
           <Title size={28}>{props.title}</Title>
           {/* {props.handleClose && (
             // <section className={styles.title}>

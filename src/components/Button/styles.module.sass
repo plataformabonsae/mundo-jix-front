@@ -1,6 +1,8 @@
 @import 'utils/styles/colors'
 
 .button
+    transition: .3s
+    opacity: 1
     text-align: center
     position: relative
     display: inline-block
@@ -22,7 +24,16 @@
 
     &.disabled
         border: 1px solid $MEDIUM_GRAY !important
-        background: $MEDIUM_GRAY !important
+        // background: $MEDIUM_GRAY !important
+        opacity: .3
+        &:hover
+            opacity: .3
+
+    &:hover
+        opacity: .8
+
+    &:active
+        opacity: .6
 
 .primary
     background: $LIGHT_BLACK
@@ -48,6 +59,16 @@
 .outlineWhite
     background: transparent
     border: 1px solid white
+
+.outlineGray
+    background: transparent
+    border: 1px solid $MEDIUM_GRAY
+    color: $MEDIUM_GRAY
+
+.outlineBlue
+    background: transparent
+    border: 1px solid $LIGHT_BLUE
+    color: $LIGHT_BLUE
 
 .outline
     background: transparent

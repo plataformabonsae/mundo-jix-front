@@ -3,8 +3,18 @@
 .wrapper
   display: flex
   padding: 36px
-  align-items: flex-start
+  max-width: 100%
+  // align-items: flex-start
   justify-content: center
+
+  > *
+    flex: 1
+    &:nth-child(1)
+      flex: 2
+
+  &__info
+    display: flex
+    padding: 36px 64px
 
 .card
   position: relative
@@ -39,10 +49,17 @@
   margin:
     top: 12px
   z-index: 4
-  // color: $MEDIUM_GRAY !important
+  // width: 60%
+  > *
+    font:
+      family: 'Open Sans' !important
+      weight: normal !important
+    // color: $MEDIUM_GRAY !important
 
 .resume
   &__list
+    margin:
+      top: 12px
     &__item
       display: inline-block
       list-style-type: none
@@ -60,3 +77,19 @@
     font:
       weight: bold
     text-transform: uppercase
+
+@media only screen and (max-width: 768px)
+
+  .wrapper
+    padding: 12px
+    display: block
+
+  .card
+    width: auto
+    margin:
+      right: 0
+
+  .resume
+    &__list
+      &__item
+        width: 100%

@@ -4,9 +4,11 @@ import * as T from "components/Text";
 
 import styles from "./styles.module.sass";
 
+import { Loading } from "components/Loading";
+
 import profile from "assets/logo/JixProfile.png";
 
-const Profile = ({ location, image, name }) => {
+const Profile = ({ location, image, name, lastName }) => {
   return (
     <>
       <div className={styles.profile}>
@@ -18,7 +20,8 @@ const Profile = ({ location, image, name }) => {
         </div>
       </div>
       <T.Title size={18} className={styles.name} color={"white"}>
-        {name}
+        {name ? name : <Loading color={"white"} inline />}{" "}
+        {lastName ? lastName : ""}
       </T.Title>
     </>
   );

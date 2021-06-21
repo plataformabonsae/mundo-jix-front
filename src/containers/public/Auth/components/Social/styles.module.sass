@@ -1,7 +1,6 @@
 @import 'utils/styles/colors'
 @import 'utils/styles/Typography.module.sass'
 
-
 .logo
     img
         height: 80px
@@ -15,8 +14,7 @@
         display: inline-block
         color: $DARK_GRAY
         margin:
-            bottom: 24px  
-
+            bottom: 24px
 
 .login
     position: relative
@@ -30,10 +28,10 @@
         // bottom: 20px
 
     > span
-       position: absolute
-       left: 50%
-       bottom: 0
-       transform: translateX(-50%)
+        position: absolute
+        left: 50%
+        bottom: 0
+        transform: translateX(-50%)
 
 .content
     width: 100%
@@ -44,7 +42,7 @@
     justify-content: space-between
     margin:
         bottom: 24px
-    
+
     &Span
         font:
             size: 12px
@@ -67,3 +65,31 @@
         margin:
             bottom: 12px
 
+.loading
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: rgba(#fbfbfb, .9)
+    z-index: 2
+
+.button__facebook
+    position: absolute
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    background: transparent
+    border: none
+
+@media only screen and (max-width: 768px)
+
+    .buttons
+        display: block
+        padding: 20px
+        *
+            display: block !important
+            min-width: unset !important
+            &:first-child
+                width: 100%

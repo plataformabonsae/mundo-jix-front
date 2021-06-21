@@ -1,3 +1,15 @@
 
 .container
   margin: 32px
+
+.slider
+  display: flex
+  flex-wrap: wrap
+
+  > *
+    max-width: 250px
+    margin: 6px
+
+@media only screen and (max-width: 768px)
+  .container
+    margin: 12px

@@ -205,7 +205,6 @@ const Pessoal = ({
   };
 
   const handleUploadPhoto = async (data) => {
-    console.log(data);
     let file;
     await fetch(data)
       .then((res) => res.blob())
@@ -264,7 +263,7 @@ const Pessoal = ({
                 Nome
               </Input>
               <Input
-                defaultValue={user.last_name || user.data.last_name}
+                defaultValue={user?.last_name || user?.data?.last_name}
                 ref={register({ required: true })}
                 name="last_name"
                 errors={errors}
@@ -354,35 +353,6 @@ const Pessoal = ({
                 </InputGroup>
               );
             })}
-
-            {/* {!tels[0]?.phone && (
-              <InputGroup>
-                <InputWithMask
-                  // defaultValue={}
-                  name={`phones.0.phone`}
-                  ref={register()}
-                  errors={errors}
-                  errorMessage="Somente números"
-                  placeholder="Digite seu telefone"
-                  control={control}
-                  mask={`(99) 99999-9999`}
-                >
-                  Telefone 1
-                </InputWithMask>
-                <SelectInput
-                  defaultValue={null}
-                  name={`phones.0.phone_type_id`}
-                  ref={register()}
-                  control={control}
-                  errors={errors}
-                  errorMessage="Selecione um tipo"
-                  placeholder="Selecione o tipo de telefone"
-                  options={typeTel}
-                >
-                  Tipo de telefone
-                </SelectInput>
-              </InputGroup>
-            )} */}
 
             <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
               <AddGroup
@@ -575,7 +545,7 @@ const Pessoal = ({
                   Tag={"span"}
                   disabled={loading}
                   type="tertiary"
-                  style={{marginRight: 12}}
+                  style={{ marginRight: 12 }}
                   onClick={() => handleEmailModal()}
                 >
                   Cancelar

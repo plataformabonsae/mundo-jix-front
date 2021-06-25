@@ -1,16 +1,7 @@
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
-// import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from "react-redux";
-import {
-  // useSpring,
-  // useSprings,
-  // useTransition,
-  useTrail,
-  animated,
-  // useChain,
-  // config,
-} from "react-spring";
+import { useTrail, animated } from "react-spring";
 
 import { Banner } from "components/Banner";
 
@@ -55,8 +46,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    dispatch(dashboardFetch());
-  }, [dispatch]);
+    dispatch(dashboardFetch(usertype));
+  }, [dispatch, usertype]);
 
   return (
     <>
@@ -93,8 +84,10 @@ const Dashboard = () => {
       {usertype === "empresa" && (
         <main className={styles.dashboard__empresa}>
           <Banner
-            title={"Maecenas dolor imperdiet."}
-            desc={"Suspendisse mi bibendum ac, aliquet duis."}
+            full
+            title={"Maecenas dolor suspendisse mi bibendum."}
+            button={"Cadastrar desafio"}
+            to={"/novo-desafio"}
           />
 
           <Badges />

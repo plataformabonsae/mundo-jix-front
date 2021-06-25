@@ -16,12 +16,12 @@ const InfoProfile = ({
   noShadow,
   children,
   hasPassword,
-  type,
   dontRedirect,
 }) => {
   let history = useHistory();
   let { action } = useParams();
   const { data: user } = useSelector((state) => state.user);
+  const { data: type } = useSelector((state) => state.usertype);
 
   const joinType = (action, type) => {
     if (type === "talento") {

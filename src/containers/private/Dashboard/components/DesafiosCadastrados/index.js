@@ -23,15 +23,15 @@ const DesafiosCadastrados = () => {
   const [activeTab, setActiveTab] = useState("todos");
 
   useEffect(() => {
-    data?.my_challenges && setChallengeType(data.my_challenges);
-  }, [data?.my_challenges]);
+    data?.challenges && setChallengeType(data.challenges);
+  }, [data?.challenges]);
 
   useEffect(() => {
     console.log(width);
   }, [width]);
 
   const handleFilter = (filterTo) => {
-    const challenges = data?.my_challenges;
+    const challenges = data?.challenges;
     setActiveTab(filterTo);
     if (filterTo !== "todos") {
       setChallengeType(() =>
@@ -55,12 +55,6 @@ const DesafiosCadastrados = () => {
               onClick={() => handleFilter("todos")}
             >
               Todos
-            </Filter>
-            <Filter
-              active={activeTab === "autodesafio"}
-              onClick={() => handleFilter("autodesafio")}
-            >
-              Autodesafio
             </Filter>
             <Filter
               active={activeTab === "in_company"}
@@ -89,9 +83,13 @@ const DesafiosCadastrados = () => {
               return (
                 <SwiperSlide key={item.id}>
                   <ChallengeCard
-                    noImage={width > 762 ? false : true}
+                    // canSubscribe
+                    // noButton
+                    company
+                    status={item.payed_for}
                     item={item}
-                    to={`${location.pathname}/modal/desafio/${item.id}`}
+                    key={item.id}
+                    to={`/meus-desafios/${item.challenge_type}/${item.id}`}
                   />
                 </SwiperSlide>
               );

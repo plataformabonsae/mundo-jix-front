@@ -22,7 +22,7 @@ const TALENT = {
 
   DASHBOARD: {
     // GET
-    talent: `${BASEURL}/dashboard`,
+    dashboard: `${BASEURL}/dashboard`,
     badges: `${BASEURL}/dashboard/badges`,
     finished_challenges: `${BASEURL}/dashboard/finished_challenges`,
     my_challenges: `${BASEURL}/dashboard/my_challenges`,

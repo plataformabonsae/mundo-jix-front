@@ -31,6 +31,36 @@ const Project = (props) => {
   const { current: mentorProject, loading: mentorLoading } = useSelector(
     (state) => state.projects
   );
+  useEffect(() => {
+    if (!!user?.user?.is_mentor || !!user?.user?.is_judge)
+      dispatch(
+        getProjectAsMentor(usertype, {
+          challenge_id: id,
+          project_id: trail_type,
+        })
+      )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {});
+    else
+      dispatch(
+        getProject(usertype, { challenge_id: id, project_id: trail_type })
+      )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          // setHasProject(false);
+        });
+  }, [
+    dispatch,
+    usertype,
+    id,
+    trail_type,
+    user?.user?.is_mentor,
+    user?.user?.is_judge,
+  ]);
 
   useEffect(() => {
     setHasProject(!!mentorProject?.project || !!data?.project);
@@ -55,7 +85,11 @@ const Project = (props) => {
           title={"Cadastrar projeto"}
           close={removeLastPath(location.pathname)}
         >
-          <ProjectEdit team={data?.team?.id} user={data?.user?.id} />
+          <ProjectEdit
+            team={data?.team?.id}
+            user={data?.user?.id}
+            handleClose={handleEditModal}
+          />
           {console.log(data)}
         </ModalPage>
       )}

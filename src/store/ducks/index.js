@@ -24,6 +24,7 @@ import trail from "./Trail";
 import forum from "./Forum";
 import notifications from "./Notifications";
 import invites from "./Invites";
+import users from "./Users";
 
 const ducks = combineReducers({
   auth,
@@ -48,6 +49,7 @@ const ducks = combineReducers({
   invites,
   forum,
   feedbacks,
+  users,
 });
 
 const rootReducer = (state, action) => {

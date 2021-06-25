@@ -17,7 +17,7 @@ const Banner = ({ title, desc, to, button, full, Tag, onClick }) => (
         </Text>
         {!!button && (
           <Button
-            onClick={() => onClick()}
+            onClick={() => (onClick ? onClick() : null)}
             Tag={Tag}
             to={to ? to : null}
             type={"green"}

@@ -142,10 +142,10 @@ const ProjectEdit = (props) => {
       user_id,
       team_id,
     } = data;
-    const materialsConter = {};
+    const materialsCounter = {};
     for (let i = 0; i < 10; i++) {
       if (data[`materials_${i}`])
-        materialsConter[`materials_${i}`] = data[`materials_${i}`][0];
+        materialsCounter[`materials_${i}`] = data[`materials_${i}`][0];
     }
     console.log({
       challenge_id,
@@ -159,10 +159,9 @@ const ProjectEdit = (props) => {
       links: JSON.stringify(links),
       name,
       resume,
-      ...materialsConter,
+      ...materialsCounter,
     });
     if (props.edit) {
-      console.log(!!videos[0].length);
       const req = dispatch(
         update(usertype, {
           challenge_id,
@@ -176,7 +175,7 @@ const ProjectEdit = (props) => {
           links: JSON.stringify(links),
           name,
           resume,
-          ...materialsConter,
+          ...materialsCounter,
           _method: "PUT",
         })
       );
@@ -204,7 +203,7 @@ const ProjectEdit = (props) => {
           links: links[0].link !== "" ? JSON.stringify(links) : null,
           name,
           resume,
-          ...materialsConter,
+          ...materialsCounter,
         })
       );
       await req
@@ -212,6 +211,7 @@ const ProjectEdit = (props) => {
           toast.success("Projeto criado com sucesso!", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
+          console.log(res);
         })
         .then(() => dispatch(get(usertype, { challenge_id })))
         .then(() => props.handleClose())

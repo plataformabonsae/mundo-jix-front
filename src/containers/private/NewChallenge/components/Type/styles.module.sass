@@ -1,0 +1,21 @@
+@import 'utils/styles/colors'
+
+.title
+  padding: 32px
+
+  &__container
+    position: relative
+
+    &::before
+      content: ''
+      display: block
+      width: 60px
+      height: 1px
+      background: $LIGHT_GRAY
+      margin:
+        left: 32px
+
+@media only screen and ( max-width: 768px )
+
+  .title
+    padding: 12px

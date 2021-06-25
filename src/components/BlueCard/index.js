@@ -7,7 +7,12 @@ import styles from "./styles.module.sass";
 
 const BlueCardContainer = (props) => {
   return (
-    <section {...props} className={styles.container}>
+    <section
+      {...props}
+      className={`${styles.container} ${
+        props.type === 3 && styles.containerTree
+      }`}
+    >
       {props.children}
     </section>
   );

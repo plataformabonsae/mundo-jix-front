@@ -1,0 +1,56 @@
+
+.wrapper
+  display: flex
+  justify-content: center
+  align-items: center
+  margin: 12px
+  margin:
+    top: 48px
+
+.step
+  cursor: pointer
+  display: flex
+  justify-content: flex-start
+  width: 120px
+  position: relative
+
+  &:last-child
+    width: auto
+
+    .number
+      &::after
+        display: none
+
+.number
+  display: inline-block
+  text-align: center
+  font:
+    weight: bold
+  line-height: 32px
+  width: 32px
+  height: 32px
+  border-radius: 300px
+  background: #788189
+  color: white
+  &::after
+    content: ''
+    position: absolute
+    // z-index: 1
+    top: 16px
+    left: 32px
+    right: 0
+    display: block
+    width: 100%
+    height: 2px
+    background: #788189
+
+.active
+  background: #5bde37
+  &::after
+    background: #5bde37
+
+.desc
+  color: #788189
+  font:
+    size: 12px
+    weight: bold

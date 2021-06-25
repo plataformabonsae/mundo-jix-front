@@ -36,7 +36,7 @@ const Badges = () => {
             slidesPerView={(width > 1366 && 5) || (width > 762 && 3) || 1}
           >
             {data?.badges.map((item, index) => (
-              <SwiperSlide>
+              <SwiperSlide key={index}>
                 <Chip
                   insignia
                   title={item?.title}

@@ -8,16 +8,13 @@ import YouTube from "react-youtube";
 import { toast } from "react-toastify";
 
 import { Card } from "components/Card";
-import { ModalPage } from "components/ModalPage";
 import { ProfileCard } from "components/ProfileCard";
 import { Dialog } from "components/Dialog";
 import { FeedbackCard, CreateFeedback } from "components/FeedbackCard";
 import { Title, Text } from "components/Text";
 import { TabFlat } from "components/Tabs";
-import { TextArea } from "components/Inputs";
 import Button from "components/Button";
 import { WindowSize } from "utils/etc";
-// import { ButtonGroup } from "components/ButtonGroup";
 
 import profileDefault from "assets/logo/JixProfile.png";
 import guardia from "assets/components/ProfileCard/guardia.svg";
@@ -131,7 +128,7 @@ const Carousel = (props) => {
             Enviar feedback
           </Button>
         ) : null}
-        {user?.user?.is_mentor || user?.user?.is_judge
+        {user?.user?.is_mentor || user?.user?.is_judge || usertype === "empresa"
           ? null
           : activeTab === "meu-projeto" &&
             (isKeeper || !data?.team) && (
@@ -302,7 +299,7 @@ const Carousel = (props) => {
       {activeTab === "equipe" && (
         <section className={styles.equipe}>
           <Card noShadow border>
-            <Title style={{ marginBottom: 32 }}>Time</Title>
+            <Title style={{ marginBottom: 32 }}>Time {data?.team?.name}</Title>
             {!!data?.guardian && (
               <TeamIntegrant
                 teamId={data?.team?.id}

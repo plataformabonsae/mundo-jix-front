@@ -23,7 +23,7 @@ const COMPANY = {
 
   DASHBOARD: {
     // GET
-    talent: `${BASEURL}/dashboard`,
+    dashboard: `${BASEURL}/dashboard`,
     badges: `${BASEURL}/dashboard/badges`,
     finished_challenges: `${BASEURL}/dashboard/finished_challenges`,
     my_challenges: `${BASEURL}/dashboard/my_challenges`,
@@ -32,29 +32,25 @@ const COMPANY = {
   },
 
   CHALLENGES: {
-    // GET
-    my_challenges: `${BASEURL}/my_challenges`,
     challenges: `${BASEURL}/challenges`,
     challenge: (id) => `${BASEURL}/challenge/${id}`,
     trail: (id) => `${BASEURL}/trail/${id}`,
     trail_premium: (id) => `${BASEURL}/trail_premium/${id}`,
-    project: (id) => `${BASEURL}/project/${id}`,
     feedback: (id) => `${BASEURL}/feedback/${id}`,
-    badges: `${BASEURL}/dashboard/badges`,
-    subscribe: (id) => `${BASEURL}/challenge/subscribe/${id}`,
+    users: (id) => `${BASEURL}/challenge/users/${id}`,
+    create: `${BASEURL}/challenge/store`,
   },
 
   PROJECT: {
-    project: (id) => `${BASEURL}/project/${id}`,
     edit: (id) => `${BASEURL}/project/edit/${id}`,
     store: `${BASEURL}/project/store`,
     update: (id) => `${BASEURL}/project/update/${id}`,
+    project: (id, project_id) =>
+      `${BASEURL}/challenge/project/${id}/${project_id}`,
   },
 
   PROJECTS: {
-    projects: (id) => `${BASEURL}/mentor/challenge/${id}/projects`,
-    project: (id, project_id) =>
-      `${BASEURL}/mentor/challenge/${id}/project/${project_id}`,
+    projects: (id) => `${BASEURL}/challenge/projects/${id}`,
   },
 
   TEAM: {

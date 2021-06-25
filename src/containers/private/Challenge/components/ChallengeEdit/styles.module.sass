@@ -1,0 +1,46 @@
+@import 'utils/styles/colors'
+
+.edit
+  padding: 0 44px
+
+.title
+
+  &__container
+    padding: 32px
+    text-align: center
+
+.label
+  // display: block
+  width: 100%
+  padding: 12px
+  *:first-child
+    margin:
+      left: 6px
+
+.counter
+  width: 100%
+  font:
+    size: 14px
+  text-align: right
+
+.duo
+  display: flex
+  align-items: center
+
+.button
+  &__wrapper
+    margin: 36px 0
+
+@media only screen and (max-width: 768px)
+  .edit
+    padding: 0
+  .button
+    &__wrapper
+      margin: 36px 12px
+
+  .duo
+    flex-direction: column
+
+  .label
+    // display: block
+    width: auto

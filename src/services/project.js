@@ -13,7 +13,7 @@ export const get =
   async (dispatch) => {
     dispatch(ProjectActions.projectRequest());
     const res = axios({
-      url: url(body.challenge_id),
+      url: url(body.challenge_id, body.project_id || ""),
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",

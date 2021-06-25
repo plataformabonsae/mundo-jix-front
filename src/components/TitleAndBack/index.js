@@ -20,12 +20,14 @@ const TitleAndBack = (props) => {
           {backText || "Voltar"}
         </Link>
       )}
-      <header className={styles.header}>
-        <Text size={14} className={styles.tag}>
-          {data?.challenge_type.replace("_", " ") || "..."}
-        </Text>
-        <Title className={styles.name}>{data?.name || "..."}</Title>
-      </header>
+      {data?.challenge_type && (
+        <header className={styles.header}>
+          <Text size={14} className={styles.tag}>
+            {data?.challenge_type.replace("_", " ") || ""}
+          </Text>
+          <Title className={styles.name}>{data?.name || ""}</Title>
+        </header>
+      )}
     </>
   );
 };

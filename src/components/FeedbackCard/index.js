@@ -5,19 +5,11 @@ import { toast } from "react-toastify";
 
 import { Card } from "components/Card";
 import { Loading } from "components/Loading";
-import { Title, Text, TextArea } from "components/Text";
+import { Title, Text } from "components/Text";
 // import { Dot } from "components/Dot";
 import Button from "components/Button";
-import {
-  // Input,
-  InputGroup,
-  // InputFile,
-  Textarea,
-  // AddGroup,
-  // RemoveGroup,
-  // SelectInput,
-} from "components/Inputs";
-import { comment, getOne, create, get } from "services/feedbacks";
+import { InputGroup, Textarea } from "components/Inputs";
+import { comment, getOne, create, get, reset } from "services/feedbacks";
 
 import { ModalPage } from "components/ModalPage";
 
@@ -48,7 +40,7 @@ const FeedbackCard = (props) => {
           </Text>
         </header>
         <Text size={14} color={colors.MEDIUM_GRAY}>
-          {/* {feedback?.challenge?.name} */}
+          {data?.challenge?.name}
         </Text>
         <Text className={styles.feedback} size={14} style={{ marginTop: 12 }}>
           {data?.feedback?.substring(0, 200)}...
@@ -93,6 +85,7 @@ const Modal = (props) => {
     dispatch(
       getOne(usertype, { challenge_id: challengeId, feedback_id: data.id })
     );
+    return dispatch(reset());
   }, [data?.id, usertype, challengeId, dispatch]);
 
   const onSubmit = async (data) => {
@@ -127,14 +120,14 @@ const Modal = (props) => {
         <Card>
           <header className={styles.header}>
             <Title size={16}>
-              {data.mentor.name} {data?.mentor?.last_name} {data?.id}
+              {data.mentor.name} {data?.mentor?.last_name}
             </Title>
             <Text size={14} color={colors.MEDIUM_GRAY}>
               {data.created_at}
             </Text>
           </header>
           <Text size={14} color={colors.MEDIUM_GRAY}>
-            {feedback?.challenge?.name}
+            {data?.challenge?.name}
           </Text>
           <Text size={14} style={{ marginTop: 12 }}>
             {data?.feedback}

@@ -19,5 +19,4 @@ export const getTerms =
       .then((response) => dispatch(TermsActions.termsSuccess(response)))
       .catch((error) => dispatch(TermsActions.termsFailure(error)));
     return res;
-    return res;
   };

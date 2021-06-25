@@ -22,8 +22,8 @@ import search from "assets/components/Input/search.svg";
 // 2 - Mudar a posição dos elementos isMulti do Select
 // 3 - search
 
-const Search = () => (
-  <button className={styles.search}>
+const Search = ({ onClick }) => (
+  <button onClick={onClick} className={styles.search}>
     <img src={search} alt={search} />
   </button>
 );
@@ -443,6 +443,43 @@ const Checkbox = React.forwardRef((props, ref) => {
   );
 });
 
+const Radio = React.forwardRef((props, ref) => {
+  const {
+    defaultValue,
+    defaultChecked,
+    disabled,
+    onClick,
+    name,
+    value,
+    placeholder,
+    onChange,
+    children,
+    checked,
+  } = props;
+
+  return (
+    <label
+      className={`${styles.inputCheckbox} ${disabled ? styles.disabled : ""}`}
+      style={{ paddingTop: 6, paddingBottom: 6 }}
+    >
+      <input
+        defaultChecked={defaultChecked}
+        defaultValue={defaultValue}
+        disabled={disabled}
+        name={name}
+        type="radio"
+        value={value}
+        checked={checked}
+        placeholder={placeholder}
+        onChange={onChange}
+        onClick={onClick}
+        ref={ref}
+      />
+      <span>{children}</span>
+    </label>
+  );
+});
+
 const PhotoUpload = React.forwardRef((props, ref) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -595,4 +632,5 @@ export {
   PhotoUpload,
   InputFile,
   SelectInputMulti,
+  Radio,
 };

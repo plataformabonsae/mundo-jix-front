@@ -11,7 +11,7 @@ export const my =
     type = "talento",
     token = window.localStorage.getItem("token"),
     url = type === "empresa"
-      ? COMPANY.CHALLENGES.my_challenges
+      ? COMPANY.CHALLENGES.challenges
       : TALENT.CHALLENGES.my_challenges
   ) =>
   async (dispatch) => {

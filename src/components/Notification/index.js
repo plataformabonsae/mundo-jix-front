@@ -38,7 +38,43 @@ const Notification = ({ list, open, isOpen }) => {
 
   const setTextByType = (type) => {
     if (type === `App\\Notifications\\UserWantsYouJoiningHisTeam`) {
-      return "teamInvite";
+      return "joinHisTeam";
+    }
+    if (type === `App\\Notifications\\UserWantsJoinYourTeam`) {
+      return "joinYourTeam";
+    }
+    if (type === `App\\Notifications\\ChallengeEndingInOneDay`) {
+      return "endingOneDay";
+    }
+    if (type === `App\\Notifications\\ChallengeEndingInTwoDays`) {
+      return "endingTwoDays";
+    }
+    if (type === `App\\Notifications\\ChallengeEndingInThreeDay`) {
+      return "endingThreeDays";
+    }
+    if (type === `App\\Notifications\\ChallengePurchaseAvailable`) {
+      return "purchaseAvailable";
+    }
+    if (type === `App\\Notifications\\GuardianAcceptedYourRequest`) {
+      return "guardianAcceptedRequest";
+    }
+    if (type === `App\\Notifications\\GuardianRefusedYourRequest`) {
+      return "guardianRefusedRequest";
+    }
+    if (type === `App\\Notifications\\GuardianSentProject`) {
+      return "guardianSentProject";
+    }
+    if (type === `App\\Notifications\\PremiumPurchaseFail`) {
+      return "premiumPurchaseFail";
+    }
+    if (type === `App\\Notifications\\PremiumPurchaseSuccess`) {
+      return "premiumPurchaseSuccess";
+    }
+    if (type === `App\\Notifications\\SubscriptionOff`) {
+      return "subscriptionOff";
+    }
+    if (type === `App\\Notifications\\SubscriptionSuccess`) {
+      return "subscriptionSuccess";
     }
   };
 
@@ -79,7 +115,7 @@ const Notification = ({ list, open, isOpen }) => {
                 >
                   <div className={styles.invites__content}>
                     <Title size={14}>
-                      {setTextByType(item.type) === "teamInvite" &&
+                      {setTextByType(item.type) === "joinHisTeam" &&
                         "Convite para o time:"}{" "}
                       {item.data.team_name || ""}
                     </Title>

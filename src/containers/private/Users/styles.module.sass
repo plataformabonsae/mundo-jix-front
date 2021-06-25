@@ -1,0 +1,50 @@
+
+.wrapper
+  padding: 32px
+
+.table
+  padding: 32px
+
+.header
+  display: flex
+  justify-content: space-between
+  margin:
+    bottom: 16px
+
+.row
+  display: flex
+  border:
+    top: 1px solid rgba(188, 195, 198, 1.0)
+    bottom: 1px solid rgba(188, 195, 198, 1.0)
+
+.block
+  overflow: auto
+  height: 50px
+  padding: 8px
+  display: flex
+  // justify-content: center
+  align-items: center
+  flex: 3
+  border:
+    right: 1px solid rgba(188, 195, 198, 1.0)
+
+  img
+    height: 18px
+    margin:
+      right: 6px
+
+  .profile
+    height: 24px
+    width: 24px
+    border-radius: 300px
+    margin:
+      right: 6px
+
+  &:first-child
+    flex: 1
+
+  &:nth-child(2)
+    flex: 3
+
+  &:last-child
+    border: none

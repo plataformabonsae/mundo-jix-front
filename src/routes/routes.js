@@ -15,7 +15,9 @@ import { NotFound } from "containers/public/NotFound";
 import { Dashboard } from "containers/private/Dashboard";
 import { Profile } from "containers/private/Profile";
 import { MyChallenges } from "containers/private/MyChallenges";
+import { MyChallengesCompany } from "containers/private/MyChallengesCompany";
 import { Challenges } from "containers/private/Challenges";
+import { Users } from "containers/private/Users";
 import { Challenge } from "containers/private/Challenge";
 import { Logout } from "containers/private/Logout";
 import { Join } from "containers/private/Join";
@@ -23,6 +25,7 @@ import { Judges } from "containers/private/Judges";
 import { Project } from "containers/private/Project";
 import { Subscription } from "containers/private/Subscription";
 import { TrilhaWatch } from "containers/private/TrilhaWatch";
+import { NewChallenge } from "containers/private/NewChallenge";
 
 // import { Loading } from "components/Loading";
 import { ModalPage } from "components/ModalPage";
@@ -54,7 +57,7 @@ const RoutesConfig = () => {
               </>
             ) : (
               <>
-                {(usertype === "talento" || usertype === "empresa") && (
+                {usertype === "talento" && (
                   <>
                     {/* Join */}
                     <Route exact path="/join/:type/:action" component={Join} />
@@ -131,6 +134,89 @@ const RoutesConfig = () => {
                       exact
                       path="/desafio/:id"
                       component={Challenge}
+                    />
+
+                    {/* Perfil */}
+                    <PrivateRouteContainer
+                      exact
+                      path="/perfil/:action"
+                      component={Profile}
+                    />
+                    <Route
+                      exact
+                      path="/perfil"
+                      render={() => <Redirect to={`/perfil/pessoal`} />}
+                    />
+                    <Route path={"/404"} component={NotFound} />
+                    {/* <Redirect to={`/404`} /> */}
+                  </>
+                )}
+                {usertype === "empresa" && (
+                  <>
+                    {/* Join */}
+                    <Route exact path="/join/:type/:action" component={Join} />
+
+                    {/* Dashboard */}
+                    <PrivateRouteContainer
+                      exact
+                      path="/dashboard"
+                      component={Dashboard}
+                    />
+
+                    {/* Meus Desafios */}
+                    <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type"
+                      component={MyChallengesCompany}
+                    />
+                    <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/:page"
+                      component={Challenge}
+                    />
+                    <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/:page/:trail_type"
+                      component={Challenge}
+                    />
+
+                    <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
+                      component={TrilhaWatch}
+                    />
+                    {/* <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/forum/:forum_id"
+                      component={Challenge}
+                    /> */}
+                    <Route
+                      exact
+                      path="/meus-desafios/:type/:id/"
+                      render={({ match }) => (
+                        <Redirect
+                          to={`/meus-desafios/${match.params.type}/${match.params.id}/inicio`}
+                        />
+                      )}
+                    />
+                    <Route
+                      exact
+                      path="/meus-desafios"
+                      render={() => (
+                        <Redirect to={`/meus-desafios/in_company`} />
+                      )}
+                    />
+
+                    {/* Novo desafio */}
+                    <Route
+                      exact
+                      path="/novo-desafio"
+                      render={() => <Redirect to={`/novo-desafio/tipo`} />}
+                    />
+                    <PrivateRouteContainer
+                      exact
+                      path="/novo-desafio/:step"
+                      component={NewChallenge}
                     />
 
                     {/* Perfil */}

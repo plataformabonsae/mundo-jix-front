@@ -2,48 +2,26 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation } from "react-router-dom";
-// import { cpf } from 'cpf-cnpj-validator'
 import { useSelector, useDispatch } from "react-redux";
-// import * as yup from "yup";
 
 import { removeLastPath } from "utils/etc";
 
 import { Card } from "components/Card";
 import { Title } from "components/Text";
 import {
-  // PhotoUpload,
   InputGroup,
   Input,
   SelectInput,
   AddGroup,
   RemoveGroup,
   InputWithMask,
-  // Textarea
 } from "components/Inputs";
 import Button from "components/Button";
 import { ButtonGroup } from "components/ButtonGroup";
 
 import { edit } from "services/auth";
 
-// const dateSchema = yup.object().shape({
-//   academic_formations: yup.array().when({
-//     is: (value) => value === "start_date",
-//     then: yup.number(),
-//     // otherwise: yup.array().nullable(),
-//   }),
-//   // .when('end_date',
-//   //   (eventStartDate, schema) => eventStartDate && schema.min(eventStartDate))
-// });
-
-const Academico = ({
-  action,
-  type,
-  noShadow,
-  advance,
-  save,
-  finalRoute,
-  dontRedirect,
-}) => {
+const Academico = ({ noShadow, finalRoute, dontRedirect }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -53,7 +31,6 @@ const Academico = ({
   const [datesValidation, setDatesValidation] = useState([]);
   const [academic, setAcademic] = useState([]);
 
-  // const resolver = validationSchema(dateSchema);
   const { register, errors, control, handleSubmit } = useForm();
 
   useEffect(() => {
@@ -82,15 +59,7 @@ const Academico = ({
     };
   }, [user]);
 
-  // const onSubmit = (data) => {
-  //   console.log(JSON.stringify(data));
-  //   let array = pathname.split("/");
-
-  //   history.push(`/${array[1]}/${usertype}/profissional`);
-  // };
-
   const onSubmit = async (data) => {
-    // let { email, name, last_name, cpf, phones, birthdate } = data;
     const { academic_formations } = data;
     let filtered_academic_formations;
     for (let i = 0; i < academic_formations.length; i++) {
@@ -149,6 +118,7 @@ const Academico = ({
   ];
 
   const handleSetStartDate = (index, start) => {
+    console.log(index, start);
     setDatesValidation((prev) => {
       let array = [...prev];
       array[index].start = start.length ? start : null;

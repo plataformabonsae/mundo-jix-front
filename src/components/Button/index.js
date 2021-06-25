@@ -26,6 +26,7 @@ const Button = ({
       style={{
         background: transparent && "none",
         minWidth: transparent && 0,
+        cursor: disabled ? "not-allowed" : "pointer",
         ...style,
       }}
       type={submit ? "submit" : ""}
@@ -33,7 +34,7 @@ const Button = ({
       to={to ? to : null}
       href={href}
       target={target}
-      onClick={onClick}
+      onClick={!disabled ? onClick : null}
       onMouseOver={onMouseOver}
       className={`${styles.button} ${styles?.[type]} ${
         disabled ? styles.disabled : ""

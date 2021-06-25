@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { useParams, Link } from "react-router-dom";
-// import { Editor } from "react-draft-wysiwyg";
+import { useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import parse from "html-react-parser";
 import "react-quill/dist/quill.snow.css";
-
-// import "./forum.css";
 
 import { Title, Text } from "components/Text";
 import {
@@ -25,8 +22,6 @@ import Button from "components/Button";
 import { Dialog } from "components/Dialog";
 import { Loading } from "components/Loading";
 
-// import { Loading } from "components/Loading";
-
 import { Header } from "./components/Header";
 
 import styles from "./styles.module.sass";
@@ -42,19 +37,13 @@ import edit from "assets/icons/edit-gray.svg";
 
 const Forum = (props) => {
   const dispatch = useDispatch();
-  const {
-    data: forumData,
-    current,
-    loading,
-  } = useSelector((state) => state.forum);
+  const { data: forumData, loading } = useSelector((state) => state.forum);
   const { data } = useSelector((state) => state.project);
   const { data: user } = useSelector((state) => state.user);
   const [forumPosts, setForumPosts] = useState([]);
   const [modal, setModal] = useState(false);
   const { data: usertype } = useSelector((state) => state.usertype);
   const { id, trail_type, type } = useParams();
-  // const { type, id, trail_type, trail_id } = useParams();
-  // const [activeTab, setActiveTab] = useState("normal");
 
   useEffect(() => {
     setForumPosts(forumData?.forums);
@@ -68,20 +57,20 @@ const Forum = (props) => {
     dispatch(forum(usertype, { challenge_id: id }));
   }, [dispatch, usertype, id]);
 
-  const handleCreate = (event) => {
-    setForumPosts((state) =>
-      [...forumData?.forums].filter(
-        (user) =>
-          user.name.toLowerCase().includes(event.target.value.toLowerCase())
-        // ||
-        // user.description
-        //   .toLowerCase()
-        //   .includes(event.target.value.toLowerCase())
-      )
-    );
-  };
+  // const handleCreate = (event) => {
+  //   setForumPosts((state) =>
+  //     [...forumData?.forums].filter(
+  //       (user) =>
+  //         user.name.toLowerCase().includes(event.target.value.toLowerCase())
+  //       // ||
+  //       // user.description
+  //       //   .toLowerCase()
+  //       //   .includes(event.target.value.toLowerCase())
+  //     )
+  //   );
+  // };
 
-  const handleEditorData = (data) => console.log(data);
+  // const handleEditorData = (data) => console.log(data);
 
   const handleSearch = (event) => {
     setForumPosts((state) =>
@@ -108,7 +97,6 @@ const Forum = (props) => {
             <section className={styles.search}>
               <Input
                 fontSize={20}
-                // style={{ fontSize: 34 }}
                 disabled={loading}
                 onChange={handleSearch}
                 placeholder={"Digite para procurar publicações"}
@@ -302,11 +290,14 @@ const Comment = (props) => {
   const { data: user } = useSelector((state) => state.user);
   const { data: usertype } = useSelector((state) => state.usertype);
   const [editorState, setEditorState] = useState("");
-  const { id, trail_type, type } = useParams();
+  const { id, trail_type } = useParams();
 
   useEffect(() => {
     dispatch(publication(usertype, { forum_id: trail_type }));
   }, [dispatch, usertype, trail_type]);
+  useEffect(() => {
+    console.log(editorState);
+  }, [editorState]);
 
   const handleComment = () => {
     console.log(current.forum.id);
@@ -365,8 +356,10 @@ const Comment = (props) => {
               style={{ marginTop: 16 }}
               type={"green"}
               Tag="span"
-              disabled={!editorState.length}
-              onClick={() => !!editorState.length && handleComment()}
+              disabled={
+                !editorState.length || editorState === "<p><br></p>" || loading
+              }
+              onClick={() => handleComment()}
             >
               Comentar
             </Button>

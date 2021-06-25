@@ -120,3 +120,7 @@ export const create =
     // .catch((error) => dispatch(FeedbackActions.feedbacksFailure(error)));
     return res;
   };
+
+export const reset = () => async (dispatch) => {
+  dispatch(FeedbackActions.feedbacksCurrentSuccess());
+};

@@ -6,8 +6,10 @@ import { Project } from "containers/private/Project";
 import { Projects } from "containers/private/Projects";
 import { Trilha } from "containers/private/Trilha";
 import { Forum } from "containers/private/Forum";
+import { Users } from "containers/private/Users";
 
 import { MainImage } from "components/MainImage";
+import { ModalPage } from "components/ModalPage";
 import { Dialog } from "components/Dialog";
 import Button from "components/Button";
 import { ProfileCard } from "components/ProfileCard";
@@ -19,6 +21,8 @@ import { SubHeader } from "components/Header";
 import { Presentation } from "./components/Presentation";
 import { Downloads } from "./components/Downloads";
 import { Infos } from "./components/Infos";
+import { Counters } from "./components/Counters";
+import { ChallengeEdit } from "./components/ChallengeEdit";
 
 import { all, get } from "services/challenges";
 import { get as getProject } from "services/project";
@@ -31,6 +35,7 @@ const Challenge = (props) => {
   const [buttonContent, setButtonContent] = useState();
   const [owned, setOwned] = useState(false);
   const [notGuardianModal, setNotGuardianModal] = useState(false);
+  const [editChallengeModal, setEditChallengeModal] = useState(false);
   // const isCard = useRef();
   const dispatch = useDispatch();
   const { data: usertype } = useSelector((state) => state.usertype);
@@ -64,17 +69,15 @@ const Challenge = (props) => {
           project_id: trail_type,
         })
       )
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {});
+        .then((res) => {})
+        .catch((err) => {
+          console.log(err);
+        });
     else
       dispatch(getProject(usertype, { challenge_id: id }))
-        .then((res) => {
-          console.log(res);
-        })
+        .then((res) => {})
         .catch((err) => {
-          // setHasProject(false);
+          console.log(err);
         });
   }, [
     dispatch,
@@ -91,8 +94,10 @@ const Challenge = (props) => {
   }, [dispatch, usertype]);
 
   useEffect(() => {
-    const data = challenges.data;
+    const data = challenges?.data;
+    console.log(typeof data);
     data &&
+      Array.isArray(data) &&
       setCurrentChallenge(
         [...data].filter((item) => item.id === parseInt(id))[0]
       );
@@ -101,6 +106,8 @@ const Challenge = (props) => {
   useEffect(() => {
     data?.team?.id && window.localStorage.setItem("current_team", data.team.id);
   }, [data?.team?.id]);
+
+  const handleEditChallenge = (props) => setEditChallengeModal((prev) => !prev);
 
   const handleClickToSubscribe = (props) => {
     setButtonContent(true);
@@ -116,45 +123,85 @@ const Challenge = (props) => {
 
   return (
     <>
-      {(owned || !!user?.user?.is_mentor || !!user?.user?.is_judge) && (
-        <SubHeader>
-          <TabFlat to={`/meus-desafios/${type}/${id}/inicio`} color={"white"}>
-            Início
-          </TabFlat>
-          {!!user?.user?.is_mentor || !!user?.user?.is_judge ? (
-            <TabFlat
-              to={`/meus-desafios/${type}/${id}/projetos`}
-              color={"white"}
-            >
-              Projetos
-            </TabFlat>
-          ) : project?.project ||
-            !project?.team ||
-            !!data?.team?.pivot?.is_guardian ? (
-            <TabFlat
-              to={`/meus-desafios/${type}/${id}/projeto`}
-              color={"white"}
-            >
-              Projeto
-            </TabFlat>
-          ) : (
-            <TabFlat
-              Tag={"span"}
-              onClick={() => handleNotGuardian()}
-              color={"white"}
-            >
-              Projeto
-            </TabFlat>
-          )}
-          <TabFlat
-            to={`/meus-desafios/${type}/${id}/trilha/normal`}
-            color={"white"}
+      {(owned || !!user?.user?.is_mentor || !!user?.user?.is_judge) &&
+        usertype !== "empresa" && (
+          <>
+            <SubHeader>
+              <TabFlat
+                to={`/meus-desafios/${type}/${id}/inicio`}
+                color={"white"}
+              >
+                Início
+              </TabFlat>
+              {!!user?.user?.is_mentor || !!user?.user?.is_judge ? (
+                <TabFlat
+                  to={`/meus-desafios/${type}/${id}/projetos`}
+                  color={"white"}
+                >
+                  Projetos
+                </TabFlat>
+              ) : project?.project ||
+                !project?.team ||
+                !!data?.team?.pivot?.is_guardian ? (
+                <TabFlat
+                  to={`/meus-desafios/${type}/${id}/projeto`}
+                  color={"white"}
+                >
+                  Projeto
+                </TabFlat>
+              ) : (
+                <TabFlat
+                  Tag={"span"}
+                  onClick={() => handleNotGuardian()}
+                  color={"white"}
+                >
+                  Projeto
+                </TabFlat>
+              )}
+              <TabFlat
+                to={`/meus-desafios/${type}/${id}/trilha/normal`}
+                color={"white"}
+              >
+                Trilha
+              </TabFlat>
+              <TabFlat
+                to={`/meus-desafios/${type}/${id}/forum`}
+                color={"white"}
+              >
+                Fórum
+              </TabFlat>
+            </SubHeader>
+            {data?.last_video && (page === "inicio" || page === "trilha") && (
+              <header className={styles.lastwatched}>
+                <Title className={styles.lastwatched__title}>
+                  {data?.last_video?.name}
+                </Title>
+                <Button
+                  type={"green"}
+                  to={`/meus-desafios/${type}/${data?.challenge?.id}/trilha/normal/${data?.last_video?.id}`}
+                >
+                  Continuar assistindo
+                </Button>
+              </header>
+            )}
+          </>
+        )}
+      {usertype === "empresa" && (
+        <SubHeader
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Title color="white">{data?.challenge?.name}</Title>
+          <Button
+            Tag={"span"}
+            onClick={() => handleEditChallenge()}
+            type={"secondary"}
           >
-            Trilha
-          </TabFlat>
-          <TabFlat to={`/meus-desafios/${type}/${id}/forum`} color={"white"}>
-            Fórum
-          </TabFlat>
+            Editar desafio
+          </Button>
         </SubHeader>
       )}
       {notGuardianModal && (
@@ -172,9 +219,23 @@ const Challenge = (props) => {
           </Button>
         </Dialog>
       )}
+      {editChallengeModal && (
+        <ModalPage
+          title={"Editar desafio"}
+          data={data?.challenge || data}
+          handleClose={handleEditChallenge}
+        >
+          <ChallengeEdit
+            data={data?.challenge}
+            handleClose={handleEditChallenge}
+            edit
+          />
+        </ModalPage>
+      )}
       {owned && !!data?.challenge && (page === "inicio" || !page) && (
         <section className={`${styles.challenge}`}>
           <MainImage data={data.challenge} />
+          {usertype === "empresa" && <Counters data={data.challenge} />}
           <Presentation
             handleClickToSubscribe={handleClickToSubscribe}
             data={data.challenge}
@@ -205,7 +266,7 @@ const Challenge = (props) => {
               </div>
             </div>
           )}
-          {!props.isModal && !data?.team && (
+          {!props.isModal && !data?.team && usertype !== "empresa" && (
             <div className={styles.section}>
               <Title size={24}>Individual</Title>
               <div className={styles.container}>
@@ -303,6 +364,7 @@ const Challenge = (props) => {
       {!!data && (page === "projetos" || !page) && <Projects data={data} />}
       {!!data && (page === "trilha" || !page) && <Trilha />}
       {!!data && (page === "forum" || !page) && <Forum />}
+      {!!data && (page === "participantes" || !page) && <Users />}
       {(loading || loadingProject) && <Loading />}
     </>
   );

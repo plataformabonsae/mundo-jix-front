@@ -27,7 +27,6 @@ export const get =
       if (response.data.success) {
         dispatch(UserActions.userSuccess(response.data.data));
       }
-      console.log(response);
     });
     //   .catch(function (response) {
     //     //handle error

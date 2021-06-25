@@ -20,10 +20,11 @@ const MyChallenges = (props) => {
   const [inCompany, setInCompany] = useState([]);
   const [ultradesafio, setUltradesafio] = useState([]);
   const { data, loading } = useSelector((state) => state.myChallenges);
+  const { data: usertype } = useSelector((state) => state.usertype);
 
   useEffect(() => {
-    dispatch(my());
-  }, [dispatch]);
+    dispatch(my(usertype));
+  }, [dispatch, usertype]);
 
   useEffect(() => {
     if (data) {
@@ -50,9 +51,11 @@ const MyChallenges = (props) => {
         {/* <link rel="canonical" href="http://mysite.com/example" /> */}
       </Helmet>
       <SubHeader>
-        <TabFlat to={`/meus-desafios/autodesafio`} color={"white"}>
-          Autodesafio
-        </TabFlat>
+        {usertype !== "empresa" && (
+          <TabFlat to={`/meus-desafios/autodesafio`} color={"white"}>
+            Autodesafio
+          </TabFlat>
+        )}
         <TabFlat to={`/meus-desafios/in_company`} color={"white"}>
           In company
         </TabFlat>

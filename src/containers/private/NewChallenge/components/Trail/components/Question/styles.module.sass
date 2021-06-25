@@ -1,0 +1,47 @@
+
+.header
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+.button
+  transition: 300ms
+  padding: 12px
+  cursor: pointer
+  opacity: 1
+  svg
+    height: 24px
+
+  &:hover
+    opacity: .8
+
+.options
+  margin:
+    top: 16px
+    left: 32px
+
+.answer
+  display: flex
+  width: 100%
+
+.radio
+  display: none
+  &:checked
+    + label
+      background: #5bde37
+      color: black
+      border: 1px solid transparent
+
+.mark
+  text-align: center
+  line-height: 24px
+  font:
+    weight: bold
+  cursor: pointer
+  display: inline-block
+  margin: 8px 12px 0 0
+  width: 24px
+  height: 24px
+  border-radius: 300px
+  border: 1px solid #9d9b98
+  color: #9d9b98

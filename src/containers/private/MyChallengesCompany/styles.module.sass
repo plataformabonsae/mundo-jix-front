@@ -1,0 +1,30 @@
+
+.container
+  padding: 36px
+
+.title
+  margin:
+    bottom: 36px
+
+.content
+  display: grid
+  grid: auto / 1fr 1fr
+  align-content: start
+
+  > *
+    // max-width: 50%
+    align-self: start
+    margin:
+      right: 24px
+
+@media only screen and (max-width: 768px)
+
+  .container
+    padding: 24px 12px
+
+  .content
+    display: block
+    > *
+      margin:
+        right: 0
+        bottom: 20px

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 import { Text } from "components/Text";
 import { Loading } from "components/Loading";
@@ -12,6 +13,7 @@ import profile from "assets/logo/JixProfile.png";
 
 const Header = ({ name, invites, user }) => {
   const [open, setOpen] = useState("");
+  const { data: usertype } = useSelector((state) => state.usertype);
 
   const handleOpen = (wich) => setOpen(wich);
 
@@ -41,7 +43,7 @@ const Header = ({ name, invites, user }) => {
         </Text>
       </div>
       <div className={styles.alerts}>
-        <Invites isOpen={open} open={handleOpen} />
+        {usertype === "talento" && <Invites isOpen={open} open={handleOpen} />}
         <Notification isOpen={open} open={handleOpen} />
       </div>
     </header>

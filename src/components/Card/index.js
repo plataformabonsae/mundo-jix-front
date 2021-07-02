@@ -9,6 +9,7 @@ const Card = ({
   style,
   border,
   gray,
+  id,
   noShadow,
   className,
   onClick,
@@ -16,6 +17,7 @@ const Card = ({
   <Tag
     onClick={onClick}
     className={`${styles.card} ${className ? className : ""}`}
+    id={id}
     style={{
       background: gray ? "#FCFCFC" : "white",
       border: border ? `1px solid ${color.LIGHT_GRAY}` : "none",

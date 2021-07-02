@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import parse from "html-react-parser";
 
 import { Card } from "components/Card";
+import { Loading } from "components/Loading";
 import Button from "components/Button";
 import { MainImage } from "components/MainImage";
 import { Title, Text } from "components/Text";
@@ -22,32 +23,46 @@ const ChallengeCard = (props) => {
           <Title color="white" style={{ weight: "bold", fontSize: 16 }}>
             {props.item.name}
           </Title>
-          <div className={styles.header__buttons}>
-            {/* <Button type={`outlineWhite`}>Favoritar</Button> */}
-            <Button
-              // to={`/desafios/${props.item.challenge_type}/${props.item.id}/inscricao`}
-              to={
-                !props.subscribed
-                  ? props.to
-                  : `/meus-desafios/${props.item.challenge_type}/${props.item.id}`
-              }
-              style={{ marginLeft: 12 }}
-              type={!props.subscribed ? `green` : `outlineWhite`}
+          {props.loading ? (
+            <div
+              style={{
+                position: "relative",
+                // top: -12,
+                left: -6,
+                height: 38,
+                width: 16 * 3 + 6 * 2,
+              }}
             >
-              {!props.subscribed ? (
-                "Participar"
-              ) : (
-                <>
-                  <img
-                    className={styles.cool}
-                    src={cool}
-                    alt="Participando do desafio"
-                  />
-                  Participando
-                </>
-              )}
-            </Button>
-          </div>
+              <Loading inline size={16} />
+            </div>
+          ) : (
+            <div className={styles.header__buttons}>
+              {/* <Button type={`outlineWhite`}>Favoritar</Button> */}
+              <Button
+                // to={`/desafios/${props.item.challenge_type}/${props.item.id}/inscricao`}
+                to={
+                  !props.subscribed
+                    ? props.to
+                    : `/meus-desafios/${props.item.challenge_type}/${props.item.id}`
+                }
+                style={{ marginLeft: 12 }}
+                type={!props.subscribed ? `green` : `outlineWhite`}
+              >
+                {!props.subscribed ? (
+                  "Participar"
+                ) : (
+                  <>
+                    <img
+                      className={styles.cool}
+                      src={cool}
+                      alt="Participando do desafio"
+                    />
+                    Participando
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </header>
       )}
       {typeof props.status === "number" && (

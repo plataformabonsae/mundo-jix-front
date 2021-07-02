@@ -115,8 +115,10 @@
 
   &__card
     background: rgb(249, 250, 252) !important
-    display: flex
-    justify-content: space-between
+    &__wrapper
+      display: flex
+      align-items: center
+      justify-content: space-between
 
   &__grades
     flex: 1
@@ -177,3 +179,18 @@
       padding: 12px
     &__total
       padding: 12px
+
+.file
+  &__wrapper
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+  &__delete
+    cursor: pointer
+    color: rgba(248, 71, 49, 1.0)
+    text-transform: uppercase
+    letter-spacing: 1px
+    font:
+      size: 12px
+      weight: bold

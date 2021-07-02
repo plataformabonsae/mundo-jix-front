@@ -19,21 +19,15 @@ const ProjectCard = (props) => {
             {data?.name || "..."}
           </Text>
         </header>
+        <div className={styles.image__header}>
+          <img
+            src={!!data?.file?.length ? BASEURL + data?.file : defaultImage}
+            alt={data?.name}
+          />
+        </div>
         <section className={styles.content}>
           <Title>{data?.name || "..."}</Title>
           <Text>{data?.description.substring(0, 200) + "..." || "..."}</Text>
-        </section>
-        <section className={styles.team}>
-          <Card className={styles.image} border>
-            <img
-              src={!!data?.file?.length ? BASEURL + data?.file : defaultImage}
-              alt={data?.name}
-            />
-          </Card>
-          <Text size={14} className={styles.names}>
-            Nome Sobrenome, Nome Sobrenome, Nome Sobrenome, Nome Sobrenome, Nome
-            Sobrenome
-          </Text>
         </section>
       </Link>
     </Card>

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 // import { Swiper, SwiperSlide } from "swiper/react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { dashboardFetch } from "services/dashboard";
 
 import { Card } from "components/Card";
 import { Title, Text } from "components/Text";
 import { Chip } from "components/Chip";
+import { Loading } from "components/Loading";
 
 import styles from "./styles.module.sass";
 import "swiper/swiper.scss";
@@ -14,15 +16,23 @@ import "swiper/swiper.scss";
 // slide buttons
 
 const Badges = () => {
-  const { data } = useSelector((state) => state.dashboard);
+  const dispatch = useDispatch();
+
+  const { data: usertype } = useSelector((state) => state.usertype);
+  const { data, loading } = useSelector((state) => state.dashboard);
   //empty dependency array so it only runs once at render
+
+  useEffect(() => {
+    dispatch(dashboardFetch(usertype));
+  }, [dispatch, usertype]);
 
   return (
     <section className={styles.container}>
-      <BadgeSection title={"Minhas insígnias"} data={data} />
-      {/* <BadgeSection title={"Autodesafio"} />
-      <BadgeSection title={"In Company"} />
-      <BadgeSection title={"Ultradesafio"} /> */}
+      {loading ? (
+        <Loading />
+      ) : (
+        <BadgeSection title={"Minhas insígnias"} data={data} />
+      )}
     </section>
   );
 };
@@ -40,16 +50,15 @@ const BadgeSection = (props) => {
       <article className={styles.slider}>
         {data?.badges && data?.badges.length > 0 ? (
           data?.badges.map((item, index) => (
-            <>
-              <Chip
-                insignia
-                title={item?.title}
-                desc={item?.description}
-                maxValue={item?.points}
-                currentValue={item?.pivot?.points}
-                valueText={`${item?.pivot?.points}/${item?.points}`}
-              />
-            </>
+            <Chip
+              key={index}
+              insignia
+              title={item?.title}
+              desc={item?.description}
+              maxValue={item?.points}
+              currentValue={item?.pivot?.points}
+              valueText={`${item?.pivot?.points}/${item?.points}`}
+            />
           ))
         ) : (
           <Text>Sem insígnias cadastradas</Text>

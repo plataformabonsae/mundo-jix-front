@@ -1,0 +1,81 @@
+
+@import 'utils/styles/colors'
+
+.dialog
+  max-width: inherit !important
+  width: 600px
+  padding:
+    top: 0
+  position: fixed
+  // overflow: hidden
+  text-align: left
+
+.wrapper
+  // display: flex
+  // flex-wrap: wrap
+  // align-items: stretch
+  // width: 100%
+  // height: 100%
+  padding: 0 24px
+  // padding:
+  //   bottom: 48px
+  .infos,
+  .form
+    padding: 14px
+    height: 100%
+    flex: 1
+
+  .infos
+    background: $LIGHT_GRAY_2
+
+    &__content
+      padding: 24px
+
+  .form
+    padding:
+      top: 48px + 12
+
+.price
+  margin:
+    top: 48px
+    bottom: 48px
+  font:
+    size: 24px
+    weight: bold
+  color: $SUCCESS
+
+.others
+  position: relative
+  &::after
+    content: ''
+    display: block
+    position: absolute
+    bottom: -14px
+    left: -14px
+    right: -14px
+    height: 175px
+    background: linear-gradient(to bottom, rgba($LIGHT_GRAY_2, 0), rgba($LIGHT_GRAY_2, 1))
+  &__challenges
+    margin:
+      top: 24px
+  &__image
+    height: 50px
+    width: 100%
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+
+.card
+  &__row
+    border-radius: 5px
+    padding: 12px
+    border: 1px solid $MEDIUM_GRAY
+
+.button
+  margin:
+    top: 24px
+
+.payment
+  &__desc
+    margin: 24px 0

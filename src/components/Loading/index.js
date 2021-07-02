@@ -15,7 +15,7 @@ const Loading = (props) => {
   return (
     // <section className={ styles.wrapper }>
     <animated.div
-      style={{ ...animatedStyles }}
+      style={{ ...props.style, ...animatedStyles }}
       className={`${styles.loading} ${props.full ? styles.full : ""}`}
     >
       <div

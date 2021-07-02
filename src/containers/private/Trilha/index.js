@@ -9,6 +9,7 @@ import { Title, Text } from "components/Text";
 import Button from "components/Button";
 import { Loading } from "components/Loading";
 import { Dialog } from "components/Dialog";
+import { Payment } from "components/Payment";
 
 import { Header } from "./components/Header";
 import { TrilhaItem } from "components/TrilhaItem";
@@ -56,7 +57,9 @@ const Trilha = (props) => {
                 <Banner
                   full
                   Tag={"span"}
-                  title={"Maecenas dolor suspendisse mi bibendum."}
+                  title={
+                    "Adquira agora mesmo uma trilha especial com um aprofundamento mais rico deste Autodesafio."
+                  }
                   button={"Comprar"}
                   onClick={handlePremumDialog}
                 />
@@ -77,35 +80,43 @@ const Trilha = (props) => {
           )}
         </section>
         {premiumDialog && (
-          <Dialog handleClose={handlePremumDialog}>
-            <Title>Redirecionamento</Title>
-            <Text style={{ margin: "12px 0" }}>
-              Você será redirecionado para uma página de confirmação de
-              pagamento. Dependendo da forma de pagamento que escolher (cartão
-              de crédito, boleto, etc), pode-se levar até 2 dias úteis para a
-              liberação do conteúdo Premium.
-            </Text>
-            <div style={{ display: "flex", justifyContent: "space-around" }}>
-              <Button
-                style={{ minWidth: 100 }}
-                Tag={"span"}
-                type={"secondary"}
-                onClick={() => handlePremumDialog()}
-              >
-                Cancelar
-              </Button>
-              <Button
-                style={{ minWidth: 100 }}
-                Tag={"a"}
-                type={"green"}
-                href={"https://stripe.com/en-br"}
-                target={"_blank"}
-                rel={"noreferrer"}
-              >
-                Ok
-              </Button>
-            </div>
-          </Dialog>
+          // <Dialog handleClose={handlePremumDialog}>
+          //   <Title>Redirecionamento</Title>
+          //   <Text style={{ margin: "12px 0" }}>
+          //     Você será redirecionado para uma página de confirmação de
+          //     pagamento. Dependendo da forma de pagamento que escolher (cartão
+          //     de crédito, boleto, etc), pode-se levar até 2 dias úteis para a
+          //     liberação do conteúdo Premium.
+          //   </Text>
+          //   <div style={{ display: "flex", justifyContent: "space-around" }}>
+          //     <Button
+          //       style={{ minWidth: 100 }}
+          //       Tag={"span"}
+          //       type={"secondary"}
+          //       onClick={() => handlePremumDialog()}
+          //     >
+          //       Cancelar
+          //     </Button>
+          //     <Button
+          //       style={{ minWidth: 100 }}
+          //       Tag={"a"}
+          //       type={"green"}
+          //       href={"https://stripe.com/en-br"}
+          //       target={"_blank"}
+          //       rel={"noreferrer"}
+          //     >
+          //       Ok
+          //     </Button>
+          //   </div>
+          // </Dialog>
+          <Payment
+            handleClose={handlePremumDialog}
+            price={"187"}
+            typeOfPayment={"pagamento único"}
+            title={
+              "Adquira agora mesmo uma trilha especial com um aprofundamento mais rico deste desafio. "
+            }
+          />
         )}
       </header>
     </section>

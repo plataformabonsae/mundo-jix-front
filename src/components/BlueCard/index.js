@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Card } from "components/Card";
 import { Title, Text } from "components/Text";
@@ -22,7 +22,11 @@ const BlueCard = (props) => {
   const [viewInfo, setViewInfo] = useState(false);
 
   return (
-    <Card className={styles.card} {...props}>
+    <Card
+      className={`${styles.card} ${props.disabled ? styles.disabled : ""}`}
+      onClick={!props.disabled ? props.onClick : null}
+      // {...props}
+    >
       {props.info && (
         <span
           className={styles.info}

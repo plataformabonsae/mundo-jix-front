@@ -27,7 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Subscription = (props) => {
   const { data: usertype } = useSelector((state) => state.usertype);
   const subscribed = useSelector((state) => state.subscribeChallenge);
-  const { data } = useSelector((state) => state.challenges);
+  const { data, loading } = useSelector((state) => state.challenges);
   const { control, register, errors, handleSubmit } = useForm();
   // const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
   const { fields, append } = useFieldArray({
@@ -139,7 +139,7 @@ const Subscription = (props) => {
       {/* {!(step === "convidar") && ( */}
       <TitleAndBack
         data={currentChallenge}
-        backText={"Ir para o desafio"}
+        backText={step === "convidar" ? "Ir para o desafio" : "Voltar"}
         to={
           (step === "1" && `/desafios/${currentChallenge?.challenge_type}`) ||
           (step === "2" &&
@@ -172,6 +172,8 @@ const Subscription = (props) => {
               handleStep={handleStep}
               handleSelection={handleAloneOrTeam}
               handleAloneDialog={handleAloneDialog}
+              currentChallenge={currentChallenge}
+              loading={loading}
             />
             {aloneDialog && (
               <Dialog

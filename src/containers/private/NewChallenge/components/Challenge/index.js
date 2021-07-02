@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -13,12 +13,13 @@ import {
   AddGroup,
   RemoveGroup,
   SelectInputMulti,
+  InputWithMask,
   Radio,
 } from "components/Inputs";
 import Button from "components/Button";
 import { ButtonGroup } from "components/ButtonGroup";
 
-import { cep, cepReset } from "services/adress";
+import { skills as skillsFetch } from "services/skills";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -33,21 +34,40 @@ const Challenge = ({
   const [countResume, setCountResume] = useState(0);
   const [materials, setMaterials] = useState([]);
   const [mentors, setMentors] = useState([]);
+  const [skills, setSkills] = useState([]);
 
-  const { data: cepData, loading } = useSelector((state) => state.cep);
+  const dispatch = useDispatch();
+  const { data: skillsData } = useSelector((state) => state.skills);
+  const { loading } = useSelector((state) => state.cep);
+
   const { register, errors, control, handleSubmit } = useForm({
     reValidateMode: "onChange",
   });
+
+  useEffect(() => {
+    dispatch(skillsFetch());
+  }, [dispatch]);
+
+  useEffect(() => {
+    skillsData?.length && setSkills([skillsData]);
+  }, [skillsData]);
 
   const handleCountChar = (e) => {
     setCountResume(e.target.value.length);
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
+    const materialsCounter = {};
+    for (let i = 0; i < 10; i++) {
+      if (data[`materials_${i}`])
+        materialsCounter[`materials_${i}`] = data[`materials_${i}`][0];
+    }
+    const dataWithMaterials = { ...data, materialsCounter };
+    console.log(dataWithMaterials);
     if (handleHasAvaliation) {
-      handleIsSubmit("trail", data);
+      handleIsSubmit("trail", dataWithMaterials);
     } else {
-      handleStep("avaliacao", data);
+      handleStep("avaliacao", dataWithMaterials);
     }
   };
 
@@ -80,7 +100,7 @@ const Challenge = ({
               ref={register()}
               name={`curriculum`}
               control={control}
-              accept="application/msword, application/pdf"
+              accept="image/png, image/gif, image/jpeg"
               errors={errors}
               errorMessage={errors?.curriculum?.message}
             >
@@ -124,6 +144,23 @@ const Challenge = ({
               placeholder="Escreva aqui a descrição completa do desafio"
             ></Textarea>
           </InputGroup>
+          <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
+            Prazo do desafio
+          </Title>
+          <InputGroup>
+            <InputWithMask
+              defaultValue={""}
+              disabled={loading}
+              control={control}
+              ref={register({ required: true })}
+              name="deadline"
+              errors={errors}
+              mask="99/99/9999"
+              rows="12"
+              errorMessage="Digite o prazo do desafio"
+              placeholder="Digite o prazo do desafio"
+            ></InputWithMask>
+          </InputGroup>
           <InputGroup>
             <div>
               <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
@@ -131,6 +168,7 @@ const Challenge = ({
               </Title>
               {materials.map((item, index) => (
                 <InputFile
+                  key={index}
                   disabled={loading}
                   ref={register()}
                   name={`materials_${index}`}
@@ -236,7 +274,6 @@ const Challenge = ({
                   <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
                     Nome do mentor {index + 1}
                   </Title>
-
                   <Input
                     defaultValue={social.link}
                     ref={register({ required: true })}
@@ -258,6 +295,33 @@ const Challenge = ({
                     errors={errors}
                     errorMessage="E-mail do mentor"
                     placeholder="E-mail do mentor"
+                  ></Input>
+                </div>
+                <div style={{ width: "50%" }}>
+                  <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
+                    Senha do mentor {index + 1}
+                  </Title>
+                  <Input
+                    defaultValue={social.link}
+                    ref={register({ required: true })}
+                    errors={errors}
+                    errorMessage="Repita a senha"
+                    name={`mentors.${index}.password`}
+                    placeholder="Repita a senha"
+                  ></Input>
+                </div>
+                <div style={{ width: "50%" }}>
+                  <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
+                    Repita a senha do mentor {index + 1}
+                  </Title>
+                  <Input
+                    defaultValue={social.platform}
+                    ref={register({ required: true })}
+                    name={`mentors.${index}.repeat_password`}
+                    control={control}
+                    errors={errors}
+                    errorMessage="Repita a senha"
+                    placeholder="Repita a senha"
                   ></Input>
                 </div>
               </InputGroup>

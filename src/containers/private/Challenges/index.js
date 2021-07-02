@@ -21,7 +21,9 @@ const Challenges = (props) => {
   const [ultradesafio, setUltradesafio] = useState([]);
   const [signedChallenges, setSignedChallenges] = useState([]);
   const { data, loading } = useSelector((state) => state.challenges);
-  const myChallenges = useSelector((state) => state.myChallenges.data);
+  const { data: myChallenges, loading: loadingMyChallenges } = useSelector(
+    (state) => state.myChallenges
+  );
 
   useEffect(() => {
     dispatch(all());
@@ -89,6 +91,7 @@ const Challenges = (props) => {
             autodesafio?.map((item, index) => (
               <ChallengeCard
                 canSubscribe
+                loading={loadingMyChallenges}
                 subscribed={signedChallenges.includes(item.id)}
                 noButton
                 item={item}
@@ -104,6 +107,7 @@ const Challenges = (props) => {
             inCompany?.map((item, index) => (
               <ChallengeCard
                 canSubscribe
+                loading={loadingMyChallenges}
                 subscribed={signedChallenges.includes(item.id)}
                 noButton
                 item={item}
@@ -120,6 +124,7 @@ const Challenges = (props) => {
             ultradesafio?.map((item, index) => (
               <ChallengeCard
                 canSubscribe
+                loading={loadingMyChallenges}
                 subscribed={signedChallenges.includes(item.id)}
                 noButton
                 item={item}

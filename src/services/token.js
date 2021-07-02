@@ -31,37 +31,10 @@ export const tokenFetch =
         }
       })
       .catch(function (error) {
-        // handle error
         dispatch(TokenActions.tokenFailure(error.response)) &&
           dispatch(UserTypeActions.userTypeFailure(error));
-        // console.log(response);
       });
     return call;
-
-    // try {
-    //   dispatch(UserTypeActions.userTypeRequest());
-    //   dispatch(TokenActions.tokenRequest());
-    //   const response = await fetch(url, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Accept: "*/*",
-    //     },
-    //     body: JSON.stringify(body),
-    //   });
-    //   const { success, data } = await response.json();
-    //   success &&
-    //     dispatch(UserTypeActions.userTypeSuccess(type)) &&
-    //     dispatch(TokenActions.tokenSuccess(data?.token)) &&
-    //     console.log(data?.token);
-    //   !success &&
-    //     dispatch(TokenActions.tokenFailure(data)) &&
-    //     dispatch(UserTypeActions.userTypeFailure(data));
-    //   return data;
-    // } catch (error) {
-    //   dispatch(TokenActions.tokenFailure(error)) &&
-    //     dispatch(UserTypeActions.userTypeFailure(error));
-    // }
   };
 
 export const tokenFetchExternal =

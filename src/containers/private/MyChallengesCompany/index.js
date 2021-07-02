@@ -43,7 +43,7 @@ const MyChallengesCompany = (props) => {
         <Title className={styles.title}>Meus Desafios</Title>
         <Banner
           full
-          title={"Maecenas dolor suspendisse mi bibendum."}
+          title={"Encontre os melhores talentos para o seu negócio agora mesmo"}
           button={"Cadastrar desafio"}
           to={"/novo-desafio"}
         />

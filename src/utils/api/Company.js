@@ -4,6 +4,10 @@ const BASEURL_TERMS = process.env.REACT_APP_TALENT_API;
 const COMPANY = {
   API: BASEURL,
 
+  SKILLS: {
+    skills: `${BASEURL}/landing-page/skills`,
+  },
+
   AUTH: {
     // POST
     login: `${BASEURL}/login`,
@@ -39,6 +43,7 @@ const COMPANY = {
     feedback: (id) => `${BASEURL}/feedback/${id}`,
     users: (id) => `${BASEURL}/challenge/users/${id}`,
     create: `${BASEURL}/challenge/store`,
+    deleteMaterial: (id) => `${BASEURL}/material/delete/${id}`,
   },
 
   PROJECT: {

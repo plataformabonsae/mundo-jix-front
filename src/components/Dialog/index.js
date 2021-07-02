@@ -62,7 +62,7 @@ const Dialog = (props) => {
             </span>
             // </section>
           )}
-          <Title size={28}>{props.title}</Title>
+          {props.title && <Title size={28}>{props.title}</Title>}
           {/* {props.handleClose && (
             // <section className={styles.title}>
             //   <Title size={28}>{props.title}</Title>
@@ -71,7 +71,7 @@ const Dialog = (props) => {
               // </span>
             // </section>
           )} */}
-          <Text className={styles.desc}>{props.desc}</Text>
+          {props.desc && <Text className={styles.desc}>{props.desc}</Text>}
           {props.children}
         </Card>
         <div className={styles.shadow}></div>

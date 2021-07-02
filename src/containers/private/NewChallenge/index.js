@@ -23,7 +23,7 @@ import { Dialog } from "components/Dialog";
 
 import styles from "./styles.module.sass";
 
-import { create } from "services/newChallenge";
+import { createChallenge as create } from "services/newChallenge";
 
 const NewChallenge = (props) => {
   const history = useHistory();
@@ -39,10 +39,6 @@ const NewChallenge = (props) => {
   const { data: usertype } = useSelector((state) => state.usertype);
 
   const { step } = useParams();
-
-  useState(() => {
-    console.log(trails, "trails");
-  }, [trails]);
 
   const handleTrails = (trail) => {
     const url = location.pathname;
@@ -82,16 +78,21 @@ const NewChallenge = (props) => {
     }
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (step, data) => {
     setFormData((prev) => ({ ...prev, ...data }));
-    setSuccess(true);
-    const req = dispatch(create(usertype, formData));
+    createChallengeRequest(formData);
+  };
+
+  const createChallengeRequest = async (data) => {
+    console.log(data);
+    const req = dispatch(create(usertype, data));
     await req
       .then((res) => console.log(res))
       .then((res) => {
         toast.success("Desafio criado com sucesso", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
+        setSuccess(true);
         console.log(res);
       })
       .catch((error) => {

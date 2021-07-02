@@ -258,7 +258,8 @@ const ChangePassword = (props) => {
             errors={errors}
             errorMessage={errors?.confirm_password?.message}
             placeholder="Digite a senha novamente"
-            onKeyUp={(e) => setConfirmPassword(e.target.value)}
+            onFocus={() => setShowTooltip(true)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           >
             Confirme a senha
           </Input>

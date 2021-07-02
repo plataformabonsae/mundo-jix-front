@@ -139,7 +139,9 @@ const TrilhaWatch = (props) => {
           <div className={styles.trailcontent__data}>
             {trailPreviewData?.video && (
               <>
-                <Title>{trailPreviewData?.video.title}</Title>
+                <Title style={{ marginBottom: 12 }}>
+                  {trailPreviewData?.video.title}
+                </Title>
                 <Text>{trailPreviewData?.video.description}</Text>
                 {/* <Downloads data={} /> */}
               </>

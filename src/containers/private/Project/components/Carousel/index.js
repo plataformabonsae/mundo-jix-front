@@ -8,6 +8,7 @@ import YouTube from "react-youtube";
 import { toast } from "react-toastify";
 
 import { Card } from "components/Card";
+import { Input, InputGroup, Textarea } from "components/Inputs";
 import { ProfileCard } from "components/ProfileCard";
 import { Dialog } from "components/Dialog";
 import { FeedbackCard, CreateFeedback } from "components/FeedbackCard";
@@ -27,6 +28,7 @@ import * as colors from "utils/styles/Colors";
 
 import { BASEURL } from "utils/api";
 
+import { get as assessment } from "services/assessment";
 import { get } from "services/project";
 import { kick, leave, transfer } from "services/team";
 import { get as getFeedbacks } from "services/feedbacks";
@@ -40,11 +42,18 @@ const Carousel = (props) => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("meu-projeto");
   const [modalFeedback, setModalFeedback] = useState(false);
+  const [modalAvaliation, setModalAvaliation] = useState(false);
   const { data: feedbacks } = useSelector((state) => state.feedbacks);
+  const { data: assessments } = useSelector((state) => state.assessment);
   const { data: user } = useSelector((state) => state.user);
+  const { current: currentProject } = useSelector((state) => state.projects);
   const { data: usertype } = useSelector((state) => state.usertype);
   const { data } = props;
   const { type, id } = useParams();
+
+  useEffect(() => {
+    dispatch(assessment(usertype, { project_id: data?.project?.id }));
+  }, [dispatch, usertype, data?.project?.id]);
 
   useEffect(() => {
     dispatch(
@@ -72,6 +81,10 @@ const Carousel = (props) => {
 
   const handleModalFeedback = () => {
     setModalFeedback((prev) => !prev);
+  };
+
+  const handleModalAvaliation = () => {
+    setModalAvaliation((prev) => !prev);
   };
 
   const handleTabs = (tab) => {
@@ -158,6 +171,15 @@ const Carousel = (props) => {
                 )}
               </>
             )}
+        {!!user?.user?.is_judge && activeTab === "avaliacao" ? (
+          <Button
+            Tag="span"
+            type={"tertiary"}
+            onClick={() => handleModalAvaliation()}
+          >
+            Avaliar projeto
+          </Button>
+        ) : null}
       </header>
       {activeTab === "meu-projeto" && (
         <Card border noShadow>
@@ -261,15 +283,18 @@ const Carousel = (props) => {
               <div className={styles.downloads__wrapper}>
                 {data?.project?.materials?.length > 0 &&
                   data?.project?.materials.map((item) => (
-                    <a
-                      href={BASEURL + item.file}
-                      rel="noreferrer"
-                      target={"_blank"}
-                      className={styles.downloads__material}
-                    >
-                      <img src={material} alt="Download de material" />
-                      {item.filename}
-                    </a>
+                    <div className={styles.file__wrapper}>
+                      <a
+                        href={BASEURL + item.file}
+                        rel="noreferrer"
+                        target={"_blank"}
+                        className={styles.downloads__material}
+                      >
+                        <img src={material} alt="Download de material" />
+                        {item.filename}
+                      </a>
+                      <span className={styles.file__delete}>Deletar</span>
+                    </div>
                   ))}
                 {data?.project?.materials?.length === 0 &&
                   "Sem materiais cadastrados"}
@@ -299,7 +324,9 @@ const Carousel = (props) => {
       {activeTab === "equipe" && (
         <section className={styles.equipe}>
           <Card noShadow border>
-            <Title style={{ marginBottom: 32 }}>Time {data?.team?.name}</Title>
+            <Title style={{ marginBottom: 32 }}>
+              Time {data?.team?.name || currentProject?.team[0]?.name}
+            </Title>
             {!!data?.guardian && (
               <TeamIntegrant
                 teamId={data?.team?.id}
@@ -330,6 +357,16 @@ const Carousel = (props) => {
                 data={item}
               />
             ))}
+            {currentProject?.team[0]?.users?.map((item) => (
+              <TeamIntegrant
+                // accepted={item.pivot.is_effected}
+                challengeId={data?.challenge?.id}
+                accepted={true}
+                teamId={data?.team?.id}
+                key={item.id}
+                data={item}
+              />
+            ))}
             {/* data?.teammates?.map((item) => console.log(item, "otros"))} */}
           </Card>
         </section>
@@ -346,83 +383,139 @@ const Carousel = (props) => {
               buttonText={"Visualizar"}
             />
           ))}
-          {feedbacks?.feedbacks?.length === 0 && "Sem feedbacks ainda"}
+          {feedbacks?.feedbacks?.length === 0 && (
+            <Text>Seu projeto ainda não tem feeedback do mentor.</Text>
+          )}
         </section>
       )}
       {activeTab === "avaliacao" && (
         <section className={styles.avaliacao}>
-          <Card noShadow border>
-            <section className={styles.avaliacao__content}>
-              <section className={styles.avaliacao__grades}>
-                <Title
-                  size={16}
-                  style={{
-                    textAlign: "center",
-                    marginBottom: 24,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Notas
-                </Title>
-                <Card className={styles.avaliacao__card} noShadow border>
-                  <Title>Materia</Title>
-                  <Title>6</Title>
-                </Card>
-                <Card className={styles.avaliacao__card} noShadow border>
-                  <Title>Materia</Title>
-                  <Title>6</Title>
-                </Card>
-                <Card className={styles.avaliacao__card} noShadow border>
-                  <Title>Materia</Title>
-                  <Title>6</Title>
-                </Card>
-                <Card className={styles.avaliacao__card} noShadow border>
-                  <Title>Materia</Title>
-                  <Title>6</Title>
-                </Card>
-                <Card className={styles.avaliacao__card} noShadow border>
-                  <Title>Materia</Title>
-                  <Title>6</Title>
-                </Card>
+          {!!assessments?.final_grades?.assessments?.length ? (
+            <Card noShadow border>
+              <section className={styles.avaliacao__content}>
+                <section className={styles.avaliacao__grades}>
+                  <Title
+                    size={16}
+                    style={{
+                      textAlign: "center",
+                      marginBottom: 24,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Notas por matéria
+                  </Title>
+                  {assessments?.final_grades?.assessments?.map((item) => (
+                    <Card
+                      key={item.assessment_id}
+                      className={styles.avaliacao__card}
+                      noShadow
+                      border
+                    >
+                      <div className={styles.avaliacao__card__wrapper}>
+                        <Title size={16}>{item.assessment.evaluate}</Title>
+                        <Title>
+                          {item.grade}
+                          <span style={{ opacity: 0.15 }}>
+                            /
+                            {item.assessment.max_grade *
+                              assessments?.judges?.length}
+                          </span>
+                        </Title>
+                      </div>
+                    </Card>
+                  ))}
+                </section>
+                <section className={styles.avaliacao__total}>
+                  <Title
+                    size={16}
+                    style={{
+                      textAlign: "center",
+                      marginBottom: 24,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Nota final
+                  </Title>
+                  <Title
+                    style={{ textAlign: "center", marginBottom: 24 }}
+                    size={180}
+                  >
+                    {assessments?.final_grades?.final_grade}
+                  </Title>
+                </section>
               </section>
-              <section className={styles.avaliacao__total}>
-                <Title
-                  size={16}
-                  style={{
-                    textAlign: "center",
-                    marginBottom: 24,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Média
-                </Title>
-                <Title
-                  style={{ textAlign: "center", marginBottom: 24 }}
-                  size={180}
-                >
-                  6
-                </Title>
-                <Title
-                  size={16}
-                  style={{
-                    color: colors.MEDIUM_GRAY,
-                    textAlign: "center",
-                    marginBottom: 24,
-                  }}
-                >
-                  Feedback
-                </Title>
-                <Text>
-                  Etiam et sapien a massa lacinia ultricies. Morbi posuere
-                  ultricies vulputate. Nulla pellentesque laoreet nunc, dictum.
-                  Etiam et sapien a massa lacinia ultricies. Morbi posuere
-                  ultricies vulputate. Nulla pellentesque laoreet nunc, dictum.
-                  Morbi posuere ultricies vulputate. Nulla pellentesque laoreet
-                  nunc, dictum.
-                </Text>
+            </Card>
+          ) : (
+            <Text>Seu projeto ainda não foi avaliado.</Text>
+          )}
+          {assessments?.judges?.map((item) => (
+            <Card noShadow border>
+              <section className={styles.avaliacao__content}>
+                <section className={styles.avaliacao__grades}>
+                  <Title
+                    size={16}
+                    style={{
+                      // textAlign: "center",
+                      marginBottom: 24,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Avaliação do jurado {item.judge.name}
+                  </Title>
+                  {item?.avaliations.map((avaliation) => (
+                    <Card
+                      key={avaliation.assessment_id}
+                      className={styles.avaliacao__card}
+                      noShadow
+                      border
+                    >
+                      <div className={styles.avaliacao__card__wrapper}>
+                        <Title size={16}>
+                          {avaliation.assessment.evaluate}
+                        </Title>
+                        <Title>
+                          {avaliation.grade}
+                          <span style={{ opacity: 0.2 }}>
+                            /{avaliation.assessment.max_grade}
+                          </span>
+                        </Title>
+                      </div>
+                      <hr style={{ marginTop: 22, opacity: 0.15 }} />
+                      <Title
+                        size={16}
+                        style={{
+                          color: colors.MEDIUM_GRAY,
+                          textAlign: "center",
+                          margin: `24px 0`,
+                        }}
+                      >
+                        Feedback do jurado
+                      </Title>
+                      <Text>{avaliation.feedback}</Text>
+                    </Card>
+                  ))}
+                </section>
+                {/* <section className={styles.avaliacao__total}>
+                  <Title
+                    size={16}
+                    style={{
+                      textAlign: "center",
+                      marginBottom: 24,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Nota do jurado
+                  </Title>
+                  <Title
+                    style={{ textAlign: "center", marginBottom: 24 }}
+                    size={180}
+                  >
+                    {assessments?.final_grades?.final_grade}
+                  </Title>
+                </section> */}
               </section>
-            </section>
-          </Card>
+            </Card>
+          ))}
         </section>
       )}
       {modalFeedback && (
@@ -431,6 +524,40 @@ const Carousel = (props) => {
           challengeId={data?.challenge?.id}
           projectId={data?.project?.id}
         />
+      )}
+      {modalAvaliation && (
+        <Dialog
+          style={{ minWidth: 600 }}
+          header={"Avaliar projeto"}
+          handleClose={handleModalAvaliation}
+        >
+          <form action="">
+            <Card className={styles.avaliacao__card} noShadow border>
+              <Title>Materia</Title>
+              <div style={{ maxWidth: 60 }}>
+                <Input></Input>
+              </div>
+            </Card>
+            <InputGroup>
+              <label
+                style={{ width: "100%", textAlign: "left", marginTop: 24 }}
+              >
+                <Title size={16}>Feedback</Title>
+                <Textarea
+                  // disabled={loading}
+                  // ref={register()}
+                  name="feedback"
+                  // onChange={handleCountChar}
+                  // errors={errors}
+                  rows="7"
+                  errorMessage="Escreva um feedback para o projeto"
+                  placeholder="Escreva um feedback para o projeto"
+                />
+              </label>
+            </InputGroup>
+            <Button type={"green"}>Enviar avaliação</Button>
+          </form>
+        </Dialog>
       )}
     </section>
   );

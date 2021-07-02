@@ -41,6 +41,7 @@ const TALENT = {
     feedback: (id) => `${BASEURL}/feedback/${id}`,
     badges: `${BASEURL}/dashboard/badges`,
     subscribe: (id) => `${BASEURL}/challenge/subscribe/${id}`,
+    deleteMaterial: (id) => `${BASEURL}/material/delete/${id}`,
   },
 
   PROJECT: {
@@ -48,6 +49,7 @@ const TALENT = {
     edit: (id) => `${BASEURL}/project/edit/${id}`,
     store: `${BASEURL}/project/store`,
     update: (id) => `${BASEURL}/project/update/${id}`,
+    assessment: (id) => `${BASEURL}/project/${id}/assessment`,
   },
 
   PROJECTS: {
@@ -108,6 +110,11 @@ const TALENT = {
     invites: `${BASEURL}/team/my_invites`,
     accept: (id) => `${BASEURL}/team/accept/${id}`,
     refuse: (id) => `${BASEURL}/team/refuse/${id}`,
+  },
+
+  PAYMENT: {
+    intent: `${BASEURL}/stripe/premium-challenge/create-payment`,
+    sucess: `${BASEURL}/stripe/premium-challenge/complete-payment`,
   },
 };
 

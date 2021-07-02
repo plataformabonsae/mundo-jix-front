@@ -46,290 +46,294 @@ const RoutesConfig = () => {
 
   return (
     <div>
-      <Switch location={background || location}>
-        <>
-          {user || logged ? (
-            accepted_terms === 0 ? (
-              <>
+      <Switch location={location}>
+        <PrivateRouteContainer
+          exact
+          path="/auth/:type/logout"
+          component={Logout}
+        />
+        <Route exact path="/auth/:type/:action" component={Auth} />
+      </Switch>
+
+      {user || logged ? (
+        accepted_terms === 0 ? (
+          <Switch location={location}>
+            {/* Join */}
+            <Route exact path="/join/:type/:action" component={Join} />
+            <Redirect from="*" to={`/join/${usertype}/terms`} />
+          </Switch>
+        ) : (
+          <>
+            {usertype === "talento" && (
+              <Switch location={location}>
                 {/* Join */}
                 <Route exact path="/join/:type/:action" component={Join} />
-                <Redirect from="*" to={`/join/${usertype}/terms`} />
-              </>
-            ) : (
-              <>
-                {usertype === "talento" && (
-                  <>
-                    {/* Join */}
-                    <Route exact path="/join/:type/:action" component={Join} />
 
-                    {/* Dashboard */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/dashboard"
-                      component={Dashboard}
-                    />
+                {/* Dashboard */}
+                <PrivateRouteContainer
+                  exact
+                  path="/dashboard"
+                  component={Dashboard}
+                />
 
-                    {/* Meus Desafios */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type"
-                      component={MyChallenges}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/:page"
-                      component={Challenge}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/:page/:trail_type"
-                      component={Challenge}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
-                      component={TrilhaWatch}
-                    />
-                    {/* <PrivateRouteContainer
+                {/* Meus Desafios */}
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type"
+                  component={MyChallenges}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/:page"
+                  component={Challenge}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/:page/:trail_type"
+                  component={Challenge}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
+                  component={TrilhaWatch}
+                />
+                {/* <PrivateRouteContainer
                       exact
                       path="/meus-desafios/:type/:id/forum/:forum_id"
                       component={Challenge}
                     /> */}
-                    <Route
-                      exact
-                      path="/meus-desafios/:type/:id/"
-                      render={({ match }) => (
-                        <Redirect
-                          to={`/meus-desafios/${match.params.type}/${match.params.id}/inicio`}
-                        />
-                      )}
+                <Route
+                  exact
+                  path="/meus-desafios/:type/:id/"
+                  render={({ match }) => (
+                    <Redirect
+                      to={`/meus-desafios/${match.params.type}/${match.params.id}/inicio`}
                     />
-                    <Route
-                      exact
-                      path="/meus-desafios"
-                      render={() => (
-                        <Redirect to={`/meus-desafios/autodesafio`} />
-                      )}
-                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/meus-desafios"
+                  render={() => <Redirect to={`/meus-desafios/autodesafio`} />}
+                />
 
-                    {/* Desafios */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/desafios/:type"
-                      component={Challenges}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/desafios/:type/inscricao/:id/:step"
-                      component={Subscription}
-                    />
-                    <Route
-                      exact
-                      path="/desafios"
-                      render={() => <Redirect to={`/desafios/autodesafio`} />}
-                    />
+                {/* Desafios */}
+                <PrivateRouteContainer
+                  exact
+                  path="/desafios/:type"
+                  component={Challenges}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/desafios/:type/inscricao/:id/:step"
+                  component={Subscription}
+                />
+                <Route
+                  exact
+                  path="/desafios"
+                  render={() => <Redirect to={`/desafios/autodesafio`} />}
+                />
 
-                    {/* Desafio */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/desafio/:id"
-                      component={Challenge}
-                    />
+                {/* Desafio */}
+                <PrivateRouteContainer
+                  exact
+                  path="/desafio/:id"
+                  component={Challenge}
+                />
 
-                    {/* Perfil */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/perfil/:action"
-                      component={Profile}
-                    />
-                    <Route
-                      exact
-                      path="/perfil"
-                      render={() => <Redirect to={`/perfil/pessoal`} />}
-                    />
-                    <Route path={"/404"} component={NotFound} />
-                    {/* <Redirect to={`/404`} /> */}
-                  </>
-                )}
-                {usertype === "empresa" && (
-                  <>
-                    {/* Join */}
-                    <Route exact path="/join/:type/:action" component={Join} />
-
-                    {/* Dashboard */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/dashboard"
-                      component={Dashboard}
-                    />
-
-                    {/* Meus Desafios */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type"
-                      component={MyChallengesCompany}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/:page"
-                      component={Challenge}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/:page/:trail_type"
-                      component={Challenge}
-                    />
-
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
-                      component={TrilhaWatch}
-                    />
-                    {/* <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/forum/:forum_id"
-                      component={Challenge}
-                    /> */}
-                    <Route
-                      exact
-                      path="/meus-desafios/:type/:id/"
-                      render={({ match }) => (
-                        <Redirect
-                          to={`/meus-desafios/${match.params.type}/${match.params.id}/inicio`}
-                        />
-                      )}
-                    />
-                    <Route
-                      exact
-                      path="/meus-desafios"
-                      render={() => (
-                        <Redirect to={`/meus-desafios/in_company`} />
-                      )}
-                    />
-
-                    {/* Novo desafio */}
-                    <Route
-                      exact
-                      path="/novo-desafio"
-                      render={() => <Redirect to={`/novo-desafio/tipo`} />}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/novo-desafio/:step"
-                      component={NewChallenge}
-                    />
-
-                    {/* Perfil */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/perfil/:action"
-                      component={Profile}
-                    />
-                    <Route
-                      exact
-                      path="/perfil"
-                      render={() => <Redirect to={`/perfil/pessoal`} />}
-                    />
-                    <Route path={"/404"} component={NotFound} />
-                    {/* <Redirect to={`/404`} /> */}
-                  </>
-                )}
-                {(usertype === "mentor" || usertype === "jurado") && (
-                  <>
-                    <PrivateRouteContainer
-                      exact
-                      path={`/mentor/:action/:id`}
-                      component={Judges}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path={`/jurado/:action/:id`}
-                      component={Judges}
-                    />
-                    {/* Meus Desafios */}
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type"
-                      component={MyChallenges}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/:page"
-                      component={Challenge}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/:page/:trail_type"
-                      component={Challenge}
-                    />
-                    <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
-                      component={TrilhaWatch}
-                    />
-                    {/* <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/forum/:forum_id"
-                      component={Challenge}
-                    /> */}
-                    <Route
-                      exact
-                      path="/meus-desafios/:type/:id/"
-                      render={({ match }) => (
-                        <Redirect
-                          to={`/meus-desafios/${match.params.type}/${match.params.id}/inicio`}
-                        />
-                      )}
-                    />
-                    <Route
-                      exact
-                      path="/meus-desafios"
-                      render={() => (
-                        <Redirect to={`/meus-desafios/autodesafio`} />
-                      )}
-                    />
-                  </>
-                )}
-                {/* Logout */}
+                {/* Perfil */}
+                <PrivateRouteContainer
+                  exact
+                  path="/perfil/:action"
+                  component={Profile}
+                />
+                <Route
+                  exact
+                  path="/perfil"
+                  render={() => <Redirect to={`/perfil/pessoal`} />}
+                />
                 <PrivateRouteContainer
                   exact
                   path="/auth/:type/logout"
                   component={Logout}
                 />
+                <Route path={"/404"} component={NotFound} />
+                {/* <Redirect to={`/404`} /> */}
+                <Route component={NotFound} />
+              </Switch>
+            )}
+            {usertype === "empresa" && (
+              <Switch location={location}>
+                {/* Join */}
+                <Route exact path="/join/:type/:action" component={Join} />
 
-                {/* Projeto */}
+                {/* Dashboard */}
                 <PrivateRouteContainer
                   exact
-                  path={`/projeto/:id`}
-                  component={Project}
+                  path="/dashboard"
+                  component={Dashboard}
                 />
 
-                {/* <Redirect from={"*"} to="/404" /> */}
-              </>
-            )
-          ) : (
-            <>
-              {/* Auth */}
-              <Route
-                exact
-                path="/auth/:type"
-                render={({ match }) => (
-                  <Redirect to={`/auth/${match.params.type}/login`} />
-                )}
-              />
-            </>
-          )}
-          {/* <Redirect component={Home} /> */}
+                {/* Meus Desafios */}
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type"
+                  component={MyChallengesCompany}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/:page"
+                  component={Challenge}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/:page/:trail_type"
+                  component={Challenge}
+                />
 
-          {/* <Redirect exact from={"/"} to={`/auth/talento/login`} /> */}
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
+                  component={TrilhaWatch}
+                />
+                {/* <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/forum/:forum_id"
+                      component={Challenge}
+                    /> */}
+                <Route
+                  exact
+                  path="/meus-desafios/:type/:id/"
+                  render={({ match }) => (
+                    <Redirect
+                      to={`/meus-desafios/${match.params.type}/${match.params.id}/inicio`}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/meus-desafios"
+                  render={() => <Redirect to={`/meus-desafios/in_company`} />}
+                />
 
-          <Route exact path="/auth/:type/:action" component={Auth} />
-        </>
-        {(usertype === "mentor" || usertype === "jurado") && (
-          <Route exact render={() => <Redirect to={`/mentor/projeto/1`} />} />
-        )}
-        {/* <Route exact render={() => <Redirect to="/auth/talento/login" />} /> */}
-      </Switch>
+                {/* Novo desafio */}
+                <Route
+                  exact
+                  path="/novo-desafio"
+                  render={() => <Redirect to={`/novo-desafio/tipo`} />}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/novo-desafio/:step"
+                  component={NewChallenge}
+                />
+
+                {/* Perfil */}
+                <PrivateRouteContainer
+                  exact
+                  path="/perfil/:action"
+                  component={Profile}
+                />
+                <Route
+                  exact
+                  path="/perfil"
+                  render={() => <Redirect to={`/perfil/pessoal`} />}
+                />
+                <Route path={"/404"} component={NotFound} />
+                {/* <Redirect to={`/404`} /> */}
+                <Route component={NotFound} />
+              </Switch>
+            )}
+            {(usertype === "mentor" || usertype === "jurado") && (
+              <Switch location={location}>
+                <PrivateRouteContainer
+                  exact
+                  path={`/mentor/:action/:id`}
+                  component={Judges}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path={`/jurado/:action/:id`}
+                  component={Judges}
+                />
+                {/* Meus Desafios */}
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type"
+                  component={MyChallenges}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/:page"
+                  component={Challenge}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/:page/:trail_type"
+                  component={Challenge}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
+                  component={TrilhaWatch}
+                />
+                {/* <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/forum/:forum_id"
+                      component={Challenge}
+                    /> */}
+                <Route
+                  exact
+                  path="/meus-desafios/:type/:id/"
+                  render={({ match }) => (
+                    <Redirect
+                      to={`/meus-desafios/${match.params.type}/${match.params.id}/inicio`}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/meus-desafios"
+                  render={() => <Redirect to={`/meus-desafios/autodesafio`} />}
+                />
+                <Route component={NotFound} />
+              </Switch>
+            )}
+
+            {/* Projeto */}
+            <PrivateRouteContainer
+              exact
+              path={`/projeto/:id`}
+              component={Project}
+            />
+            {/* <Route component={NotFound} /> */}
+
+            {/* <Redirect from={"*"} to="/404" /> */}
+          </>
+        )
+      ) : (
+        <Switch location={location}>
+          {/* Auth */}
+          <Route
+            exact
+            path="/auth/:type"
+            render={({ match }) => (
+              <Redirect to={`/auth/${match.params.type}/login`} />
+            )}
+          />
+          <PrivateRouteContainer
+            exact
+            path="/auth/:type/logout"
+            component={Logout}
+          />
+        </Switch>
+      )}
+      {/* <Switch location={location}> */}
+      {/* Logout */}
+      {/* <Switch location={location}>
+        <Route component={NotFound} />
+      </Switch> */}
+
       <Route path={["/*/modal/:type/:id"]} children={<ModalPage />} />
     </div>
   );

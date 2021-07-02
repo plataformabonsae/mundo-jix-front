@@ -90,7 +90,6 @@ const Project = (props) => {
             user={data?.user?.id}
             handleClose={handleEditModal}
           />
-          {console.log(data)}
         </ModalPage>
       )}
       {modalEditProject && data?.project && (

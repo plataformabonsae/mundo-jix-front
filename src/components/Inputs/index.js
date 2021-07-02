@@ -118,6 +118,7 @@ const Input = React.forwardRef(
       onKeyUp,
       validate,
       fontSize,
+      arrayError,
       ...rest
     },
     ref
@@ -142,7 +143,9 @@ const Input = React.forwardRef(
         {...rest}
       />
       <div className={styles.error}>
-        {(errors?.[name] && errorMessage) || (validate ? validate : null)}
+        {(errors?.[name] && errorMessage) ||
+          (validate ? validate : null) ||
+          (arrayError && errorMessage)}
       </div>
     </label>
   )
@@ -384,7 +387,7 @@ const InputWithMask = React.forwardRef((props, ref) => {
     >
       <span className={styles.name}>{children}</span>
       <Controller
-        as={<InputMask />}
+        as={<InputMask inputRef={ref} />}
         // inputRef={ref}
         control={control}
         errors={errors}

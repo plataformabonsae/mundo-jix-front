@@ -51,7 +51,9 @@ const ProjectEdit = (props) => {
   const [materials, setMaterials] = useState([]);
   const [links, setLinks] = useState([]);
   const [pitch, setPitchs] = useState([]);
-  const { register, errors, control, handleSubmit } = useForm();
+  const { register, errors, control, handleSubmit } = useForm({
+    mode: "onBlur",
+  });
   // const resolver = validationSchema(fileSchema);
 
   useEffect(() => {
@@ -188,7 +190,7 @@ const ProjectEdit = (props) => {
         })
         .then((res) => dispatch(get(usertype, { challenge_id })))
         .then(() => props.handleClose())
-        .catch((err) => console.log(err, "erro"));
+        .catch((err) => console.log(err));
     } else {
       const req = dispatch(
         post(usertype, {
@@ -220,7 +222,6 @@ const ProjectEdit = (props) => {
           toast.error("Um erro ocorreu ao criar o projeto, tente novamente.", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
-          console.log(error);
         });
     }
   };
@@ -311,15 +312,15 @@ const ProjectEdit = (props) => {
       <InputGroup>
         <div className={styles.label}>
           <Title size={18}>Pitch</Title>
-          {console.log(pitch, "pitch")}
           {pitch?.map((field, index) => {
+            console.log(errors["videos"]?.[index]?.message);
             return (
               <div className={styles.duo}>
                 <Input
                   defaultValue={field?.link}
                   disabled={loading}
                   ref={register({
-                    validation: {
+                    pattern: {
                       value:
                         /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?‌​[\w?‌​=]*)?/,
                       message: "Digite um link do Youtube válido",
@@ -327,9 +328,9 @@ const ProjectEdit = (props) => {
                   })}
                   type="text"
                   name={`videos.${index}`}
-                  errors={errors}
-                  errorMessage="Cole o link do youtube do pitch"
-                  // errorMessage={errors?.videos?.[index]?.message}
+                  arrayError={errors["videos"]?.[index]}
+                  // errorMessage="Cole o link do youtube do pitch"
+                  errorMessage={errors["videos"]?.[index]?.message}
                   placeholder="Cole o link do youtube do pitch"
                 />
               </div>

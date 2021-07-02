@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Route, Redirect } from "react-router-dom";
+// import { Route, Redirect, useLocation } from "react-router-dom";
+import { Route } from "react-router-dom";
+// import { useTransition, animated } from "@react-spring/web";
 
 import { Menu } from "components/Menu";
 import { Loading } from "components/Loading";
@@ -18,6 +20,11 @@ import { WindowSize } from "utils/etc";
 
 export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
   // const location = useLocation();
+  // const transitions = useTransition(location, {
+  //   from: { x: -100, opacity: 0 },
+  //   enter: { x: 0, opacity: 1, delay: 100 },
+  //   leave: { x: -100, opacity: 0 },
+  // });
   // const { data: usertype } = useSelector((state) => state.usertype);
   const { width } = WindowSize();
   const mobileOffset = window.localStorage.getItem("mobile_offset");
@@ -36,7 +43,11 @@ export const PrivateRouteContainer = ({ component: Component, ...rest }) => {
             <MenuMobile user={user?.user ? user?.user : user?.data} />
           )}
           <Header user={user?.user ? user?.user : user?.data} />
+          {/* {transitions((props, item) => (
+            <animated.div style={props}> */}
           <Component {...props} />
+          {/* </animated.div>
+          ))} */}
           <ToastContainer />
           {!!width && width < 762 && (
             <div style={{ minHeight: mobileOffset + "px" }}></div>

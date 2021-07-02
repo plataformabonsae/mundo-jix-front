@@ -25,6 +25,11 @@ import forum from "./Forum";
 import notifications from "./Notifications";
 import invites from "./Invites";
 import users from "./Users";
+import newChallenge from "./NewChallenge";
+import skills from "./Skills";
+import deleteMaterial from "./DeleteMaterial";
+import payment from "./Payment";
+import assessment from "./Assessment";
 
 const ducks = combineReducers({
   auth,
@@ -50,6 +55,11 @@ const ducks = combineReducers({
   forum,
   feedbacks,
   users,
+  newChallenge,
+  skills,
+  deleteMaterial,
+  payment,
+  assessment,
 });
 
 const rootReducer = (state, action) => {

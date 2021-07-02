@@ -17,6 +17,7 @@ import { Loading } from "components/Loading";
 import { Title, Text } from "components/Text";
 import { TabFlat } from "components/Tabs";
 import { SubHeader } from "components/Header";
+import { Payment } from "components/Payment";
 
 import { Presentation } from "./components/Presentation";
 import { Downloads } from "./components/Downloads";
@@ -35,6 +36,7 @@ const Challenge = (props) => {
   const [buttonContent, setButtonContent] = useState();
   const [owned, setOwned] = useState(false);
   const [notGuardianModal, setNotGuardianModal] = useState(false);
+  const [paymentModal, setPaymentModal] = useState(false);
   const [editChallengeModal, setEditChallengeModal] = useState(false);
   // const isCard = useRef();
   const dispatch = useDispatch();
@@ -109,13 +111,22 @@ const Challenge = (props) => {
 
   const handleEditChallenge = (props) => setEditChallengeModal((prev) => !prev);
 
+  const handlePaymentModal = () => {
+    setPaymentModal((prev) => !prev);
+    handleCloseBackdrop();
+  };
+
   const handleClickToSubscribe = (props) => {
-    setButtonContent(true);
-    console.log(buttonContent);
+    if (currentChallenge.challenge_type === "autodesafio") {
+      handlePaymentModal();
+    } else {
+      setButtonContent((prev) => !prev);
+    }
   };
 
   const handleCloseBackdrop = (e) => {
     setButtonContent(false);
+    // handleClickToSubscribe();
     // console.log("try close backdrop");
   };
 
@@ -123,6 +134,8 @@ const Challenge = (props) => {
 
   return (
     <>
+      {(loading || loadingProject) && <Loading />}
+
       {(owned || !!user?.user?.is_mentor || !!user?.user?.is_judge) &&
         usertype !== "empresa" && (
           <>
@@ -239,7 +252,7 @@ const Challenge = (props) => {
           <Presentation
             handleClickToSubscribe={handleClickToSubscribe}
             data={data.challenge}
-            buttonContent={buttonContent}
+            buttonContent={false}
             isModal={props.isModal}
           />
           {!!data.challenge.materials.length && (
@@ -360,12 +373,21 @@ const Challenge = (props) => {
           )}
         </section>
       )}
+      {paymentModal && (
+        <Payment
+          title={"Assine para poder participar de todos os Autodesafios"}
+          desc={
+            "Melhores suas habilidades e seja um talento imprescindível para contratantes em qualquer lugar do mundo. Assinando aos Autodesafios Jix, você tem acesso pleno aos mais diversos treinamentos em vendas, liderança, espiritualidade, inteligência emocional e muito mais. "
+          }
+          handleClose={handlePaymentModal}
+          isOpen={paymentModal}
+        />
+      )}
       {!!data && (page === "projeto" || !page) && <Project data={data} />}
       {!!data && (page === "projetos" || !page) && <Projects data={data} />}
       {!!data && (page === "trilha" || !page) && <Trilha />}
       {!!data && (page === "forum" || !page) && <Forum />}
       {!!data && (page === "participantes" || !page) && <Users />}
-      {(loading || loadingProject) && <Loading />}
     </>
   );
 };

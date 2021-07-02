@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -20,10 +20,30 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
   const dispatch = useDispatch();
+  const [cepValues, setCepValues] = useState({
+    state: null,
+    city: null,
+    address: null,
+    neighborhood: null,
+  });
   const { data: cepData, loading } = useSelector((state) => state.cep);
   const { register, errors, control, handleSubmit } = useForm({
     reValidateMode: "onChange",
   });
+
+  useEffect(() => {
+    if (cepData)
+      setCepValues((prev) => ({
+        state: cepData?.uf,
+        city: cepData?.localidade,
+        address: cepData?.logradouro,
+        neighborhood: cepData?.bairro,
+      }));
+  }, [cepData]);
+
+  useEffect(() => {
+    console.log(cepValues);
+  }, [cepValues]);
 
   const handleCep = (event) => {
     const typed = event.target.value;
@@ -37,7 +57,7 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
 
   const onSubmit = async (data) => {
     handleStep("desafio", data);
-    console.log(data);
+    console.log({ ...data, ...cepValues });
   };
 
   const typeExp = [
@@ -125,8 +145,12 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
               <InputGroup>
                 <Input
                   ref={register()}
-                  disabled={cepData?.uf ? true : false}
-                  value={cepData?.uf}
+                  disabled={cepValues?.state ? true : false}
+                  value={cepValues?.state}
+                  // defaultValue={cepValues?.uf}
+                  onKeyUp={(e) =>
+                    setCepValues((prev) => ({ ...prev, state: e.target.value }))
+                  }
                   name={`state`}
                   errors={errors}
                   errorMessage="Digite o estado"
@@ -141,10 +165,14 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
               <InputGroup>
                 <Input
                   ref={register()}
-                  disabled={cepData?.localidade ? true : false}
-                  value={cepData?.localidade}
+                  disabled={cepValues?.city ? true : false}
+                  value={cepValues?.city}
+                  // defaultValue={cepValues?.localidade}
                   name={`city`}
                   errors={errors}
+                  onChange={(e) =>
+                    setCepValues((prev) => ({ ...prev, city: e.target.value }))
+                  }
                   errorMessage="Selecione um tipo"
                   placeholder="Selecione a cidade"
                 ></Input>
@@ -158,10 +186,14 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
           <InputGroup>
             <Input
               ref={register()}
-              disabled={cepData?.logradouro ? true : false}
-              value={cepData?.logradouro}
+              disabled={cepValues?.address ? true : false}
+              // defaultValue={cepValues.address}
+              value={cepValues?.address}
               name="address"
               errors={errors}
+              onKeyUp={(e) =>
+                setCepValues((prev) => ({ ...prev, address: e.target.value }))
+              }
               errorMessage="Digite a rua da empresa"
               placeholder="Digite a rua"
             ></Input>
@@ -173,9 +205,15 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
           <InputGroup>
             <Input
               ref={register()}
-              disabled={cepData?.bairro ? true : false}
-              value={cepData?.bairro}
+              disabled={cepValues?.neighborhood ? true : false}
+              value={cepValues?.neighborhood}
               name="neighborhood"
+              onKeyUp={(e) =>
+                setCepValues((prev) => ({
+                  ...prev,
+                  neighborhood: e.target.value,
+                }))
+              }
               errors={errors}
               errorMessage="Digite a rua da empresa"
               placeholder="Digite o bairro"

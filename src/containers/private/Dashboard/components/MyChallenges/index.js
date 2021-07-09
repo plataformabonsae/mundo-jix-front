@@ -11,12 +11,12 @@ import { Filter } from "components/Filter";
 
 import styles from "./styles.module.sass";
 
-import { WindowSize } from 'utils/etc'
+import { WindowSize } from "utils/etc";
 
 // TODO
 
 const MyChallenges = () => {
-  const { width } = WindowSize()
+  const { width } = WindowSize();
   const { data, loading } = useSelector((state) => state.dashboard);
   const [challengeType, setChallengeType] = useState();
   const [activeTab, setActiveTab] = useState("todos");
@@ -77,7 +77,11 @@ const MyChallenges = () => {
 
       <article className={styles.slider}>
         {challengeType && challengeType.length > 0 ? (
-          <Swiper observer={challengeType} spaceBetween={24} slidesPerView={width > 762 ? 3 : 1}>
+          <Swiper
+            observer={challengeType}
+            spaceBetween={24}
+            slidesPerView={width > 762 ? 3 : 1}
+          >
             {challengeType.map((item, index) => (
               <SwiperSlide>
                 <Chip
@@ -87,7 +91,8 @@ const MyChallenges = () => {
                   title={`Nome do desafio`}
                   desc={"Autodesafio"}
                   maxValue={100}
-                  currentValue={0}
+                  currentValue={item.percentage?.toFixed(1)}
+                  // currenty
                 />
               </SwiperSlide>
             ))}

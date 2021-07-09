@@ -52,7 +52,7 @@ const Email = ({ title, desc, type }) => {
 
   useEffect(() => {
     setlinkedinSettings({
-      redirect_uri: `http://lvh.me:3000/auth/${type}/login`,
+      redirect_uri: `${process.env.REACT_APP_URL}/auth/${type}/login`,
     });
   }, [type]);
 
@@ -351,59 +351,62 @@ const Email = ({ title, desc, type }) => {
         >
           Continuar
         </Button>
-        {console.log(errors)}
 
-        <span className={styles.or}>ou</span>
+        {type === "talento" && (
+          <>
+            <span className={styles.or}>ou</span>
 
-        <div className={styles.buttons}>
-          {loading && (
-            <div className={styles.loading}>
-              <Loading />
-            </div>
-          )}
-          <GoogleLogin
-            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-            render={(renderProps) => (
+            <div className={styles.buttons}>
+              {loading && (
+                <div className={styles.loading}>
+                  <Loading />
+                </div>
+              )}
+              <GoogleLogin
+                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                render={(renderProps) => (
+                  <Button
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                    Tag="button"
+                    type="google"
+                  >
+                    Cadastrar com Google
+                  </Button>
+                )}
+                buttonText="Login"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={"single_host_origin"}
+              />
               <Button
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                Tag="button"
-                type="google"
+                style={{ position: "relative", cursor: "pointer" }}
+                Tag="span"
+                type="facebook"
               >
-                Cadastrar com Google
+                <FacebookLogin
+                  socialId={process.env.REACT_APP_FACEBOOK_CLIENT_ID}
+                  language="pt_BR"
+                  scope="public_profile,email"
+                  responseHandler={responseFacebook}
+                  xfbml={true}
+                  fields="id,email,name"
+                  version="v2.5"
+                  className={"button__facebook"}
+                  buttonText=""
+                />
+                Cadastrar com Facebook
               </Button>
-            )}
-            buttonText="Login"
-            onSuccess={responseGoogle}
-            onFailure={responseGoogle}
-            cookiePolicy={"single_host_origin"}
-          />
-          <Button
-            style={{ position: "relative", cursor: "pointer" }}
-            Tag="span"
-            type="facebook"
-          >
-            <FacebookLogin
-              socialId={process.env.REACT_APP_FACEBOOK_CLIENT_ID}
-              language="pt_BR"
-              scope="public_profile,email"
-              responseHandler={responseFacebook}
-              xfbml={true}
-              fields="id,email,name"
-              version="v2.5"
-              className={"button__facebook"}
-              buttonText=""
-            />
-            Cadastrar com Facebook
-          </Button>
-          <Button
-            Tag="a"
-            href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.REACT_APP_LINKEDIN_CLIENT_ID}&redirect_uri=${linkedinSettings.redirect_uri}&state=foobar&scope=r_liteprofile%20r_emailaddress`}
-            type="linkedin"
-          >
-            Cadastrar com Linkedin
-          </Button>
-        </div>
+              <Button
+                Tag="a"
+                href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.REACT_APP_LINKEDIN_CLIENT_ID}&redirect_uri=${linkedinSettings.redirect_uri}&state=foobar&scope=r_liteprofile%20r_emailaddress`}
+                type="linkedin"
+              >
+                Cadastrar com Linkedin
+              </Button>
+            </div>
+          </>
+        )}
 
         <div className={styles.subSpan} style={{ marginTop: 32 }}>
           Já possui uma conta?
@@ -411,7 +414,9 @@ const Email = ({ title, desc, type }) => {
         </div>
       </div>
 
-      <Copyright />
+      {/* <div style={{ height: "100%", display: "flex", alignItems: "flex-end" }}> */}
+      {/* <Copyright style={{ display: "block" }} /> */}
+      {/* </div> */}
     </form>
   );
 };

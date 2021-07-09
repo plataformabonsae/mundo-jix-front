@@ -47,12 +47,7 @@ const RoutesConfig = () => {
   return (
     <div>
       <Switch location={location}>
-        <PrivateRouteContainer
-          exact
-          path="/auth/:type/logout"
-          component={Logout}
-        />
-        <Route exact path="/auth/:type/:action" component={Auth} />
+        {/* <Route component={NotFound} /> */}
       </Switch>
 
       {user || logged ? (
@@ -313,19 +308,35 @@ const RoutesConfig = () => {
         )
       ) : (
         <Switch location={location}>
+          <PrivateRouteContainer
+            exact
+            path="/auth/:type/logout"
+            component={Logout}
+          />
+          <Route
+            exact
+            path="/auth/empresa/login"
+            render={() => <Redirect to={`/auth/empresa/email`} />}
+          />
+          <Route exact path="/auth/:type/:action" component={Auth} />
+          {/* Auth */}
+          <Route
+            exact
+            path="/"
+            render={({ match }) => <Redirect to={`/auth/talento/login`} />}
+          />
           {/* Auth */}
           <Route
             exact
             path="/auth/:type"
-            render={({ match }) => (
-              <Redirect to={`/auth/${match.params.type}/login`} />
-            )}
+            render={({ match }) => <Redirect to={`/auth/talento/login`} />}
           />
           <PrivateRouteContainer
             exact
             path="/auth/:type/logout"
             component={Logout}
           />
+          <Route component={NotFound} />
         </Switch>
       )}
       {/* <Switch location={location}> */}

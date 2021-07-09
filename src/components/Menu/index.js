@@ -1,9 +1,5 @@
-import React, {
-  // useState
-  useEffect,
-} from "react";
-// import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 // import { useSpring, animated } from 'react-spring'
 
 import { BASEURL } from "utils/api";
@@ -17,6 +13,8 @@ import { Profile } from "./components/Profile";
 import { Points } from "./components/Points";
 import { Button } from "./components/Button";
 
+import { dashboardFetch } from "services/dashboard";
+
 // import styles from './styles.module.sass'
 
 // TODO
@@ -24,8 +22,14 @@ import { Button } from "./components/Button";
 // 2 - social
 
 const Menu = ({ active, className, user = { name: "", last_name: "" } }) => {
-  // const location = useLocation();
-  let { data: type } = useSelector((state) => state.usertype);
+  // const location = useLocation();\
+  const dispatch = useDispatch();
+  const { data: type } = useSelector((state) => state.usertype);
+  const { data: dashboard } = useSelector((state) => state.dashboard);
+
+  useEffect(() => {
+    dispatch(dashboardFetch(type));
+  }, [dispatch, type]);
 
   useEffect(() => {
     const body = document.getElementsByTagName("body")[0];
@@ -60,7 +64,7 @@ const Menu = ({ active, className, user = { name: "", last_name: "" } }) => {
 
       {type === "talento" && (
         <>
-          <Points points={0} />
+          <Points points={dashboard?.finished_challenges?.points} />
 
           <Button to={`/dashboard`} dashboard>
             Dashboard

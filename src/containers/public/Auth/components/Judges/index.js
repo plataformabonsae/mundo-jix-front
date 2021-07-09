@@ -25,13 +25,13 @@ const Judges = (props) => {
   const { register, errors, handleSubmit } = useForm();
   const history = useHistory();
   const dispatch = useDispatch();
-  const [notMentor, setNotMentor] = useState(false);
+  const [isMentor, setIsMentor] = useState(true);
 
   // const onSubmit = (data) => alert(JSON.stringify(data));
 
   const handleIsNotMentor = () => {
-    setNotMentor((prev) => !prev);
     dispatch(logout());
+    setIsMentor((prev) => !prev);
   };
 
   const onSubmit = async (data) => {
@@ -111,9 +111,9 @@ const Judges = (props) => {
 
         <Copyright color="white" />
       </section>
-      {notMentor && (
+      {!isMentor && (
         <Dialog
-          handleClose={() => setNotMentor((prev) => !prev)}
+          handleClose={() => setIsMentor((prev) => !prev)}
           title={`Esse e-mail pertence a uma conta de talento.`}
         >
           <Text>
@@ -125,7 +125,7 @@ const Judges = (props) => {
               // style={{ minWidth: 120 }}
               Tag={"span"}
               type={"green"}
-              onClick={() => setNotMentor((prev) => !prev)}
+              onClick={() => setIsMentor((prev) => !prev)}
             >
               Voltar
             </Button>

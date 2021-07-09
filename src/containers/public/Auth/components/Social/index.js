@@ -38,7 +38,7 @@ const Social = ({ title, desc, type }) => {
 
   useEffect(() => {
     setlinkedinSettings({
-      redirect_uri: `http://lvh.me:3000/auth/${type}/login`,
+      redirect_uri: `${process.env.REACT_APP_URL}/auth/talento/login`,
     });
   }, [type]);
 
@@ -172,7 +172,7 @@ const Social = ({ title, desc, type }) => {
 
           <TabBox
             Tag={Link}
-            to="/auth/empresa/login"
+            to="/auth/empresa/email"
             active={type === "empresa" ? true : false}
           >
             Empresa

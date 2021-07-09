@@ -191,7 +191,9 @@ const Challenge = (props) => {
                 </Title>
                 <Button
                   type={"green"}
-                  to={`/meus-desafios/${type}/${data?.challenge?.id}/trilha/normal/${data?.last_video?.id}`}
+                  to={`/meus-desafios/${type}/${data?.challenge?.id}/trilha/${
+                    data?.last_video?.premium ? `premium` : `normal`
+                  }/${data?.last_video?.id}`}
                 >
                   Continuar assistindo
                 </Button>

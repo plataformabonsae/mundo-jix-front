@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Text } from "components/Text";
 import { Loading } from "components/Loading";
@@ -10,10 +10,17 @@ import styles from "./styles.module.sass";
 import { BASEURL } from "utils/api";
 
 import profile from "assets/logo/JixProfile.png";
+import { dashboardFetch } from "services/dashboard";
 
 const Header = ({ name, invites, user }) => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState("");
   const { data: usertype } = useSelector((state) => state.usertype);
+  const { data: dashboard } = useSelector((state) => state.dashboard);
+
+  useEffect(() => {
+    dispatch(dashboardFetch(usertype));
+  }, [dispatch, usertype]);
 
   const handleOpen = (wich) => setOpen(wich);
 
@@ -36,7 +43,7 @@ const Header = ({ name, invites, user }) => {
       </div>
       <div className={styles.points}>
         <Text size={16} weight={"bold"} className={styles.text}>
-          0
+          {dashboard?.finished_challenges?.points}
         </Text>
         <Text size={10} weight={"bold"} className={styles.text}>
           pontos

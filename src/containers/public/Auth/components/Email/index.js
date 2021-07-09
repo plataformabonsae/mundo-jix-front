@@ -45,7 +45,7 @@ const Email = ({ title, desc, type }) => {
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className={styles.login}>
       <div className={styles.goback}>
-        <Button type="transparent" to={`/auth/${type}/login`}>
+        <Button type="transparent" to={`/auth/talento/login`}>
           Voltar
         </Button>
       </div>

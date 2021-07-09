@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const cors = (url) => `http://cors-anywhere.herokuapp.com/${url}`;
+// const cors = (url) => `http://cors-anywhere.herokuapp.com/${url}`;
+const cors = (url) => url;
 
 export const linkedin = async (data, uri) => {
   const obj = {};

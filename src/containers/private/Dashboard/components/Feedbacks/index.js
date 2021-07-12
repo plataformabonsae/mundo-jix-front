@@ -18,7 +18,7 @@ const Feedbacks = (props) => {
   const [feedbacks, setFeedbacks] = useState("");
 
   useEffect(() => {
-    dashboard?.feedbacks && setFeedbacks([...dashboard?.feedbacks]);
+    dashboard?.feedbacks?.data && setFeedbacks([...dashboard?.feedbacks]);
   }, [dashboard?.feedbacks]);
 
   const handleSearchButton = () => setSearchToggle((prev) => !prev);

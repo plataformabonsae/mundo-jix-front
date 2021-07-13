@@ -109,6 +109,10 @@ const Social = ({ title, desc, type }) => {
     });
   };
 
+  const responseFailure = (data) => {
+    console.log(data);
+  };
+
   const responseGoogle = async (data) => {
     const res = dispatch(tokenFetchExternal(type, { email: data?.Et?.ou }));
     await res.then((response) => {
@@ -201,7 +205,7 @@ const Social = ({ title, desc, type }) => {
                 )}
                 buttonText="Login"
                 onSuccess={responseGoogle}
-                onFailure={responseGoogle}
+                onFailure={responseFailure}
                 cookiePolicy={"single_host_origin"}
               />
               <Button

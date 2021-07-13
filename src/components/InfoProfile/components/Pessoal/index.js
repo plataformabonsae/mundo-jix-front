@@ -49,6 +49,7 @@ const Pessoal = ({
   const [changedMainEmail, setChangedMainEmail] = useState(false);
   const [modalChangeEmail, setModalChangeEmail] = useState(false);
   const [photoModal, setPhotoModal] = useState(false);
+  const [exit, setExit] = useState(false);
   // const [cpfControl, setCpfControl] = useState(false);
   const user = data.user || data.data;
   const { register, errors, control, handleSubmit } = useForm({
@@ -165,6 +166,7 @@ const Pessoal = ({
           !dontRedirect &&
           history.push(removeLastPath(location.pathname) + "/academico")
       )
+      .then(() => exit && history.push("/dashboard"))
       .catch((error) => {
         console.log(error.response.data);
         toast.error(
@@ -512,7 +514,11 @@ const Pessoal = ({
             {!dontRedirect && (
               <Button
                 disabled={loading}
-                to={finalRoute ? finalRoute : `/dashboard`}
+                Tag={"button"}
+                submit
+                onClick={() => setExit(true)}
+                // onClick={() => (changedMainEmail ? handleEmailModal() : null)}
+                // to={finalRoute ? finalRoute : `/dashboard`}
                 type="outlineWhite"
               >
                 Salvar e sair

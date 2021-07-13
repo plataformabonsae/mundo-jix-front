@@ -38,14 +38,9 @@ export const tokenFetch =
   };
 
 export const tokenFetchExternal =
-  (
-    type = `talento`,
-    body,
-    url = type === `empresa`
-      ? COMPANY.AUTH.loginExternal
-      : TALENT.AUTH.loginExternal
-  ) =>
+  (type = `talento`, body, url = TALENT.AUTH.loginExternal) =>
   async (dispatch) => {
+    console.log(body);
     dispatch(TokenActions.tokenRequest());
     const call = axios({
       url,

@@ -30,6 +30,7 @@ const Academico = ({ noShadow, finalRoute, dontRedirect }) => {
 
   const [datesValidation, setDatesValidation] = useState([]);
   const [academic, setAcademic] = useState([]);
+  const [exit, setExit] = useState(false);
 
   const { register, errors, control, handleSubmit } = useForm();
 
@@ -84,6 +85,7 @@ const Academico = ({ noShadow, finalRoute, dontRedirect }) => {
           !dontRedirect &&
           history.push(removeLastPath(location.pathname) + "/profissional")
       )
+      .then(() => exit && history.push("/dashboard"))
       .catch((error) => {
         console.log(error.response.data);
         toast.error(
@@ -455,7 +457,11 @@ const Academico = ({ noShadow, finalRoute, dontRedirect }) => {
         {!dontRedirect && (
           <Button
             disabled={loading}
-            to={finalRoute ? finalRoute : `/dashboard`}
+            Tag={"button"}
+            submit
+            onClick={() => setExit(true)}
+            // onClick={() => (changedMainEmail ? handleEmailModal() : null)}
+            // to={finalRoute ? finalRoute : `/dashboard`}
             type="outlineWhite"
           >
             Salvar e sair

@@ -6,6 +6,7 @@ import axios from "axios";
 export const intent =
   (
     type = "talento",
+    body,
     token = window.localStorage.getItem("token"),
     url = type === "empresa" ? COMPANY.PAYMENT.intent : TALENT.PAYMENT.intent
   ) =>
@@ -14,6 +15,7 @@ export const intent =
     const res = axios({
       url,
       method: "post",
+      data: body,
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
@@ -37,7 +39,8 @@ export const success =
   async (dispatch) => {
     dispatch(PaymentActions.paymentRequest());
     const res = axios({
-      url: url(body.team_id),
+      url: url,
+      data: body,
       method: "post",
       headers: {
         Authorization: `Bearer ${token}`,

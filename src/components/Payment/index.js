@@ -23,18 +23,33 @@ import { BASEURL } from "utils/api";
 
 import defaultImage from "assets/components/MainImage/image.png";
 
-import { intent, sucess } from "services/payment";
+import { intent, success } from "services/payment";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx", {
-  locale: "pt-BR",
-});
+
+// const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx", {
+//   locale: "pt-BR",
+// });
+
+const stripePromise = loadStripe(
+  "pk_test_51IIxAkEkTYY014cfnr4vsRogzVMhLgJBido5Duigk3srIx3sZdGzPq8y8B0YIrUdwTi2ODwjEe5tSINQZMXJkyZI00sfC1H9tr",
+  {
+    locale: "pt-BR",
+  }
+);
+
+// pk_test_TYooMQauvdEDq54NiTphI7jx
+// sk_test_51IIxAkEkTYY014cfttoNWdOCujBZS7FabOGhwJjPtmidt4mNRzEpC7w6CPDnBdI1JgPmoEsQog5oa2mqpgbbrQbx00pgozpTlf
+// pk_test_51IIxAkEkTYY014cfnr4vsRogzVMhLgJBido5Duigk3srIx3sZdGzPq8y8B0YIrUdwTi2ODwjEe5tSINQZMXJkyZI00sfC1H9tr
 
 const Payment = (props) => {
   const dispatch = useDispatch();
   const { data: usertype } = useSelector((state) => state.usertype);
-  const { data: challenges } = useSelector((state) => state.challenges);
+  const [stripeInfo, setStripeInfo] = useState("");
+  // const { data: challenges } = useSelector((state) => state.challenges);
+  const { data: challenge } = useSelector((state) => state.challenge);
+  const { data: payment } = useSelector((state) => state.payment);
 
   useEffect(() => {
     const modal = document.getElementById("ModalPage");
@@ -48,8 +63,16 @@ const Payment = (props) => {
   }, [props.isOpen]);
 
   useEffect(() => {
-    dispatch(intent(usertype));
-  }, [dispatch, usertype]);
+    dispatch(intent(usertype, { challenge_id: challenge?.challenge?.id }));
+  }, [dispatch, usertype, challenge?.challenge?.id]);
+
+  useEffect(() => {
+    payment &&
+      setStripeInfo({
+        stripe_id: payment?.stripe_id,
+        client_secret: payment?.client_secret,
+      });
+  }, [payment]);
 
   return (
     <Elements stripe={stripePromise}>
@@ -84,7 +107,7 @@ const Payment = (props) => {
               R${props.price}
               <Text size={12}>{props.typeOfPayment}</Text>
             </div>
-            <PaymentForm />
+            <PaymentForm data={stripeInfo} />
           </div>
         </div>
       </Dialog>
@@ -93,11 +116,17 @@ const Payment = (props) => {
 };
 
 const PaymentForm = (props) => {
+  const { data } = props;
+  const dispatch = useDispatch();
   const stripe = useStripe();
   const elements = useElements();
   const [disabled, setDisabled] = useState(null);
   const [processing, setProcessing] = useState(null);
+  const [succeeded, setSucceeded] = useState(null);
   const [error, setError] = useState(null);
+
+  const { data: usertype } = useSelector((state) => state.usertype);
+  const { data: challenge } = useSelector((state) => state.challenge);
 
   // const handleChange = async (event) => {
   //   // Listen for changes in the CardElement
@@ -105,31 +134,45 @@ const PaymentForm = (props) => {
   //   setDisabled(event.empty);
   //   setError(event.error ? event.error.message : "");
   // };
-  // const handleSubmit = async ev => {
-  //   ev.preventDefault();
-  //   setProcessing(true);
-  //   const payload = await stripe.confirmCardPayment(clientSecret, {
-  //     payment_method: {
-  //       card: elements.getElement(CardElement)
-  //     }
-  //   });
-  //   if (payload.error) {
-  //     setError(`Payment failed ${payload.error.message}`);
-  //     setProcessing(false);
-  //   } else {
-  //     setError(null);
-  //     setProcessing(false);
-  //     setSucceeded(true);
-  //   }
-  // };
+
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+    setProcessing(true);
+    const payload = await stripe.confirmCardPayment(data.client_secret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+      },
+    });
+    if (payload.error) {
+      setError(`Payment failed ${payload.error.message}`);
+      setProcessing(false);
+      console.log(payload);
+    } else {
+      console.log(payload, "sucesso");
+      setError(null);
+      setProcessing(false);
+      setSucceeded(payload);
+      dispatch(
+        success(usertype, {
+          payment_id: payload.paymentIntent.id,
+          challenge_id: challenge?.challenge?.id,
+        })
+      );
+    }
+  };
+
+  useState(() => {
+    console.log(data);
+  }, [data]);
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Text className={styles.payment__desc}>
         Preencha os dados de seu cartão abaixo para realizar a aquisição.
       </Text>
       <Title size={14} style={{ marginLeft: 0, marginBottom: 6 }}>
         Pagamento
+        {processing || error} {processing && "processando..."}
       </Title>
       <div className={styles.card__row}>
         <CardElement

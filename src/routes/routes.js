@@ -29,7 +29,6 @@ import { NewChallenge } from "containers/private/NewChallenge";
 
 // import { Loading } from "components/Loading";
 import { ModalPage } from "components/ModalPage";
-import { Loading } from "components/Loading";
 import { PrivateRouteContainer } from "./PrivateRouteContainer";
 
 // import { autoLogin } from "services/login";
@@ -43,16 +42,15 @@ const RoutesConfig = () => {
   );
 
   const { data: usertype } = useSelector((state) => state.usertype);
-  const { data: user, logged, loading } = useSelector((state) => state.user);
+  const { data: user, logged } = useSelector((state) => state.user);
 
   return (
     <div>
-      {/* <Switch location={location}> */}
-      {/* <Route component={NotFound} /> */}
-      {/* </Switch> */}
-      {/* {loading && <Loading full />} */}
+      <Switch location={location}>
+        {/* <Route component={NotFound} /> */}
+      </Switch>
 
-      {user ? (
+      {user || logged ? (
         accepted_terms === 0 ? (
           <Switch location={location}>
             {/* Join */}
@@ -154,8 +152,6 @@ const RoutesConfig = () => {
                   path="/auth/:type/logout"
                   component={Logout}
                 />
-                <Route exact path="/auth/:type/:action" component={Auth} />
-
                 <Route path={"/404"} component={NotFound} />
                 {/* <Redirect to={`/404`} /> */}
                 <Route component={NotFound} />
@@ -238,12 +234,6 @@ const RoutesConfig = () => {
                   path="/perfil"
                   render={() => <Redirect to={`/perfil/pessoal`} />}
                 />
-                <PrivateRouteContainer
-                  exact
-                  path="/auth/:type/logout"
-                  component={Logout}
-                />
-                <Route exact path="/auth/:type/:action" component={Auth} />
                 <Route path={"/404"} component={NotFound} />
                 {/* <Redirect to={`/404`} /> */}
                 <Route component={NotFound} />
@@ -282,6 +272,11 @@ const RoutesConfig = () => {
                   path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
                   component={TrilhaWatch}
                 />
+                {/* <PrivateRouteContainer
+                      exact
+                      path="/meus-desafios/:type/:id/forum/:forum_id"
+                      component={Challenge}
+                    /> */}
                 <Route
                   exact
                   path="/meus-desafios/:type/:id/"
@@ -299,6 +294,7 @@ const RoutesConfig = () => {
                 <Route component={NotFound} />
               </Switch>
             )}
+
             {/* Projeto */}
             <PrivateRouteContainer
               exact
@@ -343,6 +339,11 @@ const RoutesConfig = () => {
           <Route component={NotFound} />
         </Switch>
       )}
+      {/* <Switch location={location}> */}
+      {/* Logout */}
+      {/* <Switch location={location}>
+        <Route component={NotFound} />
+      </Switch> */}
 
       <Route path={["/*/modal/:type/:id"]} children={<ModalPage />} />
     </div>

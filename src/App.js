@@ -31,7 +31,7 @@ import { Creators as UserActions } from "store/ducks/User";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { user, loading } = useSelector((state) => state.user);
+  const { data: user, loading } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(autoLogin())
@@ -49,7 +49,7 @@ const App = () => {
         dispatch(UserActions.logoutSuccess());
         // history.push("/auth/mentor/login");
       });
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   return (
     <>

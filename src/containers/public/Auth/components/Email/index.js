@@ -31,9 +31,9 @@ const Email = ({ title, desc, type }) => {
   const { error, loading } = useSelector((state) => state.token);
   const dispatch = useDispatch();
 
-  useState(() => {
-    dispatch(UserActions.logoutSuccess());
-  }, [dispatch, UserActions]);
+  // useState(() => {
+  //   dispatch(UserActions.logoutSuccess());
+  // }, [dispatch, UserActions]);
 
   const onSubmit = async (data) => {
     const req = dispatch(login(type, data));

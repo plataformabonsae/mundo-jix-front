@@ -280,11 +280,6 @@ const RoutesConfig = () => {
                   path="/meus-desafios/:type/:id/trilha/:trail_type/:trail_id"
                   component={TrilhaWatch}
                 />
-                {/* <PrivateRouteContainer
-                      exact
-                      path="/meus-desafios/:type/:id/forum/:forum_id"
-                      component={Challenge}
-                    /> */}
                 <Route
                   exact
                   path="/meus-desafios/:type/:id/"
@@ -302,7 +297,6 @@ const RoutesConfig = () => {
                 <Route component={NotFound} />
               </Switch>
             )}
-
             {/* Projeto */}
             <PrivateRouteContainer
               exact
@@ -347,11 +341,6 @@ const RoutesConfig = () => {
           <Route component={NotFound} />
         </Switch>
       )}
-      {/* <Switch location={location}> */}
-      {/* Logout */}
-      {/* <Switch location={location}>
-        <Route component={NotFound} />
-      </Switch> */}
 
       <Route path={["/*/modal/:type/:id"]} children={<ModalPage />} />
     </div>

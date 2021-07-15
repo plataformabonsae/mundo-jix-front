@@ -63,7 +63,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.LOGOUT_FAILURE:
       return {
         ...state,
-        isLoading: false,
+        loading: false,
         error: action.payload.error,
       };
     default:

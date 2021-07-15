@@ -205,7 +205,11 @@ const ChallengeCard = (props) => {
               Insígnias
             </Text>
             <Text size={14}>
-              {props.item.grade ? props.item.grade : "Sem insígnia"}
+              {!!props.item.badges.length
+                ? props.item.badges.map(
+                    (item, index) => `${!!index ? " -" : ""} ${item.title}`
+                  )
+                : "Sem insígnia"}
             </Text>
           </>
         )}

@@ -152,6 +152,8 @@ const RoutesConfig = () => {
                   path="/auth/:type/logout"
                   component={Logout}
                 />
+                <Route exact path="/auth/:type/:action" component={Auth} />
+
                 <Route path={"/404"} component={NotFound} />
                 {/* <Redirect to={`/404`} /> */}
                 <Route component={NotFound} />
@@ -234,6 +236,12 @@ const RoutesConfig = () => {
                   path="/perfil"
                   render={() => <Redirect to={`/perfil/pessoal`} />}
                 />
+                <PrivateRouteContainer
+                  exact
+                  path="/auth/:type/logout"
+                  component={Logout}
+                />
+                <Route exact path="/auth/:type/:action" component={Auth} />
                 <Route path={"/404"} component={NotFound} />
                 {/* <Redirect to={`/404`} /> */}
                 <Route component={NotFound} />

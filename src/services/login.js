@@ -54,11 +54,18 @@ export const loginFetch =
         Authorization: `Bearer ${token}`,
       },
     });
-    await res.then(function (response) {
-      const user = response?.data?.data;
-      dispatch(get(type, token));
-      window.localStorage.setItem("accepted_terms", user?.user?.accepted_terms);
-    });
+    await res
+      .then(function (response) {
+        const user = response?.data?.data;
+        dispatch(get(type, token));
+        window.localStorage.setItem(
+          "accepted_terms",
+          user?.user?.accepted_terms
+        );
+      })
+      .catch((error) => {
+        dispatch(UserActions.userFailure(error));
+      });
     // .catch(function (response) {
     //   //handle error
     //   console.log(response.data.data.data);

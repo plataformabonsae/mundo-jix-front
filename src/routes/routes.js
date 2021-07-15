@@ -29,6 +29,7 @@ import { NewChallenge } from "containers/private/NewChallenge";
 
 // import { Loading } from "components/Loading";
 import { ModalPage } from "components/ModalPage";
+import { Loading } from "components/Loading";
 import { PrivateRouteContainer } from "./PrivateRouteContainer";
 
 // import { autoLogin } from "services/login";
@@ -42,15 +43,16 @@ const RoutesConfig = () => {
   );
 
   const { data: usertype } = useSelector((state) => state.usertype);
-  const { data: user, logged } = useSelector((state) => state.user);
+  const { data: user, logged, loading } = useSelector((state) => state.user);
 
   return (
     <div>
-      <Switch location={location}>
-        {/* <Route component={NotFound} /> */}
-      </Switch>
+      {/* <Switch location={location}> */}
+      {/* <Route component={NotFound} /> */}
+      {/* </Switch> */}
+      {/* {loading && <Loading full />} */}
 
-      {user || logged ? (
+      {user ? (
         accepted_terms === 0 ? (
           <Switch location={location}>
             {/* Join */}

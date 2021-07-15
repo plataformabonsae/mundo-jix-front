@@ -13,6 +13,7 @@ import {
   AddGroup,
   RemoveGroup,
   SelectInputMulti,
+  SelectInput,
   InputWithMask,
   Radio,
 } from "components/Inputs";
@@ -35,6 +36,7 @@ const Challenge = ({
   const [materials, setMaterials] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [skillsChange, setSkillsChange] = useState([]);
 
   const dispatch = useDispatch();
   const { data: skillsData } = useSelector((state) => state.skills);
@@ -49,11 +51,36 @@ const Challenge = ({
   }, [dispatch]);
 
   useEffect(() => {
-    skillsData?.length && setSkills([skillsData]);
+    console.log(errors);
+  }, [errors]);
+
+  useEffect(() => {
+    const append = (skill) => {
+      setSkills((prev) => [...prev, skill]);
+    };
+    if (skillsData) {
+      const skills = skillsData;
+      for (let i = 0; i < skills.length; i++) {
+        append({ value: skills[i].id, label: skills[i].title });
+      }
+    }
   }, [skillsData]);
 
   const handleCountChar = (e) => {
     setCountResume(e.target.value.length);
+  };
+
+  const handleSkillsChange = (data) => {
+    console.log(data, "handleSkillsChange");
+    setSkillsChange(data);
+  };
+
+  const handleDate = (val) => {
+    let value = val;
+    let array = value.split("/").map((x) => +x);
+    const date = new Date(array[2], array[1] - 1, array[0]);
+
+    return date.getTime() && date > new Date();
   };
 
   const onSubmit = (data) => {
@@ -152,12 +179,22 @@ const Challenge = ({
               defaultValue={""}
               disabled={loading}
               control={control}
-              ref={register({ required: true })}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Esse campo é obrigatório",
+                },
+                validate: {
+                  isValid: (val) =>
+                    handleDate(val) || "Insira um deadline válido",
+                },
+                valueAsDate: true,
+              }}
               name="deadline"
               errors={errors}
               mask="99/99/9999"
               rows="12"
-              errorMessage="Digite o prazo do desafio"
+              errorMessage={errors["deadline"]?.message}
               placeholder="Digite o prazo do desafio"
             ></InputWithMask>
           </InputGroup>
@@ -200,12 +237,30 @@ const Challenge = ({
           <InputGroup>
             <Input
               defaultValue={""}
+              disabled={loading}
+              ref={register({
+                pattern: {
+                  value:
+                    /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?‌​[\w?‌​=]*)?/,
+                  message: "Digite um link do Youtube válido",
+                },
+              })}
+              type="text"
+              name={`link`}
+              errors={errors}
+              // arrayError={errors["videos"]?.[index]}
+              // errorMessage="Cole o link do youtube do pitch"
+              errorMessage={errors["link"]?.message}
+              placeholder="Cole o link do youtube do pitch"
+            />
+            {/* <Input
+              defaultValue={""}
               ref={register({ required: true })}
               errors={errors}
               errorMessage="Cole o link do vídeo"
               name="link"
               placeholder="Cole o link do vídeo"
-            ></Input>
+            ></Input> */}
           </InputGroup>
           <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
             Premiação
@@ -227,8 +282,22 @@ const Challenge = ({
           <InputGroup>
             <SelectInputMulti
               name={`skills`}
-              // ref={register({ required: true })}
+              ref={register()}
+              isMulti
               control={control}
+              options={skills}
+              errors={errors}
+              value={skillsChange}
+              // defaultValue={skillsChange}
+              onChange={handleSkillsChange}
+              rules={{
+                validate: {
+                  hasAny: (v) =>
+                    console.log(skillsChange) ||
+                    "Selecione pelo menos uma skill",
+                },
+              }}
+              errorMessage={errors["skills"]?.message}
               placeholder="Digite sua skill"
             />
           </InputGroup>

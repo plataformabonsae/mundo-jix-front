@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 // import { removeLastPath } from "utils/etc";
 
-import { validationSchema } from "utils/etc";
+// import { validationSchema } from "utils/etc";
 
 import { Text, Title } from "components/Text";
 import Button from "components/Button";

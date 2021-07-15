@@ -17,7 +17,7 @@ const Type = (props) => {
       </BlueCard>
       <BlueCard
         onClick={() =>
-          props.handleStep("job", { challenge_type: "ultradesafio" })
+          props.handleStep("desafio", { challenge_type: "ultradesafio" })
         }
       >
         Ultradesafio

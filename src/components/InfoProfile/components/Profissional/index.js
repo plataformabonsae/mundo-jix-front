@@ -160,8 +160,8 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   }, [user]);
 
   const onSubmit = async (data) => {
-    console.log(data);
-    console.log(data.curriculum.length);
+    // console.log(data);
+    // console.log(data.curriculum.length);
     // let { email, name, last_name, cpf, phones, birthdate } = data;
     const {
       current_situation,
@@ -218,7 +218,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
         });
       });
 
-    console.log(errors);
+    // console.log(errors);
   };
 
   const typeSituacao = [

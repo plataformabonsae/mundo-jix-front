@@ -10,15 +10,17 @@ import styles from "./styles.module.sass";
 const TitleAndBack = (props) => {
   const location = useLocation();
   const { data, to, noBack, backText } = props;
+  let Tag = !props.handleGoBack ? Link : "span";
   return (
     <>
       {!noBack && (
-        <Link
+        <Tag
           className={styles.goback}
+          onClick={() => props.handleGoBack(to)}
           to={to || removeLastPath(location.pathname)}
         >
           {backText || "Voltar"}
-        </Link>
+        </Tag>
       )}
       {data?.challenge_type && (
         <header className={styles.header}>

@@ -119,6 +119,7 @@ const Input = React.forwardRef(
       validate,
       fontSize,
       arrayError,
+      step,
       ...rest
     },
     ref
@@ -140,6 +141,7 @@ const Input = React.forwardRef(
         onChange={onChange}
         onKeyUp={onKeyUp}
         ref={ref}
+        step={step}
         {...rest}
       />
       <div className={styles.error}>
@@ -204,26 +206,30 @@ const SelectInput = React.forwardRef((props, ref) => {
     // options,
     control,
     isMulti,
+    rules,
     options,
+    value,
   } = props;
   return (
     <label
       className={` ${styles.input} ${
-        errors?.[name]?.type === "required" ? styles.required : ""
+        errors?.[name] === "required" ? styles.required : ""
       } `}
     >
       <span className={styles.name}>{children}</span>
       <Controller
         name={name}
         control={control}
-        options={options}
+        // options={options}
         {...props}
         defaultValue={defaultValue}
-        // value={options.value}
+        value={options.value}
         isMulti={isMulti}
         // as={
-        render={({ onChange, value, name, ref }) => (
+        rules={rules}
+        render={({ onChange, value, name, ref, rules }) => (
           <Select
+            rules={rules}
             inputRef={ref}
             isMulti={isMulti}
             placeholder={placeholder}
@@ -273,6 +279,91 @@ const SelectInput = React.forwardRef((props, ref) => {
   );
 });
 
+// const SelectInputMulti = React.forwardRef((props, ref) => {
+//   const {
+//     name,
+//     // value,
+//     placeholder,
+//     // type,
+//     // onChange,
+//     children,
+//     // control,
+//     errors,
+//     errorMessage,
+//     defaultValue,
+//     // options,
+//     // control,
+//     // isMulti,
+//     options,
+//     onChange,
+//     value,
+//   } = props;
+//   return (
+//     <label
+//       className={` ${styles.input} ${
+//         errors?.[name]?.type === "required" ? styles.required : ""
+//       } `}
+//     >
+//       <span className={styles.name}>{children}</span>
+//       {/* <Controller
+//         name={name}
+//         control={control}
+//         {...props}
+//         // value={options.value}
+//         // isMulti={isMulti}
+//         // as={
+//         render={({ name, ref }) => ( */}
+//       <Select
+//         options={options}
+//         defaultValue={defaultValue}
+//         inputRef={ref}
+//         isMulti
+//         placeholder={placeholder}
+//         value={value}
+//         onChange={onChange}
+//         styles={{
+//           placeholder: (provided, state) => ({
+//             ...provided,
+//             fontSize: 12,
+//           }),
+//           option: (provided, state) => ({
+//             ...provided,
+//             fontSize: 12,
+//           }),
+//           singleValue: (provided, state) => ({
+//             ...provided,
+//             fontSize: 12,
+//           }),
+//           indicatorSeparator: () => ({
+//             display: "none",
+//           }),
+//           input: (provided, state) => ({
+//             ...provided,
+//             fontSize: 12,
+//           }),
+//           menu: (provided, state) => ({
+//             ...provided,
+//             zIndex: 12,
+//           }),
+//           control: (provided, state) => ({
+//             ...provided,
+//             border: "1px solid #B3BBBE",
+//             minHeight: 42,
+//           }),
+//           container: (provided, state) => ({
+//             ...provided,
+//             width: "100%",
+//           }),
+//         }}
+//         innerRef={ref}
+//       />
+//       {/* )}
+//       /> */}
+//       <div className={styles.error}>{errors?.[name] && errorMessage}</div>
+//     </label>
+//   );
+// });
+
 const SelectInputMulti = React.forwardRef((props, ref) => {
   const {
     name,
@@ -281,78 +372,85 @@ const SelectInputMulti = React.forwardRef((props, ref) => {
     // type,
     // onChange,
     children,
+    onChange,
     // control,
     errors,
     errorMessage,
     defaultValue,
     // options,
-    // control,
-    // isMulti,
+    control,
+    isMulti,
+    rules,
     options,
-    onChange,
     value,
   } = props;
   return (
     <label
       className={` ${styles.input} ${
-        errors?.[name]?.type === "required" ? styles.required : ""
+        errors?.[name] === "required" ? styles.required : ""
       } `}
     >
       <span className={styles.name}>{children}</span>
-      {/* <Controller
+      <Controller
         name={name}
         control={control}
+        // options={options}
         {...props}
-        // value={options.value}
-        // isMulti={isMulti}
-        // as={
-        render={({ name, ref }) => ( */}
-      <Select
-        options={options}
         defaultValue={defaultValue}
-        inputRef={ref}
-        isMulti
-        placeholder={placeholder}
+        isMulti={isMulti}
+        // as={
+        // onChange={onChange}
         value={value}
-        onChange={onChange}
-        styles={{
-          placeholder: (provided, state) => ({
-            ...provided,
-            fontSize: 12,
-          }),
-          option: (provided, state) => ({
-            ...provided,
-            fontSize: 12,
-          }),
-          singleValue: (provided, state) => ({
-            ...provided,
-            fontSize: 12,
-          }),
-          indicatorSeparator: () => ({
-            display: "none",
-          }),
-          input: (provided, state) => ({
-            ...provided,
-            fontSize: 12,
-          }),
-          menu: (provided, state) => ({
-            ...provided,
-            zIndex: 12,
-          }),
-          control: (provided, state) => ({
-            ...provided,
-            border: "1px solid #B3BBBE",
-            minHeight: 42,
-          }),
-          container: (provided, state) => ({
-            ...provided,
-            width: "100%",
-          }),
-        }}
-        innerRef={ref}
+        rules={rules}
+        render={({ value, name, ref, rules, defaultValue }) => (
+          <Select
+            rules={rules}
+            // inputRef={ref}
+            isMulti={isMulti}
+            placeholder={placeholder}
+            options={options}
+            value={value}
+            // name={name}
+            defaultValue={defaultValue}
+            onChange={(val) => onChange(val)}
+            styles={{
+              placeholder: (provided, state) => ({
+                ...provided,
+                fontSize: 12,
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                fontSize: 12,
+              }),
+              singleValue: (provided, state) => ({
+                ...provided,
+                fontSize: 12,
+              }),
+              indicatorSeparator: () => ({
+                display: "none",
+              }),
+              input: (provided, state) => ({
+                ...provided,
+                fontSize: 12,
+              }),
+              menu: (provided, state) => ({
+                ...provided,
+                zIndex: 12,
+              }),
+              control: (provided, state) => ({
+                ...provided,
+                border: "1px solid #B3BBBE",
+                minHeight: 42,
+              }),
+              container: (provided, state) => ({
+                ...provided,
+                width: "100%",
+              }),
+            }}
+            innerRef={ref}
+          />
+        )}
       />
-      {/* )}
-      /> */}
       <div className={styles.error}>{errors?.[name] && errorMessage}</div>
     </label>
   );

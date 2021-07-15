@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 
 import { useParams, useHistory, useLocation } from "react-router-dom";
-import { useForm, useFieldArray } from "react-hook-form";
+// import { useForm, useFieldArray } from "react-hook-form";
 
 import { Type } from "./components/Type";
 import { Job } from "./components/Job";
@@ -33,12 +33,11 @@ const NewChallenge = (props) => {
   const [formData, setFormData] = useState({});
   const [success, setSuccess] = useState(false);
   const [hasAvaliation, setHasAvaliation] = useState(false);
+  const [step, setStep] = useState("tipo");
 
   const [trails, setTrails] = useState([]);
 
   const { data: usertype } = useSelector((state) => state.usertype);
-
-  const { step } = useParams();
 
   const handleTrails = (trail) => {
     const url = location.pathname;
@@ -61,18 +60,13 @@ const NewChallenge = (props) => {
   const handleHasAvaliation = (data) => setHasAvaliation(data);
 
   const handleStep = (step, data) => {
-    const url = location.pathname;
-    const removeCurrentStep = url.split("/");
-    removeCurrentStep.pop();
-    history.push(removeCurrentStep.join("/") + "/" + step);
     setFormData((prev) => ({ ...prev, ...data }));
+    setStep(step);
+    window.scrollTo(0, 0);
   };
   const handleGoBack = (step) => {
     if (step) {
-      const url = location.pathname;
-      const removeCurrentStep = url.split("/");
-      removeCurrentStep.pop();
-      history.push(removeCurrentStep.join("/") + "/" + step);
+      setStep(step);
     } else {
       history.push("/dashboard");
     }
@@ -108,11 +102,12 @@ const NewChallenge = (props) => {
       {/* {!(step === "convidar") && ( */}
       <TitleAndBack
         backText={"Voltar"}
+        handleGoBack={handleGoBack}
         to={
-          (step === "tipo" && `/novo-desafio`) ||
-          (step === "vaga" && `/novo-desafio/vaga`) ||
-          (step === "desafio" && `/novo-desafio/desafio`) ||
-          (step === "avaliacao" && `/novo-desafio/avaliacao`)
+          (step === "tipo" && `novo-desafio`) ||
+          (step === "vaga" && `vaga`) ||
+          (step === "desafio" && `desafio`) ||
+          (step === "avaliacao" && `avaliacao`)
         }
       />
       {/* )} */}
@@ -145,17 +140,19 @@ const NewChallenge = (props) => {
       {(step === "job" || step === "desafio" || step === "avaliacao") && (
         <Layout style={{ marginTop: 0 }}>
           <Steps>
-            <Step
-              active={step === "job"}
-              // onClick={() => handleStep("job")}
-              number={1}
-            >
-              Vaga
-            </Step>
+            {!(formData.challenge_type === "ultradesafio") && (
+              <Step
+                active={step === "job"}
+                // onClick={() => handleStep("job")}
+                number={1}
+              >
+                Vaga
+              </Step>
+            )}
             <Step
               active={step === "desafio"}
               // onClick={() => handleStep("desafio")}
-              number={2}
+              number={formData.challenge_type === "ultradesafio" ? 1 : 2}
             >
               Desafio
             </Step>
@@ -163,7 +160,7 @@ const NewChallenge = (props) => {
               <Step
                 active={step === "avaliacao"}
                 // onClick={() => handleStep("avaliacao")}
-                number={3}
+                number={formData.challenge_type === "ultradesafio" ? 2 : 3}
               >
                 Avaliação
               </Step>

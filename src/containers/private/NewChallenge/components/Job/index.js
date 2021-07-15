@@ -56,8 +56,7 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
   };
 
   const onSubmit = async (data) => {
-    handleStep("desafio", data);
-    console.log({ ...data, ...cepValues });
+    handleStep("desafio", { ...data, ...cepValues });
   };
 
   const typeExp = [
@@ -79,13 +78,16 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
             Remuneração
           </Title>
           <InputGroup>
+            <span style={{ position: "relative", top: 20 }}>R$</span>
             <Input
               defaultValue={""}
               ref={register({ required: true })}
               errors={errors}
               errorMessage="Digite a remuneração"
               name="remuneration"
-              placeholder="R$"
+              placeholder="Em reais"
+              step={0.01}
+              type={"number"}
             ></Input>
           </InputGroup>
         </Card>
@@ -145,7 +147,7 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
               <InputGroup>
                 <Input
                   ref={register()}
-                  disabled={cepValues?.state ? true : false}
+                  disabled={cepData?.uf ? true : false}
                   value={cepValues?.state}
                   // defaultValue={cepValues?.uf}
                   onKeyUp={(e) =>
@@ -162,10 +164,11 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
               <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
                 Cidade
               </Title>
+
               <InputGroup>
                 <Input
                   ref={register()}
-                  disabled={cepValues?.city ? true : false}
+                  disabled={cepData?.localidade ? true : false}
                   value={cepValues?.city}
                   // defaultValue={cepValues?.localidade}
                   name={`city`}
@@ -186,12 +189,12 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
           <InputGroup>
             <Input
               ref={register()}
-              disabled={cepValues?.address ? true : false}
+              disabled={cepData?.logradouro ? true : false}
               // defaultValue={cepValues.address}
               value={cepValues?.address}
               name="address"
               errors={errors}
-              onKeyUp={(e) =>
+              onChange={(e) =>
                 setCepValues((prev) => ({ ...prev, address: e.target.value }))
               }
               errorMessage="Digite a rua da empresa"
@@ -205,7 +208,7 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
           <InputGroup>
             <Input
               ref={register()}
-              disabled={cepValues?.neighborhood ? true : false}
+              disabled={cepData?.bairro ? true : false}
               value={cepValues?.neighborhood}
               name="neighborhood"
               onKeyUp={(e) =>

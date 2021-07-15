@@ -5,7 +5,7 @@ const COMPANY = {
   API: BASEURL,
 
   SKILLS: {
-    skills: `${BASEURL}/landing-page/skills`,
+    skills: `${BASEURL}/search-skill`,
   },
 
   AUTH: {

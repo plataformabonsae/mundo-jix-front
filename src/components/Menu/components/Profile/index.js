@@ -14,9 +14,9 @@ const Profile = ({ location, image, name, lastName }) => {
       <div className={styles.profile}>
         <div className={styles.image}>
           <img src={image !== "undefined" ? image : profile} alt={name} />
-          <T.Text weight="bold" size={12} className={styles.location}>
+          {/* <T.Text weight="bold" size={12} className={styles.location}>
             {location}º
-          </T.Text>
+          </T.Text> */}
         </div>
       </div>
       <T.Title size={18} className={styles.name} color={"white"}>

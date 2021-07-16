@@ -65,8 +65,12 @@ const Terms = ({ children, type, id = 1 }) => {
 
   return (
     <section>
-      <Card style={{maxHeight: 400, overflow: 'auto'}}>
-        {termsLoading ? <Loading /> : parse(terms?.data?.data?.terms || "")}
+      <Card style={{ height: 400, overflow: "auto" }}>
+        {termsLoading || loading ? (
+          <Loading />
+        ) : (
+          parse(terms?.data?.data?.terms || "")
+        )}
       </Card>
 
       <Card>
@@ -80,8 +84,6 @@ const Terms = ({ children, type, id = 1 }) => {
           Concordo e desejo continuar
         </Checkbox>
       </Card>
-
-      {console.log(terms)}
 
       {accept ? (
         usertype === "empresa" || usertype === "talento" ? (

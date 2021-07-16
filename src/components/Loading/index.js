@@ -9,7 +9,7 @@ import styles from "./styles.module.sass";
 const Loading = (props) => {
   const animatedStyles = useSpring({
     to: { opacity: 1 },
-    from: { opacity: 0 },
+    from: { opacity: 1 },
   });
 
   return (

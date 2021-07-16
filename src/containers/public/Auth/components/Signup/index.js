@@ -52,7 +52,7 @@ const Email = ({ title, desc, type }) => {
 
   useEffect(() => {
     setlinkedinSettings({
-      redirect_uri: `${process.env.REACT_APP_URL}/auth/${type}/login`,
+      redirect_uri: `${process.env.REACT_APP_URL}/auth/talento/login`,
     });
   }, [type]);
 
@@ -88,7 +88,7 @@ const Email = ({ title, desc, type }) => {
               dispatch(
                 loginExternal(type, {
                   email: response.email,
-                  password: response.password,
+                  // password: response.password,
                 })
               )
                 .then((res) => history.push("/dashboard"))
@@ -116,34 +116,39 @@ const Email = ({ title, desc, type }) => {
           })
         ).then(() => history.push(`/join/${type}/terms`));
       response?.data?.message === "Your Account was successfully Logged!" &&
-        dispatch(loginExternal(type, { email: data.email, password: data.id }))
+        dispatch(loginExternal(type, { email: data.email }))
           .then((res) => history.push("/dashboard"))
           .catch((err) => console.log(err));
       // history.push(`/dashboard`);
     });
   };
 
+  const responseFailure = (data) => {
+    console.log(data);
+  };
+
   const responseGoogle = async (data) => {
-    const res = dispatch(tokenFetchExternal(type, { email: data?.Et?.ou }));
+    console.log(data, "google");
+    const res = dispatch(
+      tokenFetchExternal(type, { email: data?.profileObj?.email })
+    );
     await res.then((response) => {
       console.log(response);
       response?.data?.message === "User Not Found!" &&
         dispatch(
           newuser(type, {
-            email: data?.Et?.ou,
-            name: data?.Et?.Ue,
-            password: data?.Aa,
-            confirm_password: data?.Aa,
+            email: data?.profileObj?.email,
+            name: data?.profileObj?.givenName,
+            password: data?.profileObj?.googleId,
+            confirm_password: data?.profileObj?.googleId,
             is_mentor: 0,
             is_judge: 0,
-            last_name: "Escreva seu sobrenome",
+            last_name: "Sobrenome",
             // cpf: "000.000.000,
           })
         ).then(() => history.push(`/join/${type}/terms`));
       response?.data?.message === "Your Account was successfully Logged!" &&
-        dispatch(
-          loginExternal(type, { email: data?.Et?.ou, password: data?.Aa })
-        )
+        dispatch(loginExternal(type, { email: data?.profileObj?.email }))
           .then((res) => history.push("/dashboard"))
           // .then((res) => console.log(res))
           .catch((err) => console.log(err));
@@ -305,7 +310,7 @@ const Email = ({ title, desc, type }) => {
             }
             onFocus={() => setShowTooltip(true)}
             placeholder="Digite a senha novamente"
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onKeyUp={(e) => setConfirmPassword(e.target.value)}
           >
             Confirme a senha
           </Input>
@@ -316,7 +321,7 @@ const Email = ({ title, desc, type }) => {
               ref={register()}
               type="hidden"
               name="social_reason"
-              value="l"
+              value="_"
             />
             <input
               ref={register()}
@@ -342,7 +347,9 @@ const Email = ({ title, desc, type }) => {
             errors?.email ||
             !allValid ||
             !name.length ||
-            !lastName.length
+            type === "talento"
+              ? !lastName.length
+              : false
             // !email.length
           }
           Tag={`button`}
@@ -371,12 +378,12 @@ const Email = ({ title, desc, type }) => {
                     Tag="button"
                     type="google"
                   >
-                    Cadastrar com Google
+                    Entrar com Google
                   </Button>
                 )}
                 buttonText="Login"
                 onSuccess={responseGoogle}
-                onFailure={responseGoogle}
+                onFailure={responseFailure}
                 cookiePolicy={"single_host_origin"}
               />
               <Button

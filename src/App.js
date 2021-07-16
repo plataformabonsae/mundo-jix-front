@@ -31,7 +31,7 @@ import { Creators as UserActions } from "store/ducks/User";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { data: user, loading } = useSelector((state) => state.user);
+  const { data: user, loading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(autoLogin());
@@ -55,31 +55,31 @@ const App = () => {
   //     });
   // }, [dispatch]);
 
-  // useEffect(() => {
-  //   dispatch(autoLogin());
-  //   // .then(() => {
+  useEffect(() => {
+    dispatch(autoLogin());
+    // .then(() => {
 
-  //   // })
-  //   // .catch((err) => {
-  //   //   // console.log(err);
-  //   //   dispatch(UserActions.logoutSuccess());
-  //   //   // history.push("/auth/mentor/login");
-  //   // });
-  // }, [dispatch]);
+    // })
+    // .catch((err) => {
+    //   // console.log(err);
+    //   dispatch(UserActions.logoutSuccess());
+    //   // history.push("/auth/mentor/login");
+    // });
+  }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     if (user?.user?.is_mentor || user?.user?.is_judge) {
-  //       window.location.pathname.split("/")[1] === "auth" &&
-  //         history.push("/meus-desafios");
-  //     } else {
-  //       window.location.pathname.split("/")[1] === "auth" &&
-  //         history.push("/dashboard");
-  //     }
-  //   } else if (error) {
-  //     dispatch(UserActions.logoutSuccess());
-  //   }
-  // }, [dispatch, user, error]);
+  useEffect(() => {
+    if (user) {
+      if (user?.user?.is_mentor || user?.user?.is_judge) {
+        window.location.pathname.split("/")[1] === "auth" &&
+          history.push("/meus-desafios");
+      } else {
+        window.location.pathname.split("/")[1] === "auth" &&
+          history.push("/dashboard");
+      }
+    } else if (error) {
+      dispatch(UserActions.logoutSuccess());
+    }
+  }, [dispatch, user, error]);
 
   return (
     <>

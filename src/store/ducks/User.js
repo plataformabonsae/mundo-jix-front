@@ -24,13 +24,13 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.USER_REQUEST:
       return {
         ...state,
-        logged: true,
+        logged: false,
         loading: true,
       };
     case Types.USER_UPDATE:
       return {
         loading: true,
-        logged: true,
+        logged: false,
         // data: action.payload,
       };
     case Types.USER_SUCCESS:
@@ -52,11 +52,13 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: true,
+        logged: false,
       };
     case Types.LOGOUT_SUCCESS:
       return {
         ...state,
         loading: false,
+        logged: false,
         error: null,
         data: INITIAL_STATE.data,
       };
@@ -64,6 +66,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: false,
+        logged: false,
         error: action.payload.error,
       };
     default:

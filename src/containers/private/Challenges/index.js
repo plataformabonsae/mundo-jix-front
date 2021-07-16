@@ -91,6 +91,7 @@ const Challenges = (props) => {
             autodesafio?.map((item, index) => (
               <ChallengeCard
                 canSubscribe
+                isExpired={item.deadline}
                 loading={loadingMyChallenges}
                 subscribed={signedChallenges.includes(item.id)}
                 noButton
@@ -107,6 +108,7 @@ const Challenges = (props) => {
             inCompany?.map((item, index) => (
               <ChallengeCard
                 canSubscribe
+                isExpired={item.deadline}
                 loading={loadingMyChallenges}
                 subscribed={signedChallenges.includes(item.id)}
                 noButton

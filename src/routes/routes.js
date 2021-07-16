@@ -47,10 +47,10 @@ const RoutesConfig = () => {
 
   return (
     <div>
-      {/* <Switch location={location}> */}
-      {/* <Route component={NotFound} /> */}
-      {/* </Switch> */}
-      {/* {loading && <Loading full />} */}
+      <Switch location={location}>
+        {/* <Route component={NotFound} /> */}
+      </Switch>
+      {loading && <Loading full />}
 
       {user ? (
         accepted_terms === 0 ? (

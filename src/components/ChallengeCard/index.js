@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import parse from "html-react-parser";
 
@@ -16,8 +16,25 @@ import deadline from "assets/components/Card/deadline.svg";
 import styles from "./styles.module.sass";
 
 const ChallengeCard = (props) => {
+  const [expired, setExpired] = useState(false);
+
+  useEffect(() => {
+    if (props.item.deadline) {
+      const array = props.item.deadline?.split("/").map((x) => +x);
+      const today = new Date();
+      const date = new Date(array[2], array[1] - 1, array[0]);
+
+      setExpired(date < today);
+    }
+  }, [props.item.deadline]);
+
   return (
-    <Card key={props.item.id} border noShadow>
+    <Card
+      key={props.item.id}
+      style={{ opacity: expired ? 0.5 : 1 }}
+      border
+      noShadow
+    >
       {props.canSubscribe && (
         <header className={styles.header}>
           <Title color="white" style={{ weight: "bold", fontSize: 16 }}>
@@ -38,29 +55,35 @@ const ChallengeCard = (props) => {
           ) : (
             <div className={styles.header__buttons}>
               {/* <Button type={`outlineWhite`}>Favoritar</Button> */}
-              <Button
-                // to={`/desafios/${props.item.challenge_type}/${props.item.id}/inscricao`}
-                to={
-                  !props.subscribed
-                    ? props.to
-                    : `/meus-desafios/${props.item.challenge_type}/${props.item.id}`
-                }
-                style={{ marginLeft: 12 }}
-                type={!props.subscribed ? `green` : `outlineWhite`}
-              >
-                {!props.subscribed ? (
-                  "Participar"
-                ) : (
-                  <>
-                    <img
-                      className={styles.cool}
-                      src={cool}
-                      alt="Participando do desafio"
-                    />
-                    Participando
-                  </>
-                )}
-              </Button>
+              {expired ? (
+                <span style={{ color: "white", fontWeight: "bold" }}>
+                  Desafio encerrado
+                </span>
+              ) : (
+                <Button
+                  // to={`/desafios/${props.item.challenge_type}/${props.item.id}/inscricao`}
+                  to={
+                    !props.subscribed
+                      ? props.to
+                      : `/meus-desafios/${props.item.challenge_type}/${props.item.id}`
+                  }
+                  style={{ marginLeft: 12 }}
+                  type={!props.subscribed ? `green` : `outlineWhite`}
+                >
+                  {!props.subscribed ? (
+                    "Participar"
+                  ) : (
+                    <>
+                      <img
+                        className={styles.cool}
+                        src={cool}
+                        alt="Participando do desafio"
+                      />
+                      Participando
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
           )}
         </header>
@@ -105,7 +128,9 @@ const ChallengeCard = (props) => {
           <span className={styles.deadline}>
             <img src={deadline} alt={"deadline"} />
             <div className={styles.deadline__content}>
-              <div className={styles.deadline__title}>Encerra em</div>
+              <div className={styles.deadline__title}>
+                {expired ? "Encerrado em" : "Encerra em"}
+              </div>
               <div className={styles.deadline__data}>{props.item.deadline}</div>
             </div>
           </span>

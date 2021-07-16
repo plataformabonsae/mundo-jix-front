@@ -22,7 +22,7 @@ export const get =
         Accept: "application/json",
       },
     });
-    await dispatch(UserActions.userUpdate());
+    dispatch(UserActions.userRequest());
     await res.then(function (response) {
       if (response.data.success) {
         dispatch(UserActions.userSuccess(response.data.data));

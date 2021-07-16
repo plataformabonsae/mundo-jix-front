@@ -84,7 +84,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      {loading && <Loading />}
+      {/* {loading && <Loading />} */}
       <Routes />
     </>
   );

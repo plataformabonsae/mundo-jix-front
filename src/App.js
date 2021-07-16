@@ -34,22 +34,26 @@ const App = () => {
   const { data: user, loading } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(autoLogin())
-      .then(() => {
-        if (user?.user?.is_mentor || user?.user?.is_judge) {
-          window.location.pathname.split("/")[1] === "auth" &&
-            history.push("/meus-desafios");
-        } else {
-          window.location.pathname.split("/")[1] === "auth" &&
-            history.push("/dashboard");
-        }
-      })
-      .catch((err) => {
-        // console.log(err);
-        dispatch(UserActions.logoutSuccess());
-        // history.push("/auth/mentor/login");
-      });
+    dispatch(autoLogin());
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   dispatch(autoLogin())
+  //     .then(() => {
+  //       if (user?.user?.is_mentor || user?.user?.is_judge) {
+  //         window.location.pathname.split("/")[1] === "auth" &&
+  //           history.push("/meus-desafios");
+  //       } else {
+  //         window.location.pathname.split("/")[1] === "auth" &&
+  //           history.push("/dashboard");
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       // console.log(err);
+  //       dispatch(UserActions.logoutSuccess());
+  //       // history.push("/auth/mentor/login");
+  //     });
+  // }, [dispatch]);
 
   // useEffect(() => {
   //   dispatch(autoLogin());

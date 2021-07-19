@@ -24,7 +24,7 @@ import { WindowSize } from "utils/etc";
 // skills
 
 const Presentation = (props) => {
-  const { data, handleClickToSubscribe, buttonContent } = props;
+  const { data, handleClickToSubscribe, buttonContent, payed_for } = props;
   const { width } = WindowSize();
 
   const opts = {
@@ -71,9 +71,6 @@ const Presentation = (props) => {
                   </Text>
                 )}
               </div>
-              {/* <div>
-                Por <a href="#0">Nome da Marca</a>
-              </div> */}
             </>
           )}
           <div className={styles.content}>
@@ -117,19 +114,18 @@ const Presentation = (props) => {
                   marginTop: 24,
                 }}
               >
-                {/* {!buttonContent && <Button type={"outline"}>Favoritar</Button>} */}
                 <Button
-                  Tag={buttonContent ? Link : "button"}
+                  Tag={buttonContent || payed_for ? Link : "button"}
                   to={`${
-                    buttonContent
+                    buttonContent || payed_for
                       ? `/desafios/${data?.challenge_type}/inscricao/${data?.id}/1`
                       : null
                   }`}
-                  type={buttonContent ? "green" : "secondary"}
+                  type={buttonContent || payed_for ? "green" : "secondary"}
                   style={{ marginLeft: 12 }}
                   onClick={() => handleClickToSubscribe()}
                 >
-                  {buttonContent ? "Vamo nessa!" : "Participar"}
+                  {buttonContent || payed_for ? "Vamo nessa!" : "Participar"}
                 </Button>
               </div>
             </>

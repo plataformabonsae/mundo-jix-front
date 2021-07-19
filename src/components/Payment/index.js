@@ -138,6 +138,7 @@ const PaymentForm = (props) => {
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     setProcessing(true);
+    // console.log(data.client_secret);
     const payload = await stripe.confirmCardPayment(data.client_secret, {
       payment_method: {
         card: elements.getElement(CardElement),

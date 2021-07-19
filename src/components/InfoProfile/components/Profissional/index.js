@@ -30,6 +30,8 @@ import Button from "components/Button";
 import { ButtonGroup } from "components/ButtonGroup";
 // import { cep, cepReset } from "services/adress";
 
+import styles from "./styles.module.sass";
+
 import { edit } from "services/auth";
 
 const curriculumSchema = yup.object().shape({
@@ -50,8 +52,8 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   const { data: usertype } = useSelector((state) => state.usertype);
 
   const resolver = validationSchema(curriculumSchema);
-  const { register, errors, control, handleSubmit } = useForm({ resolver });
   const [availableSkills, setAvailableSkills] = useState([]);
+  const { register, errors, control, handleSubmit } = useForm({ resolver });
   const [skillsChange, setSkillsChange] = useState([]);
 
   const [currentJob, setCurrentJob] = useState([]);
@@ -62,30 +64,25 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   const [links, setLinks] = useState([]);
 
   useEffect(() => {
-    const append = (skill) => {
-      setSkillsChange((prev) => [...prev, skill]);
-    };
+    const append = (skill) => setSkillsChange((prev) => [...prev, skill]);
     const skills = user?.skills;
-    if (skills) {
-      for (let i = 0; i < skills.length; i++) {
-        append({ value: skills[i].id, label: skills[i].title });
-      }
+    setSkillsChange([]);
+    for (let i = 0; i < skills.length; i++) {
+      append({ value: skills[i].id, label: skills[i].title });
     }
   }, [user?.skills]);
 
   useEffect(() => {
-    console.log(skillsChange);
-  }, [skillsChange]);
-
-  useEffect(() => {
-    const append = (skill) => {
-      setAvailableSkills((prev) => [...prev, skill]);
-    };
+    const append = (skill) => setAvailableSkills((prev) => [...prev, skill]);
     const skills = user.types.skills;
     for (let i = 0; i < skills.length; i++) {
       append({ value: skills[i].id, label: skills[i].title });
     }
-  }, [user?.types?.skills]);
+  }, [user.types.skills]);
+
+  useEffect(() => {
+    console.log(skillsChange);
+  }, [skillsChange]);
 
   useEffect(() => {
     const append = (xp) => {
@@ -163,10 +160,11 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     };
   }, [user]);
 
+  const handleRemoveSkill = (value) => {
+    setSkillsChange((prev) => [...prev].filter((item) => item.value !== value));
+  };
+
   const onSubmit = async (data) => {
-    // console.log(data);
-    // console.log(data.curriculum.length);
-    // let { email, name, last_name, cpf, phones, birthdate } = data;
     const {
       current_situation,
       looking_for,
@@ -183,9 +181,9 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     for (let i = 0; i < portfolios?.length; i++) {
       filtered_portfolios = [...portfolios].filter((port) => port.link.length);
     }
-    for (let i = 0; i < skills?.length; i++) {
-      filtered_skills = [...skills].filter((skill) => skill.id);
-    }
+    // for (let i = 0; i < skills?.length; i++) {
+    //   filtered_skills = [...skills].filter((skill) => skill.id);
+    // }
     for (let i = 0; i < experiences?.length; i++) {
       filtered_experiences = [...experiences].filter((xp) => xp.role.length);
     }
@@ -194,11 +192,12 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
     }
     // console.log(JSON.stringify(filtered_experiences));
     // console.log(JSON.stringify(filtered_skills));
+    console.log(skills);
     await dispatch(
       edit(usertype, {
         name: user?.user?.name,
         email: user?.user?.email,
-        skills: JSON.stringify(filtered_skills),
+        skills: JSON.stringify(skills),
         current_situation,
         looking_for,
         curriculum: curriculum[0],
@@ -253,7 +252,7 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   ];
 
   const handleSkillsChange = (data) => {
-    setSkillsChange(data);
+    setSkillsChange((prev) => [...prev, data]);
   };
 
   const handleCurrentJob = (index, status) => {
@@ -327,18 +326,16 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
 
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Skills</Title>
-        {/* {console.log(availableSkills[0])} */}
         <InputGroup>
           <SelectInputMulti
             name={`skills`}
             // ref={register()}
-            isMulti
+            isMulti={false}
             control={control}
             options={availableSkills}
             errors={errors}
-            // value={[{ value: 1, label: "Labelll" }]}
-            defaultValue={skillsChange}
-            // vdefaultlue={[{ value: 1, label: "Labelll" }]}
+            value={skillsChange}
+            // defaultValue={skillsChange}
             onChange={handleSkillsChange}
             // rules={{
             //   validate: {
@@ -351,15 +348,26 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
             placeholder="Digite sua skill"
           />
         </InputGroup>
-        {skillsChange?.map((item, index) => (
-          <input
-            key={index}
-            type="text"
-            ref={register()}
-            name={`skills.${index}.id`}
-            value={`${item.label} ${item.value}`}
-          />
-        ))}
+        <div className={styles.skill__wrapper}>
+          {skillsChange?.map((item, index) => (
+            <div className={styles.skill__item}>
+              {item.label}
+              <span
+                className={styles.skill__remove}
+                onClick={() => handleRemoveSkill(item.value)}
+              >
+                X
+              </span>
+              <input
+                key={index}
+                type="hidden"
+                ref={register()}
+                name={`skills.${index}.id`}
+                value={`${item.value}`}
+              />
+            </div>
+          ))}
+        </div>
       </Card>
 
       <Card noShadow={noShadow}>

@@ -400,7 +400,7 @@ const SelectInputMulti = React.forwardRef((props, ref) => {
         isMulti={isMulti}
         // as={
         // onChange={onChange}
-        // value={value}
+        value={value}
         rules={rules}
         render={({ value, name, ref, rules, defaultValue }) => (
           <Select

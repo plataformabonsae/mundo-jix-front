@@ -1,0 +1,41 @@
+@import 'utils/styles/colors.sass'
+
+.skill
+  &__wrapper
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+
+  &__item
+    margin: 4px
+    display: flex
+    align-items: center
+    font:
+      size: 14px
+      weight: bold
+    color: $INFORMATION
+    padding: 4px 16px
+    border: 2px solid $INFORMATION
+    border:
+      radius: 300px
+
+  &__remove
+    margin:
+      left: 8px
+    transition: 300ms ease
+    background: transparent
+    color: $ERROR
+    padding: 8px
+    text-align: center
+    padding:
+      top: 9px
+    width: 8px
+    height: 8px
+    font:
+      size: 14px
+    line-height: 8px
+    border:
+      radius: 300px
+    cursor: pointer
+    &:hover
+      background: rgba(59, 170, 208, .2)

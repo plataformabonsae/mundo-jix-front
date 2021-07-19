@@ -18,13 +18,13 @@ export const intent =
       data: body,
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: "application/json",
+        Accept: "Application/json",
       },
     });
     await res
-      .then((response) =>
-        dispatch(PaymentActions.paymentSuccess(response?.data?.data))
-      )
+      .then((response) => {
+        dispatch(PaymentActions.paymentSuccess(response?.data?.data));
+      })
       .catch((error) => dispatch(PaymentActions.paymentFailure(error)));
     return res;
   };

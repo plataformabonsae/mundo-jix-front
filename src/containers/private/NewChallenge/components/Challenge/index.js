@@ -179,6 +179,7 @@ const Challenge = ({
               defaultValue={""}
               disabled={loading}
               control={control}
+              ref={register()}
               rules={{
                 required: {
                   value: true,
@@ -290,17 +291,26 @@ const Challenge = ({
               value={skillsChange}
               // defaultValue={skillsChange}
               onChange={handleSkillsChange}
-              rules={{
-                validate: {
-                  hasAny: (v) =>
-                    console.log(skillsChange) ||
-                    "Selecione pelo menos uma skill",
-                },
-              }}
+              // rules={{
+              //   validate: {
+              //     hasAny: (v) =>
+              //       console.log(skillsChange) ||
+              //       "Selecione pelo menos uma skill",
+              //   },
+              // }}
               errorMessage={errors["skills"]?.message}
               placeholder="Digite sua skill"
             />
           </InputGroup>
+          {skillsChange?.map((item, index) => (
+            <input
+              key={item.value}
+              type="hidden"
+              ref={register()}
+              name={`skills.${index}.id`}
+              value={item.value}
+            />
+          ))}
         </Card>
 
         <Card noShadow={noShadow}>

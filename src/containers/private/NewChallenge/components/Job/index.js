@@ -207,7 +207,7 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
               disabled={cepData?.bairro ? true : false}
               value={cepValues?.neighborhood}
               name="neighborhood"
-              onKeyUp={(e) =>
+              onChange={(e) =>
                 setCepValues((prev) => ({
                   ...prev,
                   neighborhood: e.target.value,

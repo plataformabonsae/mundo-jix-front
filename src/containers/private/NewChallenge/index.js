@@ -79,7 +79,14 @@ const NewChallenge = (props) => {
 
   const createChallengeRequest = async (data) => {
     console.log(data);
-    const req = dispatch(create(usertype, data));
+    const { mentors, skills } = data;
+    const req = dispatch(
+      create(usertype, {
+        ...data,
+        mentors: JSON.stringify(mentors),
+        skills: JSON.stringify(skills),
+      })
+    );
     await req
       .then((res) => console.log(res))
       .then((res) => {

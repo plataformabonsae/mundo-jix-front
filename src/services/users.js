@@ -27,7 +27,7 @@ export const get =
       })
       .catch((error) => {
         dispatch(UsersActions.usersFailure(error));
-        console.log(error.response);
+        console.log(error);
       });
     return res;
   };

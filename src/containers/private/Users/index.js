@@ -37,14 +37,7 @@ const Users = (props) => {
   };
 
   useEffect(() => {
-    // const req =
-    try {
-      dispatch(get(usertype, { challenge_id: id }));
-      // console.log(req());
-    } catch (e) {
-      console.log(e);
-    }
-    // console.log;
+    dispatch(get(usertype, { challenge_id: id }));
   }, [dispatch, usertype, id]);
 
   return (
@@ -88,7 +81,7 @@ const Users = (props) => {
               <Text>Redes sociais</Text>
             </div>
           </div>
-          {users?.users?.map((item, index) => (
+          {users?.users?.data?.map((item, index) => (
             <div
               className={styles.row}
               key={index}
@@ -147,7 +140,7 @@ const Modal = (props) => {
       <Card>
         <Title style={{ marginBottom: 32 }}>Formação acadêmica</Title>
 
-        {academic.map((fields, index) => {
+        {academic?.map((fields, index) => {
           return (
             <section key={index} style={{ marginTop: 24 }}>
               <InputGroup>
@@ -207,7 +200,7 @@ const Modal = (props) => {
       <Card>
         <Title style={{ marginBottom: 32 }}>Portfolio</Title>
 
-        {portfolios.map((field, index) => {
+        {portfolios?.map((field, index) => {
           return (
             <InputGroup>
               <Input defaultValue={field.link}>Link</Input>
@@ -234,7 +227,7 @@ const Modal = (props) => {
       <Card>
         <Title style={{ marginBottom: 32 }}>Experiência Profissional</Title>
 
-        {experiences.map((field, index) => {
+        {experiences?.map((field, index) => {
           return (
             <div key={index}>
               <InputGroup>
@@ -270,7 +263,7 @@ const Modal = (props) => {
 
       <Card>
         <Title style={{ marginBottom: 32 }}>Outros links</Title>
-        {links.map((field, index) => {
+        {links?.map((field, index) => {
           return (
             <InputGroup key={index}>
               <Input defaultValue={field.link}>Link</Input>

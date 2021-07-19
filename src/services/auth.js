@@ -110,13 +110,15 @@ export const editFetch =
         Authorization: `Bearer ${token}`,
       },
     });
-    await res.then(function (response) {
-      dispatch(get(type, token));
-    });
-    //   .catch(function (response) {
-    //     //handle error
-    //     // dispatch(UserActions.userFailure(response));
-    //   });
+    await res
+      .then(function (response) {
+        dispatch(get(type, token));
+      })
+      .catch(function (response) {
+        //handle error
+        dispatch(UserActions.userFailure(response));
+        console.log(response.message);
+      });
     return res;
     // console.log(res);
     // console.log(body);

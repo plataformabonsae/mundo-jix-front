@@ -97,7 +97,6 @@ const Challenge = (props) => {
 
   useEffect(() => {
     const data = challenges?.data;
-    console.log(typeof data);
     data &&
       Array.isArray(data) &&
       setCurrentChallenge(

@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { cnpj } from "cpf-cnpj-validator";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { Card } from "components/Card";
 import { Loading } from "components/Loading";
@@ -44,6 +45,7 @@ const Empresa = ({
   dontRedirect,
 }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { data, loading } = useSelector((state) => state.user);
   // const { data: profile, loading } = useSelector((state) => state.profile);
   const { data: usertype } = useSelector((state) => state.usertype);
@@ -55,6 +57,8 @@ const Empresa = ({
   const [changedMainEmail, setChangedMainEmail] = useState(false);
   const [modalChangeEmail, setModalChangeEmail] = useState(false);
   const [photoModal, setPhotoModal] = useState(false);
+  const [exit, setExit] = useState(false);
+  const [cepValues, setCepValues] = useState();
 
   const [tels, setTels] = useState([]);
   const [emails, setEmails] = useState([]);
@@ -63,10 +67,24 @@ const Empresa = ({
   const user = data.user || data.data;
 
   useEffect(() => {
+    if (cepData)
+      setCepValues((prev) => ({
+        state: cepData?.uf,
+        city: cepData?.localidade,
+        address: cepData?.logradouro,
+        neighborhood: cepData?.bairro,
+      }));
+  }, [cepData, data]);
+
+  useEffect(() => {
+    console.log(cepValues);
+  }, [cepValues]);
+
+  useEffect(() => {
     const append = (tel) => {
       setTels((prev) => [...prev, tel]);
     };
-    if (data.phones.length) {
+    if (data?.phones?.length) {
       for (let i = 0; i < data.phones.length; i++) {
         append({
           phone: data.phones[i].phone,
@@ -87,21 +105,28 @@ const Empresa = ({
   };
 
   const onSubmit = async (data) => {
-    // let { email, name, last_name, cpf, phones, birthdate } = data;
     handleEmailModal("close");
     const { phones, emails, socialMedias } = data;
     let filtered_phones;
     let filtered_social_media;
-    for (let i = 0; i < phones?.length; i++) {
-      filtered_phones = [...phones].filter((phone) => phone.phone);
-    }
+    // for (let i = 0; i < phones?.length; i++) {
+    //   filtered_phones = [...phones].filter((phone) => phone.phone);
+    // }
     for (let i = 0; i < socialMedias?.length; i++) {
       filtered_social_media = [...socialMedias].filter((social) => social.link);
     }
+    console.log({
+      ...data,
+      ...cepValues,
+      phones: JSON.stringify(phones),
+      emails: JSON.stringify(emails) || "{}",
+      social_medias: JSON.stringify(filtered_social_media),
+    });
     await dispatch(
       edit(usertype, {
         ...data,
-        phones: JSON.stringify(filtered_phones),
+        ...cepValues,
+        phones: JSON.stringify(phones),
         emails: JSON.stringify(emails) || "{}",
         social_medias: JSON.stringify(filtered_social_media),
       })
@@ -111,6 +136,7 @@ const Empresa = ({
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       })
+      .then(() => exit && history.push("/dashboard"))
       .catch((error) => {
         console.log(error);
         toast.error(
@@ -127,10 +153,8 @@ const Empresa = ({
   const handleCep = (event) => {
     const typed = event.target.value;
     const onlyNumbers = parseInt(typed.replace("-", ""));
-    console.log(onlyNumbers);
     if (onlyNumbers.toString().length === 8) {
       dispatch(cep(onlyNumbers));
-      console.log("dispatch");
     } else {
       dispatch(cepReset());
     }
@@ -155,7 +179,6 @@ const Empresa = ({
       .then((blob) => {
         file = new File([blob], "File name", { type: "image/png" });
       });
-    console.log({ email: user?.email, name: user?.name, file });
     await dispatch(
       edit(type, {
         email: user?.email,
@@ -288,7 +311,6 @@ const Empresa = ({
           <Title style={{ marginBottom: 32 }}>Contato</Title>
 
           {tels.map((field, index) => {
-            // console.log(field);
             return (
               <InputGroup key={index}>
                 <InputWithMask
@@ -388,8 +410,9 @@ const Empresa = ({
 
           <InputGroup>
             <InputWithMask
-              ref={register()}
+              ref={register({ required: true })}
               name="cep"
+              defaultValue={user?.cep}
               errors={errors}
               errorMessage="Digite um CEP válido"
               placeholder="Digite o CEP"
@@ -405,7 +428,11 @@ const Empresa = ({
             <Input
               ref={register()}
               disabled={cepData?.uf ? true : false}
-              value={cepData?.uf}
+              value={cepValues?.state}
+              defaultValue={user?.state}
+              onKeyUp={(e) =>
+                setCepValues((prev) => ({ ...prev, state: e.target.value }))
+              }
               name={`state`}
               errors={errors}
               errorMessage="Digite o estado"
@@ -417,9 +444,13 @@ const Empresa = ({
             <Input
               ref={register()}
               disabled={cepData?.localidade ? true : false}
-              value={cepData?.localidade}
+              value={cepValues?.city}
+              defaultValue={user?.city}
               name={`city`}
               errors={errors}
+              onChange={(e) =>
+                setCepValues((prev) => ({ ...prev, city: e.target.value }))
+              }
               errorMessage="Selecione um tipo"
               placeholder="Selecione a cidade"
             >
@@ -431,9 +462,13 @@ const Empresa = ({
             <Input
               ref={register()}
               disabled={cepData?.logradouro ? true : false}
-              value={cepData?.logradouro}
+              defaultValue={user?.address}
+              value={cepValues?.address}
               name="address"
               errors={errors}
+              onChange={(e) =>
+                setCepValues((prev) => ({ ...prev, address: e.target.value }))
+              }
               errorMessage="Digite a rua da empresa"
               placeholder="Digite a rua"
             >
@@ -445,8 +480,15 @@ const Empresa = ({
             <Input
               ref={register()}
               disabled={cepData?.bairro ? true : false}
-              value={cepData?.bairro}
+              defaultValue={user?.neighborhood}
+              value={cepValues?.neighborhood}
               name="neighborhood"
+              onKeyUp={(e) =>
+                setCepValues((prev) => ({
+                  ...prev,
+                  neighborhood: e.target.value,
+                }))
+              }
               errors={errors}
               errorMessage="Digite a rua da empresa"
               placeholder="Digite o bairro"
@@ -459,6 +501,7 @@ const Empresa = ({
             <Input
               ref={register()}
               name="address_id"
+              defaultValue={user?.address_id}
               errors={errors}
               errorMessage="Digite a número da empresa"
               placeholder="Digite o número"
@@ -471,6 +514,7 @@ const Empresa = ({
             <Input
               ref={register()}
               name="complement"
+              defaultValue={user?.complement}
               errors={errors}
               errorMessage="Digite o complemento"
               placeholder="Digite o complemento"
@@ -539,7 +583,7 @@ const Empresa = ({
         </Card>
 
         <Card noShadow={noShadow}>
-          <Title style={{ marginBottom: 32 }}>Biografia</Title>
+          <Title style={{ marginBottom: 32 }}>Sobre sua empresa</Title>
 
           <InputGroup>
             <Textarea
@@ -549,7 +593,7 @@ const Empresa = ({
               name={`description`}
               placeholder="Digite sua biografia"
             >
-              Biografia
+              Sobre sua empresa
             </Textarea>
           </InputGroup>
         </Card>
@@ -557,10 +601,12 @@ const Empresa = ({
         <ButtonGroup>
           <Button
             disabled={loading}
-            to={finalRoute ? finalRoute : `/dashboard`}
-            type="outlineWhite"
+            Tag={"button"}
+            submit
+            onClick={() => !dontRedirect && setExit(true)}
+            type={"primary"}
           >
-            Salvar e sair
+            {dontRedirect ? "Salvar" : "Salvar e sair"}
           </Button>
         </ButtonGroup>
         {modalChangeEmail && (

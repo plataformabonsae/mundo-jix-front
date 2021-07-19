@@ -37,8 +37,16 @@ const Users = (props) => {
   };
 
   useEffect(() => {
-    dispatch(get(usertype, { challenge_id: id }));
+    // const req =
+    try {
+      dispatch(get(usertype, { challenge_id: id }));
+      // console.log(req());
+    } catch (e) {
+      console.log(e);
+    }
+    // console.log;
   }, [dispatch, usertype, id]);
+
   return (
     <div className={styles.wrapper}>
       <TitleAndBack data={challenge?.challenge} />

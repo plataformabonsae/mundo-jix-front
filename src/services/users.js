@@ -21,9 +21,13 @@ export const get =
       },
     });
     await res
-      .then((response) =>
-        dispatch(UsersActions.usersSuccess(response?.data?.data))
-      )
-      .catch((error) => dispatch(UsersActions.usersFailure(error)));
+      .then((response) => {
+        dispatch(UsersActions.usersSuccess(response?.data?.data));
+        console.log(response);
+      })
+      .catch((error) => {
+        dispatch(UsersActions.usersFailure(error));
+        console.log(error.response);
+      });
     return res;
   };

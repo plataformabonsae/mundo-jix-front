@@ -41,10 +41,6 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
       }));
   }, [cepData]);
 
-  useEffect(() => {
-    console.log(cepValues);
-  }, [cepValues]);
-
   const handleCep = (event) => {
     const typed = event.target.value;
     const onlyNumbers = parseInt(typed.replace("-", ""));

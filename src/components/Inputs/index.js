@@ -367,7 +367,7 @@ const SelectInput = React.forwardRef((props, ref) => {
 const SelectInputMulti = React.forwardRef((props, ref) => {
   const {
     name,
-    // value,
+    value,
     placeholder,
     // type,
     // onChange,
@@ -382,7 +382,6 @@ const SelectInputMulti = React.forwardRef((props, ref) => {
     isMulti,
     rules,
     options,
-    value,
   } = props;
   return (
     <label
@@ -393,6 +392,7 @@ const SelectInputMulti = React.forwardRef((props, ref) => {
       <span className={styles.name}>{children}</span>
       <Controller
         name={name}
+        inputRef={ref}
         control={control}
         // options={options}
         {...props}
@@ -400,7 +400,7 @@ const SelectInputMulti = React.forwardRef((props, ref) => {
         isMulti={isMulti}
         // as={
         // onChange={onChange}
-        value={value}
+        // value={value}
         rules={rules}
         render={({ value, name, ref, rules, defaultValue }) => (
           <Select
@@ -411,7 +411,7 @@ const SelectInputMulti = React.forwardRef((props, ref) => {
             options={options}
             value={value}
             // name={name}
-            defaultValue={defaultValue}
+            // defaultValue={defaultValue}
             onChange={(val) => onChange(val)}
             styles={{
               placeholder: (provided, state) => ({

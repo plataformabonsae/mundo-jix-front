@@ -74,6 +74,10 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
   }, [user?.skills]);
 
   useEffect(() => {
+    console.log(skillsChange);
+  }, [skillsChange]);
+
+  useEffect(() => {
     const append = (skill) => {
       setAvailableSkills((prev) => [...prev, skill]);
     };
@@ -327,22 +331,36 @@ const Profissional = ({ action, type, noShadow, dontRedirect }) => {
         <InputGroup>
           <SelectInputMulti
             name={`skills`}
-            value={skillsChange}
-            options={availableSkills}
+            // ref={register()}
+            isMulti
             control={control}
-            placeholder="Digite sua skill"
+            options={availableSkills}
+            errors={errors}
+            // value={[{ value: 1, label: "Labelll" }]}
+            defaultValue={skillsChange}
+            // vdefaultlue={[{ value: 1, label: "Labelll" }]}
             onChange={handleSkillsChange}
+            // rules={{
+            //   validate: {
+            //     hasAny: (v) =>
+            //       console.log(skillsChange) ||
+            //       "Selecione pelo menos uma skill",
+            //   },
+            // }}
+            errorMessage={errors["skills"]?.message}
+            placeholder="Digite sua skill"
           />
         </InputGroup>
+        {skillsChange?.map((item, index) => (
+          <input
+            key={index}
+            type="text"
+            ref={register()}
+            name={`skills.${index}.id`}
+            value={`${item.label} ${item.value}`}
+          />
+        ))}
       </Card>
-      {skillsChange.map((item, index) => (
-        <input
-          type="hidden"
-          ref={register()}
-          name={`skills.${index}.id`}
-          value={item.value}
-        />
-      ))}
 
       <Card noShadow={noShadow}>
         <Title style={{ marginBottom: 32 }}>Portfolio</Title>

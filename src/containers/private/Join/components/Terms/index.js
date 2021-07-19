@@ -103,7 +103,7 @@ const Terms = ({ children, type, id = 1 }) => {
             </Button>
           </ButtonGroup>
         ) : (
-          <Button to={`/${usertype}/desafio/${id}`} type="secondary">
+          <Button to={`/meus-desafios`} type="secondary">
             Continuar
           </Button>
         )

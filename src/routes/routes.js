@@ -251,6 +251,8 @@ const RoutesConfig = () => {
             )}
             {(usertype === "mentor" || usertype === "jurado") && (
               <Switch location={location}>
+                <Route exact path="/join/:type/:action" component={Join} />
+
                 <PrivateRouteContainer
                   exact
                   path={`/mentor/:action/:id`}

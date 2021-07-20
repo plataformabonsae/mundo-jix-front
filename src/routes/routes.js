@@ -232,6 +232,11 @@ const RoutesConfig = () => {
                   path="/editar-trilha/:step/:id"
                   component={CreateTrail}
                 />
+                <PrivateRouteContainer
+                  exact
+                  path="/editar-trilha/:step/:id/:type"
+                  component={CreateTrail}
+                />
 
                 {/* Perfil */}
                 <PrivateRouteContainer

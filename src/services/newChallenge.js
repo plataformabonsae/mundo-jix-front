@@ -34,7 +34,7 @@ export const createChallenge =
     });
     await res
       .then((response) =>
-        dispatch(NewChallengeActions.newChallengeSuccess(response))
+        dispatch(NewChallengeActions.newChallengeSuccess(response?.data?.data))
       )
       .catch(function (error) {
         dispatch(NewChallengeActions.newChallengeFailure(error));

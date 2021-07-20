@@ -51,10 +51,6 @@ const Challenge = ({
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
-  useEffect(() => {
     const append = (skill) => {
       setSkills((prev) => [...prev, skill]);
     };
@@ -90,12 +86,12 @@ const Challenge = ({
         materialsCounter[`materials_${i}`] = data[`materials_${i}`][0];
     }
     const dataWithMaterials = { ...data, materialsCounter };
-    if (!handleHasAvaliation) {
-      handleIsSubmit("trail", dataWithMaterials);
-      console.log("handleIsSubmit");
-    } else {
+    if (hasAvaliation) {
       handleStep("avaliacao", dataWithMaterials);
       console.log("handleStep");
+    } else {
+      handleIsSubmit(dataWithMaterials);
+      console.log("handleIsSubmit");
     }
   };
 
@@ -438,6 +434,7 @@ const Challenge = ({
             style={{ display: "flex", flexDirection: "column", marginTop: 12 }}
           >
             <Radio
+              ref={register()}
               onChange={() => handleHasAvaliation(true)}
               name={"hasAssessment"}
               checked={hasAvaliation === true}
@@ -445,6 +442,7 @@ const Challenge = ({
               Sim
             </Radio>
             <Radio
+              ref={register()}
               onChange={() => handleHasAvaliation(false)}
               name={"hasAssessment"}
               checked={hasAvaliation === false}

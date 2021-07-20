@@ -31,7 +31,11 @@ const CreateTrail = (props) => {
   const { data: usertype } = useSelector((state) => state.usertype);
   const { data } = useSelector((state) => state.challenge);
 
-  const { step: stepUrl, id } = useParams();
+  const { step: stepUrl, id, type } = useParams();
+
+  useEffect(() => {
+    handleTrails(type);
+  }, [type]);
 
   useEffect(() => {
     dispatch(get(usertype, { challenge_id: id }));
@@ -39,12 +43,6 @@ const CreateTrail = (props) => {
   }, [dispatch, usertype, id, stepUrl]);
 
   const handleTrails = (trail) => {
-    const url = location.pathname;
-    const removeCurrentStep = url.split("/");
-    removeCurrentStep.pop();
-
-    stepUrl !== "trilha-livre" &&
-      history.push(removeCurrentStep.join("/") + "/trilha-livre");
     setTrails((prev) => [...prev, { type: trail }]);
   };
 

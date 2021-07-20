@@ -93,7 +93,7 @@ const Trail = (props) => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <Text>Deseja adiciona a trilha?</Text>
+        <Text>Deseja finalizar a trilha?</Text>
         <div className={styles.buttons__wrapper}>
           <Button
             disabled={!trails.length}
@@ -101,7 +101,7 @@ const Trail = (props) => {
             type={"green"}
             onClick={() => handleTrails("video")}
           >
-            Enviar
+            Finalizar
           </Button>
         </div>
       </div>

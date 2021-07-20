@@ -26,8 +26,7 @@ const Avaliation = ({
   });
 
   const onSubmit = async (data) => {
-    // console.log(data);
-    handleSubmitData("end", data);
+    handleSubmitData(data);
   };
 
   const marginTitulo = {
@@ -50,7 +49,7 @@ const Avaliation = ({
                     ref={register({ required: true })}
                     errors={errors}
                     errorMessage="Digite o critério que deseja avaliar"
-                    name={`assessments.new.${index}.evaluate`}
+                    name={`assessments.${index}.evaluate`}
                     placeholder="Digite o critério que deseja avaliar"
                   ></Input>
                 </div>
@@ -61,7 +60,7 @@ const Avaliation = ({
                   <Input
                     // defaultValue={social.platform}
                     ref={register({ required: true })}
-                    name={`assessments.new.${index}.max_grade`}
+                    name={`assessments.${index}.max_grade`}
                     control={control}
                     errors={errors}
                     errorMessage="Nota máxima"
@@ -100,7 +99,7 @@ const Avaliation = ({
                   </Title>
 
                   <Input
-                    defaultValue={social.link}
+                    defaultValue={""}
                     ref={register({ required: true })}
                     errors={errors}
                     errorMessage="Nome do jurado"
@@ -113,7 +112,7 @@ const Avaliation = ({
                     E-mail do Jurado {index + 1}
                   </Title>
                   <Input
-                    defaultValue={social.platform}
+                    defaultValue={""}
                     ref={register({ required: true })}
                     name={`judges.${index}.email`}
                     control={control}
@@ -127,7 +126,7 @@ const Avaliation = ({
                     Senha do jurado {index + 1}
                   </Title>
                   <Input
-                    defaultValue={social.link}
+                    defaultValue={""}
                     ref={register({ required: true })}
                     errors={errors}
                     errorMessage="Repita a senha"

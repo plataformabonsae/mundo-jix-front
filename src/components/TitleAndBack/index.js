@@ -16,7 +16,7 @@ const TitleAndBack = (props) => {
       {!noBack && (
         <Tag
           className={styles.goback}
-          onClick={() => props.handleGoBack(to)}
+          /* onClick={() => props.handleGoBack && props.handleGoBack(to)} */
           to={to || removeLastPath(location.pathname)}
         >
           {backText || "Voltar"}

@@ -126,7 +126,7 @@ const Challenge = ({
           <InputGroup>
             <InputFile
               ref={register()}
-              name={`curriculum`}
+              name={`file`}
               control={control}
               accept="image/png, image/gif, image/jpeg"
               errors={errors}
@@ -325,7 +325,7 @@ const Challenge = ({
               ref={register({ required: true })}
               errors={errors}
               errorMessage="Digite o nome da insígnia"
-              name="badge_name"
+              name="badge.title"
               placeholder="Digite o nome da insígnia"
             ></Input>
           </InputGroup>
@@ -338,9 +338,16 @@ const Challenge = ({
               ref={register({ required: true })}
               errors={errors}
               errorMessage="Descrição da insígnia"
-              name="badge_description"
+              name="badge.description"
               placeholder="Descrição da insígnia"
             ></Input>
+
+            <input
+              type="hidden"
+              value={"15"}
+              ref={register()}
+              name={"badge.points"}
+            />
           </InputGroup>
         </Card>
 

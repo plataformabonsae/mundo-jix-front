@@ -1,7 +1,7 @@
 const Types = {
-  ASSESSMENT_REQUEST: "assessment/REQUEST",
-  ASSESSMENT_SUCCESS: "assessment/SUCCESS",
-  ASSESSMENT_FAILURE: "assessment/FAILURE",
+  CREATETRAIL_REQUEST: "createTrail/REQUEST",
+  CREATETRAIL_SUCCESS: "createTrail/SUCCESS",
+  CREATETRAIL_FAILURE: "createTrail/FAILURE",
 };
 
 const INITIAL_STATE = {
@@ -13,22 +13,21 @@ const INITIAL_STATE = {
 /* Reducer */
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case Types.ASSESSMENT_REQUEST:
+    case Types.CREATETRAIL_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case Types.ASSESSMENT_SUCCESS:
+    case Types.CREATETRAIL_SUCCESS:
       return {
         ...state,
         loading: false,
         data: action.payload,
       };
-    case Types.ASSESSMENT_FAILURE:
+    case Types.CREATETRAIL_FAILURE:
       return {
         ...state,
         data: null,
-        loading: false,
         error: action.payload,
       };
     default:
@@ -38,15 +37,15 @@ export default function reducer(state = INITIAL_STATE, action) {
 
 /* Actions */
 export const Creators = {
-  assessmentRequest: () => ({
-    type: Types.ASSESSMENT_REQUEST,
+  createTrailRequest: () => ({
+    type: Types.CREATETRAIL_REQUEST,
   }),
-  assessmentSuccess: (payload) => ({
-    type: Types.ASSESSMENT_SUCCESS,
+  createTrailSuccess: (payload) => ({
+    type: Types.CREATETRAIL_SUCCESS,
     payload,
   }),
-  assessmentFailure: (payload) => ({
-    type: Types.ASSESSMENT_FAILURE,
+  createTrailFailure: (payload) => ({
+    type: Types.CREATETRAIL_FAILURE,
     payload,
   }),
 };

@@ -39,12 +39,14 @@ const NewChallenge = (props) => {
 
   const { data: usertype } = useSelector((state) => state.usertype);
 
+  const { step: stepUrl, id } = useParams();
+
   const handleTrails = (trail) => {
     const url = location.pathname;
     const removeCurrentStep = url.split("/");
     removeCurrentStep.pop();
 
-    step !== "trilha-livre" &&
+    stepUrl !== "trilha-livre" &&
       history.push(removeCurrentStep.join("/") + "/trilha-livre");
     setTrails((prev) => [...prev, { type: trail }]);
   };
@@ -72,14 +74,18 @@ const NewChallenge = (props) => {
     }
   };
 
-  const handleSubmit = async (step, data) => {
-    setFormData((prev) => ({ ...prev, ...data }));
+  const handleSubmit = async (data) => {
+    await setFormData((prev) => ({ ...prev, ...data }));
     createChallengeRequest(formData);
   };
 
   const createChallengeRequest = async (data) => {
-    console.log(data);
-    const { mentors, skills, assessments, judges } = data;
+    const { mentors, skills, assessments, judges, badges, file } = data;
+    const materialsCounter = {};
+    for (let i = 0; i < 10; i++) {
+      if (data[`materials_${i}`])
+        materialsCounter[`materials_${i}`] = data[`materials_${i}`][0];
+    }
     const req = dispatch(
       create(usertype, {
         ...data,
@@ -87,6 +93,9 @@ const NewChallenge = (props) => {
         assessments: JSON.stringify(assessments),
         mentors: JSON.stringify(mentors),
         skills: JSON.stringify(skills),
+        badge: JSON.stringify(badges),
+        file: file[0],
+        ...materialsCounter,
       })
     );
     await req
@@ -119,7 +128,6 @@ const NewChallenge = (props) => {
           (step === "avaliacao" && `avaliacao`)
         }
       />
-      {/* )} */}
       <div className={styles.title__container}>
         <Title size={28} className={styles.title}>
           {step === "tipo" && "Qual tipo de desafio você deseja criar?"}
@@ -141,11 +149,11 @@ const NewChallenge = (props) => {
                 ? "In Company"
                 : "Ultradesafio"
             }`}
-          {step === "trilha" && "Qual tipo de conteúdo você deseja adicionar?"}
-          {step === "trilha-livre" && "Trilha Livre"}
+          {stepUrl === "trilha" &&
+            "Qual tipo de conteúdo você deseja adicionar?"}
+          {stepUrl === "trilha-livre" && "Trilha Livre"}
         </Title>
       </div>
-      {/* <form noValidate onSubmit={handleSubmit(onSubmit)}> */}
       {(step === "job" || step === "desafio" || step === "avaliacao") && (
         <Layout style={{ marginTop: 0 }}>
           <Steps>
@@ -220,7 +228,7 @@ const NewChallenge = (props) => {
               // style={{ minWidth: 120 }}
               Tag={"span"}
               type={"green"}
-              onClick={() => handleGoToTrail()}
+              to={`/editar-trilha/trilha/${id}`}
             >
               Vamos nessa
             </Button>
@@ -228,9 +236,9 @@ const NewChallenge = (props) => {
         </Dialog>
       )}
 
-      {step === "trilha" && <TrailType handleTrails={handleTrails} />}
+      {stepUrl === "trilha" && <TrailType handleTrails={handleTrails} />}
 
-      {step === "trilha-livre" && (
+      {stepUrl === "trilha-livre" && (
         <Trail
           handleTrails={handleTrails}
           setTrails={setTrails}

@@ -30,6 +30,7 @@ import skills from "./Skills";
 import deleteMaterial from "./DeleteMaterial";
 import payment from "./Payment";
 import assessment from "./Assessment";
+import createTrail from "./CreateTrail";
 
 const ducks = combineReducers({
   auth,
@@ -60,6 +61,7 @@ const ducks = combineReducers({
   deleteMaterial,
   payment,
   assessment,
+  createTrail,
 });
 
 const rootReducer = (state, action) => {

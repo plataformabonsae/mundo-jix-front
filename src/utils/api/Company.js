@@ -75,6 +75,9 @@ const COMPANY = {
     answer: (id, type) => `${BASEURL}/question/answer/${id}/${type}`,
     video: (id, type) => `${BASEURL}/video/${id}/${type}`,
     material: (id, type) => `${BASEURL}/material/${id}/${type}`,
+    createVideo: (id) => `${BASEURL}/challenge/trail/${id}/video`,
+    createQuestion: (id) => `${BASEURL}/challenge/trail/${id}/question`,
+    createMaterial: (id) => `${BASEURL}/challenge/trail/${id}/material`,
   },
 
   FORUM: {

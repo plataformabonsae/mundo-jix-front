@@ -58,7 +58,7 @@ const Trilha = (props) => {
                   full
                   Tag={"span"}
                   title={
-                    "Adquira agora mesmo uma trilha especial com um aprofundamento mais rico deste Autodesafio."
+                    "Adquira agora mesmo uma trilha especial com um aprofundamento mais rico deste desafio."
                   }
                   button={"Comprar"}
                   onClick={handlePremumDialog}

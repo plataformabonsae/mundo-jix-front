@@ -17,6 +17,7 @@ import { Profile } from "containers/private/Profile";
 import { MyChallenges } from "containers/private/MyChallenges";
 import { MyChallengesCompany } from "containers/private/MyChallengesCompany";
 import { Challenges } from "containers/private/Challenges";
+import { CreateTrail } from "containers/private/CreateTrail";
 import { Users } from "containers/private/Users";
 import { Challenge } from "containers/private/Challenge";
 import { Logout } from "containers/private/Logout";
@@ -216,15 +217,20 @@ const RoutesConfig = () => {
                 />
 
                 {/* Novo desafio */}
-                <Route
+                <PrivateRouteContainer
                   exact
                   path="/novo-desafio"
-                  render={() => <Redirect to={`/novo-desafio/tipo`} />}
+                  component={NewChallenge}
                 />
                 <PrivateRouteContainer
                   exact
-                  path="/novo-desafio/:step"
-                  component={NewChallenge}
+                  path="/editar-trilha/:step/:id"
+                  component={CreateTrail}
+                />
+                <PrivateRouteContainer
+                  exact
+                  path="/editar-trilha/:step/:id"
+                  component={CreateTrail}
                 />
 
                 {/* Perfil */}

@@ -298,6 +298,12 @@ const RoutesConfig = () => {
                   path="/meus-desafios"
                   render={() => <Redirect to={`/meus-desafios/autodesafio`} />}
                 />
+                <PrivateRouteContainer
+                  exact
+                  path="/auth/:type/logout"
+                  component={Logout}
+                />
+                <Route exact path="/auth/:type/:action" component={Auth} />
                 <Route component={NotFound} />
               </Switch>
             )}

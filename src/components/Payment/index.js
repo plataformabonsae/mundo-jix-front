@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
 // import { Elements } from "@stripe/react-stripe-js";
 // import { loadStripe } from "@stripe/stripe-js";
 // import { CardElement } from "@stripe/react-stripe-js";
 // import { StripeProvider, Elements, CardElement } from "react-stripe-elements";
+import { toast } from "react-toastify";
 import { Text, Title } from "components/Text";
+import { Input, InputWithMask, InputGroup } from "components/Inputs";
 import {
   Elements,
   CardElement,
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import Cards from "react-credit-cards";
 import { loadStripe } from "@stripe/stripe-js";
 
 import { Dialog } from "components/Dialog";
@@ -18,12 +22,13 @@ import Button from "components/Button";
 // import { Loading } from "components/Loading";
 
 import styles from "./styles.module.sass";
+import "react-credit-cards/es/styles-compiled.css";
 
 import { BASEURL } from "utils/api";
 
 import defaultImage from "assets/components/MainImage/image.png";
 
-import { intent, success } from "services/payment";
+import { intent, success, subscription } from "services/payment";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -48,7 +53,7 @@ const Payment = (props) => {
   const { data: usertype } = useSelector((state) => state.usertype);
   const [stripeInfo, setStripeInfo] = useState("");
   // const { data: challenges } = useSelector((state) => state.challenges);
-  const { data: challenge } = useSelector((state) => state.challenge);
+  // const { data: challenge } = useSelector((state) => state.challenge);
   const { data: payment } = useSelector((state) => state.payment);
 
   useEffect(() => {
@@ -63,8 +68,11 @@ const Payment = (props) => {
   }, [props.isOpen]);
 
   useEffect(() => {
-    dispatch(intent(usertype, { challenge_id: challenge?.challenge?.id }));
-  }, [dispatch, usertype, challenge?.challenge?.id]);
+    if (props.id && !props.subscription) {
+      dispatch(intent(usertype, { challenge_id: props.id }));
+      console.log(props.id);
+    }
+  }, [dispatch, usertype, props.id, props.subscription]);
 
   useEffect(() => {
     payment &&
@@ -82,24 +90,6 @@ const Payment = (props) => {
         handleClose={props.handleClose}
       >
         <div className={styles.wrapper}>
-          {/* <div className={styles.infos}>
-            <div className={styles.infos__content}>
-              <div className={styles.others}>
-                Você terá acesso a este e mais outros desafios, como:
-                <div className={styles.others__challenges}>
-                  {!!challenges &&
-                    challenges
-                      ?.filter((item) => item.challenge_type === "autodesafio")
-                      .map((item, index) => (
-                        <Card style={{ padding: 12 }} key={index}>
-
-                          <Title size={14}>{item.name}</Title>
-                        </Card>
-                      ))}
-                </div>
-              </div>
-            </div>
-          </div> */}
           <div className={styles.form}>
             <Title style={{ marginBottom: 12 }}>{props.title}</Title>
             <Text>{props.desc}</Text>
@@ -107,8 +97,15 @@ const Payment = (props) => {
               R${props.price}
               <Text size={12}>{props.typeOfPayment}</Text>
             </div>
-            <PaymentForm data={stripeInfo} />
+            {props.subscription ? (
+              <SubscriptionForm />
+            ) : (
+              <PaymentForm data={stripeInfo} />
+            )}
           </div>
+        </div>
+        <div className={styles.disclaimer}>
+          Todos os pagamentos são processados via © Stripe.
         </div>
       </Dialog>
     </Elements>
@@ -197,10 +194,176 @@ const PaymentForm = (props) => {
         Caso tenha alguma dúvida, mande um e-mail para contato@mundojix.com
       </Text>
       <div className={styles.button}>
-        <Button Tag={"button"} type={"green"} submit>
-          Assinar
+        <Button style={{ width: "100%" }} Tag={"button"} type={"green"} submit>
+          Adiquirir
         </Button>
       </div>
+    </form>
+  );
+};
+
+const SubscriptionForm = (data) => {
+  const dispatch = useDispatch();
+  const [cardInfo, setCardInfo] = useState({
+    cvc: "",
+    expiry: "",
+    focus: "",
+    name: "",
+    number: "",
+  });
+  const { handleSubmit, errors, control, register } = useForm();
+  const {
+    // data: payment,
+    loading,
+    error,
+  } = useSelector((state) => state.payment);
+  const { data: user } = useSelector((state) => state.user);
+  const { data: usertype } = useSelector((state) => state.usertype);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCardInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleInputFocus = (e) => {
+    setCardInfo((prev) => (prev.focus = e.target.name));
+  };
+
+  const handleDate = (val) => {
+    let value = val;
+    let array = value.split("/").map((x) => +x);
+    const date = new Date(array[1], array[0] - 1, 1);
+
+    return date.getTime() && date > new Date();
+  };
+
+  const onSubmit = (data) => {
+    const { number, expiry, cvc } = data;
+    let card_number = number.replace(/\s+/g, "");
+    let card_exp_month = expiry.split("/")[0];
+    let card_exp_year = expiry.split("/")[1];
+    let card_cvc = cvc.replace(/_/g, "");
+    dispatch(
+      subscription(usertype, {
+        client_id: user.user.id,
+        card_number,
+        card_exp_month,
+        card_exp_year,
+        card_cvc,
+      })
+    )
+      .then((res) => {
+        toast.success("Assinatura efetuada com sucesso", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        console.log(res);
+      })
+      .catch((error) => {
+        // toast.error("Algum erro ocorreu ao enviar o comentário", {
+        //   position: toast.POSITION.BOTTOM_RIGHT,
+        // });
+        console.log(error);
+      });
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className={styles.credit__wrapper}>
+        <Cards
+          cvc={cardInfo.cvc}
+          expiry={cardInfo.expiry}
+          focused={cardInfo.focus}
+          name={"  "}
+          number={cardInfo.number}
+        />
+        <div className={styles.credit__form}>
+          <InputGroup>
+            <InputWithMask
+              // value={cardInfo.card_number}
+              ref={register()}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Insira o número do cartão",
+                },
+              }}
+              disabled={loading}
+              errors={errors}
+              control={control}
+              errorMessage={errors["number"]?.message}
+              name="number"
+              onKeyUp={handleInputChange}
+              placeholder="Número do cartão de crédito"
+              mask={"9999 9999 9999 9999"}
+              onFocus={handleInputFocus}
+            >
+              Número do cartão
+            </InputWithMask>
+          </InputGroup>
+          <InputGroup>
+            <InputWithMask
+              ref={register()}
+              disabled={loading}
+              errors={errors}
+              control={control}
+              rules={{
+                validate: {
+                  isValid: (val) => handleDate(val) || "Insira uma data válida",
+                },
+                // valueAsDate: true,
+              }}
+              errorMessage={errors["expiry"]?.message}
+              name="expiry"
+              onKeyUp={handleInputChange}
+              placeholder="12/2022"
+              mask={"99/9999"}
+              onFocus={handleInputFocus}
+            >
+              Data de expiração
+            </InputWithMask>
+          </InputGroup>
+          <InputGroup>
+            <InputWithMask
+              disabled={loading}
+              ref={register()}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Insira o CVC/CVV do cartão",
+                },
+              }}
+              errors={errors}
+              control={control}
+              name="cvc"
+              onKeyUp={handleInputChange}
+              placeholder="123"
+              onFocus={handleInputFocus}
+              mask={"9999"}
+            >
+              CVC/CVV
+            </InputWithMask>
+          </InputGroup>
+        </div>
+      </div>
+      {error && (
+        <div className={styles.error}>
+          Algum erro ocorreu ao fazer a assinatura. Tente novamente
+        </div>
+      )}
+      <Text size={14} style={{ marginTop: 12 }}>
+        Caso tenha alguma dúvida, mande um e-mail para contato@mundojix.com
+      </Text>
+      <Button
+        style={{ width: "100%", marginTop: 12 }}
+        disabled={
+          !(cardInfo.cvc && cardInfo.expiry && cardInfo.number) || loading
+        }
+        type={"green"}
+        Tag={"button"}
+        submit
+      >
+        Assinar
+      </Button>
     </form>
   );
 };

@@ -66,11 +66,14 @@ const Trilha = (props) => {
               )}
               {trail?.map((item, index) => (
                 <TrilhaItem
-                  to={`/meus-desafios/${type}/${id}/trilha/${trail_type}/${item.id}`}
+                  to={`/meus-desafios/${type}/${id}/trilha/${trail_type}/${
+                    item.video_id || item.question_id || item.material_id
+                  }`}
                   // locked={data.?user}
                   item={item}
                   trailType={item.type}
-                  key={item.id}
+                  key={item.video_id || item.question_id || item.material_id}
+                  index={index + 1}
                   video={item.video}
                   file={item.material}
                   question={item.question}
@@ -82,11 +85,12 @@ const Trilha = (props) => {
         {premiumDialog && (
           <Payment
             handleClose={handlePremumDialog}
-            price={"187"}
+            price={"187,00"}
             typeOfPayment={"pagamento único"}
             title={
               "Adquira agora mesmo uma trilha especial com um aprofundamento mais rico deste desafio. "
             }
+            id={data.challenge.id}
           />
         )}
       </header>

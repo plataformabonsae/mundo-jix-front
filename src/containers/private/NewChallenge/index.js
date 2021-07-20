@@ -79,10 +79,12 @@ const NewChallenge = (props) => {
 
   const createChallengeRequest = async (data) => {
     console.log(data);
-    const { mentors, skills } = data;
+    const { mentors, skills, assessments, judges } = data;
     const req = dispatch(
       create(usertype, {
         ...data,
+        judges: JSON.stringify(judges),
+        assessments: JSON.stringify(assessments),
         mentors: JSON.stringify(mentors),
         skills: JSON.stringify(skills),
       })
@@ -200,7 +202,11 @@ const NewChallenge = (props) => {
 
       {step === "avaliacao" && (
         <Layout style={{ marginTop: 0, padding: 24 }}>
-          <Avaliation handleGoBack={handleGoBack} handleSubmit={handleSubmit} />
+          <Avaliation
+            handleGoBack={handleGoBack}
+            handleStep={handleStep}
+            handleSubmit={handleSubmit}
+          />
         </Layout>
       )}
       {success && (

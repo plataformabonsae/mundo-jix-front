@@ -26,7 +26,8 @@ const Avaliation = ({
   });
 
   const onSubmit = async (data) => {
-    handleSubmitData(data);
+    // console.log(data);
+    handleSubmitData("end", data);
   };
 
   const marginTitulo = {
@@ -37,7 +38,7 @@ const Avaliation = ({
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Card noShadow={noShadow}>
           <Title style={marginTitulo}>Sobre a avaliação</Title>
-          {assessments.map((social, index) => {
+          {assessments.map((item, index) => {
             return (
               <InputGroup key={index}>
                 <div style={{ width: "50%" }}>
@@ -45,11 +46,11 @@ const Avaliation = ({
                     O que deseja avaliar?
                   </Title>
                   <Input
-                    defaultValue={social.link}
+                    // defaultValue={social.link}
                     ref={register({ required: true })}
                     errors={errors}
                     errorMessage="Digite o critério que deseja avaliar"
-                    name={`assessments.${index}.name`}
+                    name={`assessments.new.${index}.evaluate`}
                     placeholder="Digite o critério que deseja avaliar"
                   ></Input>
                 </div>
@@ -58,9 +59,9 @@ const Avaliation = ({
                     Nota máxima {index + 1}
                   </Title>
                   <Input
-                    defaultValue={social.platform}
+                    // defaultValue={social.platform}
                     ref={register({ required: true })}
-                    name={`assessments.${index}.value`}
+                    name={`assessments.new.${index}.max_grade`}
                     control={control}
                     errors={errors}
                     errorMessage="Nota máxima"
@@ -88,7 +89,7 @@ const Avaliation = ({
         </Card>
 
         <Card noShadow={noShadow}>
-          <Title style={marginTitulo}>Pessoas mentoras</Title>
+          <Title style={marginTitulo}>Pessoas juradas</Title>
 
           {judges.map((social, index) => {
             return (
@@ -121,6 +122,33 @@ const Avaliation = ({
                     placeholder="E-mail do jurado"
                   ></Input>
                 </div>
+                <div style={{ width: "50%" }}>
+                  <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
+                    Senha do jurado {index + 1}
+                  </Title>
+                  <Input
+                    defaultValue={social.link}
+                    ref={register({ required: true })}
+                    errors={errors}
+                    errorMessage="Repita a senha"
+                    name={`judges.${index}.password`}
+                    placeholder="Repita a senha"
+                  ></Input>
+                </div>
+                <div style={{ width: "50%" }}>
+                  <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
+                    Repita a senha do jurado {index + 1}
+                  </Title>
+                  <Input
+                    defaultValue={social.platform}
+                    ref={register({ required: true })}
+                    name={`judges.${index}.repeat_password`}
+                    control={control}
+                    errors={errors}
+                    errorMessage="Repita a senha"
+                    placeholder="Repita a senha"
+                  ></Input>
+                </div>
               </InputGroup>
             );
           })}
@@ -128,12 +156,12 @@ const Avaliation = ({
           <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
             <AddGroup
               onClick={() => setJudges((prev) => [...prev, prev++])}
-              text="Adicionar mentor"
+              text="Adicionar jurado"
             />
             {judges?.length > 1 && (
               <RemoveGroup
                 onClick={() => setJudges((state) => [...state].slice(0, -1))}
-                text="Remover mentor"
+                text="Remover jurado"
               />
             )}
           </InputGroup>
@@ -142,7 +170,7 @@ const Avaliation = ({
         <ButtonGroup>
           <Button
             Tag={"span"}
-            onClick={() => handleGoBack("challenge")}
+            onClick={() => handleStep("desafio")}
             type="gray"
           >
             Voltar

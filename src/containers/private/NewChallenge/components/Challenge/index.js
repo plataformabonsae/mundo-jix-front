@@ -90,11 +90,12 @@ const Challenge = ({
         materialsCounter[`materials_${i}`] = data[`materials_${i}`][0];
     }
     const dataWithMaterials = { ...data, materialsCounter };
-    console.log(dataWithMaterials);
-    if (handleHasAvaliation) {
+    if (!handleHasAvaliation) {
       handleIsSubmit("trail", dataWithMaterials);
+      console.log("handleIsSubmit");
     } else {
       handleStep("avaliacao", dataWithMaterials);
+      console.log("handleStep");
     }
   };
 
@@ -432,12 +433,14 @@ const Challenge = ({
             <Radio
               onChange={() => handleHasAvaliation(true)}
               name={"hasAssessment"}
+              checked={hasAvaliation === true}
             >
               Sim
             </Radio>
             <Radio
               onChange={() => handleHasAvaliation(false)}
               name={"hasAssessment"}
+              checked={hasAvaliation === false}
             >
               Não
             </Radio>

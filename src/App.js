@@ -5,8 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { Routes } from "routes";
 import "./App.css";
 
-import { Loading } from "components/Loading";
-
 import { autoLogin } from "services/login";
 
 import history from "utils/history";

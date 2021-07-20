@@ -32,6 +32,7 @@ export const linkedinToken = async (data, uri) => {
     headers: {
       // Host: "http//:localhost:3000/auth/talento/login",
       // "Access-Control-Allow-Origin": "*",
+      // "Access-Control-Allow-Origin": process.REACT_APP_URL,
       crossdomain: true,
       "Content-Type": "application/x-www-form-urlencoded",
     },

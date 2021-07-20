@@ -115,6 +115,8 @@ const TALENT = {
   PAYMENT: {
     intent: `${BASEURL}/stripe/premium-challenge/create-payment`,
     success: `${BASEURL}/stripe/premium-challenge/complete-payment`,
+    subscription: `${BASEURL}/stripe/subscription`,
+    cancelSubscription: `${BASEURL}/stripe/subscription-cancel`,
   },
 };
 

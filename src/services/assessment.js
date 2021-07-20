@@ -18,7 +18,7 @@ export const get =
       url: url(body.project_id),
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: "application/json",
+        Accept: "Application/json",
       },
     });
     await res

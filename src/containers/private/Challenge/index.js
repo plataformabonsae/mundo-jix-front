@@ -38,14 +38,12 @@ const Challenge = (props) => {
   const [notGuardianModal, setNotGuardianModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState(false);
   const [editChallengeModal, setEditChallengeModal] = useState(false);
-  // const isCard = useRef();
   const dispatch = useDispatch();
   const { data: usertype } = useSelector((state) => state.usertype);
   const { data: user } = useSelector((state) => state.user);
   const { data: project, loadingProject } = useSelector(
     (state) => state.project
   );
-  // const { current: mentorProject } = useSelector((state) => state.projects);
   const { data, loading } = useSelector((state) => state.challenge);
   const challenges = useSelector((state) => state.challenges);
 
@@ -192,7 +190,11 @@ const Challenge = (props) => {
                   type={"green"}
                   to={`/meus-desafios/${type}/${data?.challenge?.id}/trilha/${
                     data?.last_video?.premium ? `premium` : `normal`
-                  }/${data?.last_video?.id}`}
+                  }/${
+                    data?.last_video?.video_id ||
+                    data?.last_video?.question_id ||
+                    data?.last_video?.material_id
+                  }`}
                 >
                   Continuar assistindo
                 </Button>
@@ -280,7 +282,7 @@ const Challenge = (props) => {
               </div>
             </div>
           )}
-          {!props.isModal && !data?.team && usertype !== "empresa" && (
+          {!props.isModal && !data?.team && usertype === "talento" && (
             <div className={styles.section}>
               <Title size={24}>Individual</Title>
               <div className={styles.container}>
@@ -376,14 +378,19 @@ const Challenge = (props) => {
       )}
       {paymentModal && (
         <Payment
+          subscription
           title={"Assine para poder participar de todos os Autodesafios"}
           desc={
             "Melhores suas habilidades e seja um talento imprescindível para contratantes em qualquer lugar do mundo. Assinando aos Autodesafios Jix, você tem acesso pleno aos mais diversos treinamentos em vendas, liderança, espiritualidade, inteligência emocional e muito mais. "
           }
+          typeOfPayment={"por mês"}
           handleClose={handlePaymentModal}
           isOpen={paymentModal}
+          price={"27,90"}
+          id={currentChallenge?.id}
         />
       )}
+      {console.log(currentChallenge)}
       {!!data && (page === "projeto" || !page) && <Project data={data} />}
       {!!data && (page === "projetos" || !page) && <Projects data={data} />}
       {!!data && (page === "trilha" || !page) && <Trilha />}

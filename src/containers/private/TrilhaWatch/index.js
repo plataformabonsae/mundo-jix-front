@@ -50,7 +50,9 @@ const TrilhaWatch = (props) => {
       return;
     } else {
       const trailByUrl = [...trail].filter(
-        (item) => item.id === parseInt(trail_id)
+        (item) =>
+          (item.video_id || item.question_id || item.material_id) ===
+          parseInt(trail_id)
       )[0];
       console.log(trailByUrl, trail_id);
       setTrailPreview({
@@ -110,20 +112,27 @@ const TrilhaWatch = (props) => {
               {trail?.map((item, index) => (
                 <div
                   style={{
-                    background: parseInt(trail_id) === item.id && "#e9eced",
+                    background:
+                      parseInt(trail_id) ===
+                        (item.video_id ||
+                          item.question_id ||
+                          item.material_id) && "#e9eced",
                     padding: "0 32px",
                   }}
                 >
                   <TrilhaItem
                     small
-                    to={`/meus-desafios/${type}/${id}/trilha/normal/${item.id}`}
+                    to={`/meus-desafios/${type}/${id}/trilha/${trail_type}/${
+                      item.video_id || item.question_id || item.material_id
+                    }`}
                     // onClick={() =>
                     //   handlePreview(item[item.type].id, item.premium, item.type)
                     // }
                     locked={item.premium === 1 ? true : false}
                     item={item}
                     trailType={item.type}
-                    key={item.id}
+                    key={item.video_id || item.question_id || item.material_id}
+                    index={index + 1}
                     video={item.video}
                     file={item.material}
                     question={item.question}

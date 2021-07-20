@@ -22,7 +22,7 @@ const TrilhaItem = ({ Tag = Link, ...props }) => {
     file,
     question,
     video,
-    // index,
+    index,
     watched,
     item,
     trailType,
@@ -59,13 +59,13 @@ const TrilhaItem = ({ Tag = Link, ...props }) => {
       >
         <div className={styles.trilhaitem__image}>
           {!props.small ? (
-            <Title color={colors.MEDIUM_GRAY}>0{item.order}</Title>
+            <Title color={colors.MEDIUM_GRAY}>0{index}</Title>
           ) : (
             <Text
               className={styles.trilhaitem__number}
               color={colors.MEDIUM_GRAY}
             >
-              0{item.order}
+              0{index}
             </Text>
           )}
           <div

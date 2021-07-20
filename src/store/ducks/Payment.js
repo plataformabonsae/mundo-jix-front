@@ -17,17 +17,20 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: true,
+        error: null,
       };
     case Types.PAYMENT_SUCCESS:
       return {
         ...state,
         loading: false,
         data: action.payload,
+        error: null,
       };
     case Types.PAYMENT_FAILURE:
       return {
         ...state,
         data: null,
+        loading: false,
         error: action.payload,
       };
     default:

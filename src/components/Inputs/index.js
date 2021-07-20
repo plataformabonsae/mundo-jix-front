@@ -120,6 +120,7 @@ const Input = React.forwardRef(
       fontSize,
       arrayError,
       step,
+      onFocus,
       ...rest
     },
     ref
@@ -141,6 +142,7 @@ const Input = React.forwardRef(
         onChange={onChange}
         onKeyUp={onKeyUp}
         ref={ref}
+        onFocus={onFocus}
         step={step}
         {...rest}
       />
@@ -474,6 +476,7 @@ const InputWithMask = React.forwardRef((props, ref) => {
     required,
     rules,
     validate,
+    onFocus,
     ...rest
   } = props;
   // console.log(errors)
@@ -485,8 +488,16 @@ const InputWithMask = React.forwardRef((props, ref) => {
     >
       <span className={styles.name}>{children}</span>
       <Controller
-        as={<InputMask inputRef={ref} />}
+        as={
+          <InputMask
+            maskOptions={{ maskChar: " " }}
+            onChange={onChange}
+            inputRef={ref}
+          />
+        }
         // inputRef={ref}
+        // onChange={on}
+        onFocus={onFocus}
         control={control}
         errors={errors}
         rules={rules}
@@ -494,7 +505,7 @@ const InputWithMask = React.forwardRef((props, ref) => {
         type={type ? type : "text"}
         value={value || ""}
         placeholder={placeholder}
-        onChange={onChange}
+        // onChange={onChange}
         mask={mask}
         defaultValue={defaultValue || ""}
         onKeyPress={onKeyPress}

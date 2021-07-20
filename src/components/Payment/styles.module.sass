@@ -79,3 +79,47 @@
 .payment
   &__desc
     margin: 24px 0
+
+.credit
+  &__wrapper
+    display: flex
+    align-items: center
+
+  &__form
+    margin:
+      left: 8px
+    width: 100%
+
+.error
+  font:
+    size: 14px
+  color: $ERROR
+  text-align: center
+
+.disclaimer
+  text-align: center
+  padding: 0 16px
+  font:
+    size: 13px
+  color: rgba(120, 129, 137, .5)
+
+@media only screen and (max-width: 768px)
+
+  .dialog
+    width: auto
+    padding: 0
+    padding:
+      bottom: 48px
+    max-height: 100%
+  .wrapper
+    padding: 0 12px
+  .credit
+    &__wrapper
+      display: block
+
+    &__form
+      margin:
+        top: 12px
+
+  .price
+    text-align: center

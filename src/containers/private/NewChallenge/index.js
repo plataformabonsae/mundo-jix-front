@@ -176,7 +176,6 @@ const NewChallenge = (props) => {
             {hasAvaliation && (
               <Step
                 active={step === "avaliacao"}
-                // onClick={() => handleStep("avaliacao")}
                 number={formData.challenge_type === "ultradesafio" ? 2 : 3}
               >
                 Avaliação

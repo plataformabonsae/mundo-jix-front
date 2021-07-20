@@ -367,7 +367,7 @@ const Challenge = (props) => {
 					)}
 				</section>
 			)}
-			{paymentModal && (
+			{paymentModal && currentChallenge.id && (
 				<Payment
 					subscription
 					title={"Assine para poder participar de todos os Autodesafios"}
@@ -381,7 +381,7 @@ const Challenge = (props) => {
 					id={currentChallenge?.id}
 				/>
 			)}
-			{/* {console.log(currentChallenge)} */}
+			{console.log("cheguei", currentChallenge, paymentModal)}
 			{!!data && (page === "projeto" || !page) && <Project data={data} />}
 			{!!data && (page === "projetos" || !page) && <Projects data={data} />}
 			{!!data && (page === "trilha" || !page) && <Trilha />}

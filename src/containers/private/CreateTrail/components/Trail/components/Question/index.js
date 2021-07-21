@@ -46,8 +46,15 @@ const Question = (props) => {
   const handleEdit = () => setEditable(true);
 
   const onSubmit = (data) => {
+    const { option } = data;
     handleData(index, data);
-    dispatch(question(usertype, { challenge_id: id, ...data }))
+    dispatch(
+      question(usertype, {
+        ...data,
+        challenge_id: id,
+        option: JSON.stringify(option),
+      })
+    )
       .then((res) => {
         toast.success("Video salvo", {
           position: toast.POSITION.BOTTOM_RIGHT,

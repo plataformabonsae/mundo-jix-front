@@ -653,11 +653,7 @@ const ChangePassword = (props) => {
 						type="password"
 						name="password"
 						errors={errors}
-						errorMessage={
-							errors?.password?.type === "pattern"
-								? "paternet"
-								: errors?.password?.message
-						}
+						errorMessage={errors?.password?.message}
 						placeholder="Digite a senha"
 						onKeyUp={(e) => setPassword(e.target.value)}
 						onFocus={() => setShowTooltip(true)}
@@ -691,7 +687,8 @@ const ChangePassword = (props) => {
 						errors={errors}
 						errorMessage={errors?.confirm_password?.message}
 						placeholder="Digite a senha novamente"
-						onChange={(e) => setConfirmPassword(e.target.value)}
+						onFocus={() => setShowTooltip(true)}
+						onKeyUp={(e) => setConfirmPassword(e.target.value)}
 					>
 						Confirme a senha
 					</Input>

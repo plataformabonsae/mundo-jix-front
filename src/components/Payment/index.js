@@ -18,8 +18,9 @@ import Cards from "react-credit-cards";
 import { loadStripe } from "@stripe/stripe-js";
 
 import { Dialog } from "components/Dialog";
+// import { Dialog } from "components/Dialog";
 import Button from "components/Button";
-// import { Loading } from "components/Loading";
+import { Loading } from "components/Loading";
 
 import styles from "./styles.module.sass";
 import "react-credit-cards/es/styles-compiled.css";
@@ -29,6 +30,7 @@ import { BASEURL } from "utils/api";
 import defaultImage from "assets/components/MainImage/image.png";
 
 import { intent, success, subscription } from "services/payment";
+import { get } from "services/challenges";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -55,6 +57,10 @@ const Payment = (props) => {
   // const { data: challenges } = useSelector((state) => state.challenges);
   // const { data: challenge } = useSelector((state) => state.challenge);
   const { data: payment } = useSelector((state) => state.payment);
+
+  // useEffect(() => {
+  //   dispatch()
+  // }, [dispatch, usertype])
 
   useEffect(() => {
     const modal = document.getElementById("ModalPage");
@@ -155,13 +161,22 @@ const PaymentForm = (props) => {
           payment_id: payload.paymentIntent.id,
           challenge_id: challenge?.challenge?.id,
         })
-      );
+      )
+        .then((res) => {
+          toast.success("Pgamento efetuado com sucesso", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+          console.log(res);
+        })
+        .then(() => {
+          dispatch(get(usertype, { challenge_id: challenge?.challenge?.id }));
+        });
     }
   };
 
-  useState(() => {
-    console.log(data);
-  }, [data]);
+  // useState(() => {
+  //   console.log(data);
+  // }, [data]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -170,7 +185,12 @@ const PaymentForm = (props) => {
       </Text>
       <Title size={14} style={{ marginLeft: 0, marginBottom: 6 }}>
         Pagamento
-        {processing || error} {processing && "processando..."}
+        {processing && "Processando pagamento..."}
+        {error && (
+          <div className={styles.error}>
+            Algum erro ocorreu ao efetuar o pagamento. Tente novamente
+          </div>
+        )}
       </Title>
       <div className={styles.card__row}>
         <CardElement
@@ -194,9 +214,18 @@ const PaymentForm = (props) => {
         Caso tenha alguma dúvida, mande um e-mail para contato@mundojix.com
       </Text>
       <div className={styles.button}>
-        <Button style={{ width: "100%" }} Tag={"button"} type={"green"} submit>
-          Adiquirir
-        </Button>
+        {processing ? (
+          <Loading />
+        ) : (
+          <Button
+            style={{ width: "100%" }}
+            Tag={"button"}
+            type={"green"}
+            submit
+          >
+            Adiquirir
+          </Button>
+        )}
       </div>
     </form>
   );

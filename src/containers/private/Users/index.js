@@ -135,143 +135,232 @@ const Modal = (props) => {
   const [portfolios, setPortfolios] = useState([]);
   const [experiences, setExperiences] = useState([]);
 
+  const [tels, setTels] = useState([]);
+  const [emails, setEmails] = useState([]);
+  // const [emailError, setEmailError] = useState();
+  const [socials, setSocials] = useState([]);
+
+  useEffect(() => {
+    const append = (tel) => {
+      setAcademic((prev) => [...prev, tel]);
+    };
+
+    if (props.data.academicformations.length) {
+      for (let i = 0; i < props.data.academicformations.length; i++) {
+        append(props.data.academicformations[i]);
+      }
+    } else {
+      append({});
+    }
+
+    return () => {
+      setAcademic([]);
+    };
+  }, [props.data]);
+
+  useEffect(() => {
+    const append = (tel) => {
+      setTels((prev) => [...prev, tel]);
+    };
+    if (props.data.phones.length) {
+      for (let i = 0; i < props.data.phones.length; i++) {
+        append({
+          phone: props.data.phones[i].phone,
+          phone_type_id: props.data.phones[i].phone_type_id,
+          id: props.data.phones[i].id,
+        });
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setTels([]);
+    };
+  }, [props.data]);
+
+  useEffect(() => {
+    const append = (tel) => {
+      setEmails((prev) => [...prev, tel]);
+    };
+    if (props.data.emails.length) {
+      for (let i = 0; i < props.data.emails.length; i++) {
+        append(props.data.emails[i]);
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setEmails([]);
+    };
+  }, [props.data]);
+
+  useEffect(() => {
+    const append = (tel) => {
+      setSocials((prev) => [...prev, tel]);
+    };
+    if (props.data?.socialMedias?.length) {
+      for (let i = 0; i < props.data.socialMedias.length; i++) {
+        append(props.data.socialMedias[i]);
+      }
+    } else {
+      append({});
+    }
+    if (props.data?.social_medias?.length) {
+      for (let i = 0; i < props.data.social_medias.length; i++) {
+        append(props.data.social_medias[i]);
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setSocials([]);
+    };
+  }, [props.data]);
+
+  const marginTitulo = {
+    marginBottom: 32,
+  };
+
+  useEffect(() => {
+    console.log(props.data);
+  }, [props]);
+
   return (
     <ModalPage title={"Ver mais"} handleClose={() => props.setModal(null)}>
-      <Card>
-        <Title style={{ marginBottom: 32 }}>Formação acadêmica</Title>
-
-        {academic?.map((fields, index) => {
-          return (
-            <section key={index} style={{ marginTop: 24 }}>
-              <InputGroup>
-                <Input defaultValue={fields.level_of_education}>
-                  Nível de escolaridade
-                </Input>
-              </InputGroup>
-
-              <InputGroup>
-                <Input defaultValue={fields.degree} disabled={true}>
-                  Grau
-                </Input>
-              </InputGroup>
-
-              <InputGroup>
-                <Input defaultValue={fields.status}>Status</Input>
-              </InputGroup>
-
-              <InputGroup>
-                <Input defaultValue={fields.institution}>Instituição</Input>
-              </InputGroup>
-
-              <InputGroup>
-                <Input defaultValue={fields.course}>Curso</Input>
-              </InputGroup>
-
-              <InputGroup>
-                <Input defaultValue={fields.start_date}>Início</Input>
-                <Input defaultValue={fields.end_date}>Término</Input>
-              </InputGroup>
-            </section>
-          );
-        })}
-      </Card>
-      <Card>
-        <Title style={{ marginBottom: 32 }}>Perspectivas</Title>
-
-        <InputGroup>
-          <Input defaultValue={"user?.user?.current_situation"}>
-            Situação atual
-          </Input>
-        </InputGroup>
-
-        <InputGroup>
-          <Input defaultValue={"user?.user?.looking_for"}>O que busca?</Input>
-        </InputGroup>
-      </Card>
-
-      <Card>
-        <Title style={{ marginBottom: 32 }}>Skills</Title>
-        {/* {console.log(availableSkills[0])} */}
-        <InputGroup>
-          <Input defaultValue={"skillsChange"} />
-        </InputGroup>
-      </Card>
-
-      <Card>
-        <Title style={{ marginBottom: 32 }}>Portfolio</Title>
-
-        {portfolios?.map((field, index) => {
-          return (
-            <InputGroup>
-              <Input defaultValue={field.link}>Link</Input>
-              <Input defaultValue={field.platform}>Plataforma</Input>
-            </InputGroup>
-          );
-        })}
-      </Card>
-
-      <Card>
-        <Title style={{ marginBottom: 32 }}>Currículo</Title>
-
-        {/* <InputGroup>
-          {user?.user?.curriculum_file && (
-            <File
-              file={user.user.curriculum_file}
-              name={user.user.curriculum_filename}
-              extension={user.user.curriculum_fileextension}
-            />
-          )}
-        </InputGroup> */}
-      </Card>
-
-      <Card>
-        <Title style={{ marginBottom: 32 }}>Experiência Profissional</Title>
-
-        {experiences?.map((field, index) => {
-          return (
-            <div key={index}>
-              <InputGroup>
-                <Input defaultValue={field.role}>Cargo</Input>
-              </InputGroup>
-
-              <InputGroup>
-                <Input defaultValue={field.company}>Empresa</Input>
-              </InputGroup>
-
-              <InputGroup>
-                <Input defaultValue={field.start_date}>Início</Input>
-                {/* {console.log(currentJob[index].status)} */}
-
-                <Input
-                  defaultValue={
-                    '(currentJob[index].status && " ") || field.end_date'
-                  }
-                >
-                  Término
-                </Input>
-              </InputGroup>
-
-              <InputGroup>
-                <Textarea defaultValue={field.main_activities}>
-                  Principais atividades
-                </Textarea>
-              </InputGroup>
+      <div className={styles.modal__wrapper}>
+        <Card>
+          <Title style={marginTitulo}>Dados pessoais</Title>
+          <div className={styles.profile}>
+            <div className={styles.image}>
+              <img
+                src={props.data.file ? BASEURL + props.data.file : profile}
+                alt={props.data.name}
+              />
+              {/* <T.Text weight="bold" size={12} className={styles.location}>
+            {location}º
+          </T.Text> */}
             </div>
-          );
-        })}
-      </Card>
+          </div>
+          <InputGroup>
+            <Input readOnly value={props.name || props.data.name}>
+              Nome
+            </Input>
+            <Input readOnly value={props?.last_name || props?.data?.last_name}>
+              Sobrenome
+            </Input>
+          </InputGroup>
+          <InputGroup>
+            <Input readOnly value={props?.cpf || props?.data?.cpf}>
+              CPF
+            </Input>
+            <Input readOnly value={props?.birthdate || props?.data?.birthdate}>
+              Data de nascimento
+            </Input>
+          </InputGroup>
+        </Card>
 
-      <Card>
-        <Title style={{ marginBottom: 32 }}>Outros links</Title>
-        {links?.map((field, index) => {
-          return (
-            <InputGroup key={index}>
-              <Input defaultValue={field.link}>Link</Input>
-              <Input defaultValue={field.platform}>Tipo de rede</Input>
-            </InputGroup>
-          );
-        })}
-      </Card>
+        <Card>
+          <Title style={{ marginBottom: 32 }}>Contato</Title>
+
+          {tels.map((field, index) => {
+            return (
+              <InputGroup key={index}>
+                <Input readOnly value={field.phone}>
+                  Telefone {index + 1}
+                </Input>
+                <Input readOnly value={field.phone_type_id}>
+                  Tipo de telefone
+                </Input>
+              </InputGroup>
+            );
+          })}
+
+          <InputGroup style={{ marginTop: 24 }}>
+            <Input readOnly value={props.data.email}>
+              E-mail principal
+            </Input>
+          </InputGroup>
+
+          {emails.length > 0 &&
+            emails.map((email, index) => {
+              return (
+                <InputGroup key={index}>
+                  <Input readOnly value={email.email}>
+                    E-mail {index + 1}
+                  </Input>
+                </InputGroup>
+              );
+            })}
+        </Card>
+
+        <Card>
+          <Title style={{ marginBottom: 32 }}>Redes sociais</Title>
+
+          {socials.map((social, index) => {
+            return (
+              <InputGroup key={index}>
+                <Input readOnly value={social.link}>
+                  Link da rede social
+                </Input>
+                <Input readOnly value={social.platform}>
+                  Tipo de rede
+                </Input>
+              </InputGroup>
+            );
+          })}
+          <Textarea readyOnly value={props.data.description}>
+            Biografia
+          </Textarea>
+        </Card>
+        <Card>
+          <Title style={{ marginBottom: 32 }}>Formação acadêmica</Title>
+
+          {academic.map((fields, index) => {
+            return (
+              <section key={index} style={{ marginTop: 24 }}>
+                <InputGroup>
+                  <Input readyOnly value={fields.level_of_education}>
+                    Nível de escolaridade
+                  </Input>
+                </InputGroup>
+
+                <InputGroup>
+                  <Input readyOnly value={fields.degree}>
+                    Grau
+                  </Input>
+                </InputGroup>
+
+                <InputGroup>
+                  <Input readyOnly value={fields.status}>
+                    Status
+                  </Input>
+                </InputGroup>
+
+                <InputGroup>
+                  <Input readyOnly value={fields.institution}>
+                    Instituição
+                  </Input>
+                </InputGroup>
+
+                <InputGroup>
+                  <Input readyOnly value={fields.course}>
+                    Curso
+                  </Input>
+                </InputGroup>
+
+                <InputGroup>
+                  <Input readyOnly value={fields.start_date}>
+                    Início
+                  </Input>
+                  <Input readyOnly value={fields.end_date}>
+                    Término
+                  </Input>
+                </InputGroup>
+              </section>
+            );
+          })}
+        </Card>
+      </div>
     </ModalPage>
   );
 };

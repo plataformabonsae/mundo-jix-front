@@ -23,6 +23,7 @@ import { ButtonGroup } from "components/ButtonGroup";
 import { skills as skillsFetch } from "services/skills";
 
 import "react-toastify/dist/ReactToastify.css";
+import styles from "./styles.module.sass";
 
 const Challenge = ({
   noShadow = true,
@@ -62,13 +63,17 @@ const Challenge = ({
     }
   }, [skillsData]);
 
+  const handleRemoveSkill = (value) => {
+    setSkillsChange((prev) => [...prev].filter((item) => item.value !== value));
+  };
+
   const handleCountChar = (e) => {
     setCountResume(e.target.value.length);
   };
 
   const handleSkillsChange = (data) => {
-    console.log(data, "handleSkillsChange");
-    setSkillsChange(data);
+    console.log(data);
+    setSkillsChange((prev) => [...prev, data]);
   };
 
   const handleDate = (val) => {
@@ -280,8 +285,8 @@ const Challenge = ({
           <InputGroup>
             <SelectInputMulti
               name={`skills`}
-              ref={register()}
-              isMulti
+              // ref={register()}
+              isMulti={false}
               control={control}
               options={skills}
               errors={errors}
@@ -299,15 +304,26 @@ const Challenge = ({
               placeholder="Digite sua skill"
             />
           </InputGroup>
-          {skillsChange?.map((item, index) => (
-            <input
-              key={item.value}
-              type="hidden"
-              ref={register()}
-              name={`skills.${index}.id`}
-              value={item.value}
-            />
-          ))}
+          <div className={styles.skill__wrapper}>
+            {skillsChange?.map((item, index) => (
+              <div className={styles.skill__item}>
+                {item.label}
+                <span
+                  className={styles.skill__remove}
+                  onClick={() => handleRemoveSkill(item.value)}
+                >
+                  X
+                </span>
+                <input
+                  key={index}
+                  type="hidden"
+                  ref={register()}
+                  name={`skills.${index}.id`}
+                  value={`${item.value}`}
+                />
+              </div>
+            ))}
+          </div>
         </Card>
 
         <Card noShadow={noShadow}>

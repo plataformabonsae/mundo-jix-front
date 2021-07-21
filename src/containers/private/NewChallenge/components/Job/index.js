@@ -83,7 +83,7 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
               name="remuneration"
               placeholder="Em reais"
               step={0.01}
-              type={"number"}
+              // type={"number"}
             ></Input>
           </InputGroup>
         </Card>

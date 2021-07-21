@@ -9,13 +9,13 @@ import { TrailType } from "./components/TrailType";
 import { Trail } from "./components/Trail";
 // import { Avaliation } from "./components/Avaliation";
 
-import { Steps, Step } from "components/Steps";
+/* import { Steps, Step } from "components/Steps";
 import { Layout } from "components/Layout";
 import { ButtonGroup } from "components/ButtonGroup";
-import Button from "components/Button";
+import Button from "components/Button"; */
 import { TitleAndBack } from "components/TitleAndBack";
 import { Title, Text } from "components/Text";
-import { Dialog } from "components/Dialog";
+// import { Dialog } from "components/Dialog";
 
 import styles from "./styles.module.sass";
 

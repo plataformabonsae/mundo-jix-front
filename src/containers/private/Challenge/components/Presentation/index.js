@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import YouTube from "react-youtube";
 import parse from "html-react-parser";
+import { useSelector } from "react-redux";
 
 import { Card } from "components/Card";
 // import { ButtonGroup } from "components/ButtonGroup";
@@ -24,7 +25,8 @@ import { WindowSize } from "utils/etc";
 // skills
 
 const Presentation = (props) => {
-  const { data, handleClickToSubscribe, buttonContent, payed_for } = props;
+  const { data: user } = useSelector((state) => state.user);
+  const { data, handleClickToSubscribe, buttonContent, isSubscribed } = props;
   const { width } = WindowSize();
 
   const opts = {
@@ -115,17 +117,25 @@ const Presentation = (props) => {
                 }}
               >
                 <Button
-                  Tag={buttonContent || payed_for ? Link : "button"}
+                  Tag={
+                    buttonContent || user?.user?.is_subscribed ? Link : "button"
+                  }
                   to={`${
-                    buttonContent || payed_for
+                    buttonContent || user?.user?.is_subscribed
                       ? `/desafios/${data?.challenge_type}/inscricao/${data?.id}/1`
                       : null
                   }`}
-                  type={buttonContent || payed_for ? "green" : "secondary"}
+                  type={
+                    buttonContent || user?.user?.is_subscribed
+                      ? "green"
+                      : "secondary"
+                  }
                   style={{ marginLeft: 12 }}
                   onClick={() => handleClickToSubscribe()}
                 >
-                  {buttonContent || payed_for ? "Vamo nessa!" : "Participar"}
+                  {buttonContent || user?.user?.is_subscribed
+                    ? "Vamo nessa!"
+                    : "Participar"}
                 </Button>
               </div>
             </>

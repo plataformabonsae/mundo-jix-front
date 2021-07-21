@@ -390,7 +390,11 @@ const Pessoal = ({ type, noShadow, finalRoute, hasPassword, redirect, dontRedire
 										})}
 										name={`emails.${index}.email`}
 										errors={errors}
-										errorMessage={`${errors?.emails?.[index]?.email?.message}`}
+										validate={`${
+											errors?.emails?.[index]?.email?.message
+												? errors?.emails?.[index]?.email?.message
+												: ""
+										}`}
 										// errorMessage={"Digite um e-mail válido"}
 										placeholder="Digite um e-mail"
 									>
@@ -424,13 +428,24 @@ const Pessoal = ({ type, noShadow, finalRoute, hasPassword, redirect, dontRedire
 								<InputGroup key={index}>
 									<Input
 										defaultValue={social.link}
-										ref={register()}
-										errors={errors}
-										errorMessage="Somente números"
+										ref={register({
+											pattern: {
+												value: /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+												message: "Digite um link valido",
+											},
+										})}
+										validate={`${
+											errors?.socialMedias?.[index]?.link?.message
+												? errors?.socialMedias?.[index]?.link
+														?.message
+												: ""
+										}`}
 										name={`socialMedias.${index}.link`}
 										placeholder="Link da rede social"
 									>
-										Cole aqui
+										{console.log(errors)}
+										Cole aqui{" "}
+										{errors?.socialMedias?.[index]?.link?.message}
 									</Input>
 									<SelectInput
 										defaultValue={social.platform}

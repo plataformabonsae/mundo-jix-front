@@ -166,7 +166,7 @@ const Question = (props) => {
           Descrição da pergunta
         </Title>
         <Textarea
-          defaultValue={trails[index]?.data?.name}
+          defaultValue={trails[index]?.data?.description}
           ref={register({ required: true })}
           errors={errors}
           disabled={!editable}

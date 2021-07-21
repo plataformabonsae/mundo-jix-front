@@ -94,7 +94,15 @@ const NewChallenge = (props) => {
 
   const createChallengeRequest = async (data) => {
     console.log(data);
-    const { mentors, skills, assessments, judges } = data;
+    const { mentors, skills, assessments, judges, badge } = data;
+    console.log({
+      ...data,
+      judges: JSON.stringify(judges),
+      assessments: JSON.stringify(assessments),
+      mentors: JSON.stringify(mentors),
+      skills: JSON.stringify(skills),
+      badge: JSON.stringify(badge),
+    });
     const req = dispatch(
       create(usertype, {
         ...data,

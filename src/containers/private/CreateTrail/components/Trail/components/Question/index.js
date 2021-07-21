@@ -46,13 +46,18 @@ const Question = (props) => {
   const handleEdit = () => setEditable(true);
 
   const onSubmit = (data) => {
-    const { option } = data;
+    const { options } = data;
     handleData(index, data);
+    console.log({
+      ...data,
+      challenge_id: id,
+      options: JSON.stringify(options),
+    });
     dispatch(
       question(usertype, {
         ...data,
         challenge_id: id,
-        option: JSON.stringify(option),
+        options: JSON.stringify(options),
       })
     )
       .then((res) => {
@@ -178,8 +183,7 @@ const Question = (props) => {
                 ref={register()}
                 className={styles.radio}
                 type="radio"
-                value={item.isCorrect}
-                defaultChecked={item.isCorrect}
+                checked={item.isCorrect}
                 id={`options[${i}].is_correct`}
                 name={`options[${i}].is_correct`}
               />

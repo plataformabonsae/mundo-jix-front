@@ -149,7 +149,7 @@ const Video = (props) => {
         </Title>
         <InputGroup>
           <Textarea
-            defaultValue={trails[index]?.data?.name}
+            defaultValue={trails[index]?.data?.description}
             ref={register({ required: true })}
             name="description"
             errors={errors}

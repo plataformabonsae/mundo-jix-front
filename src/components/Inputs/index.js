@@ -121,6 +121,7 @@ const Input = React.forwardRef(
       arrayError,
       step,
       onFocus,
+      readyOnly,
       ...rest
     },
     ref
@@ -144,6 +145,7 @@ const Input = React.forwardRef(
         ref={ref}
         onFocus={onFocus}
         step={step}
+        readyOnly={readyOnly}
         {...rest}
       />
       <div className={styles.error}>
@@ -168,6 +170,7 @@ const Textarea = React.forwardRef(
       checked,
       errors,
       errorMessage,
+      readyOnly,
       ...props
     },
     ref
@@ -186,6 +189,7 @@ const Textarea = React.forwardRef(
         placeholder={placeholder}
         onChange={onChange}
         ref={ref}
+        readyOnly={readyOnly}
         {...props}
       />
       <div className={styles.error}>{errors?.[name] && errorMessage}</div>

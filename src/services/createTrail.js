@@ -135,3 +135,55 @@ export const answer =
       .catch((error) => dispatch(CreateTrail.createTrailFailure(error)));
     return res;
   };
+
+export const up =
+  (
+    type = "talento",
+    body,
+    token = window.localStorage.getItem("token"),
+    url = type === "empresa" ? COMPANY.TRAIL.up : TALENT.TRAIL.up
+  ) =>
+  async (dispatch) => {
+    // dispatch(CreateTrail.createTrailRequest());
+    const res = axios({
+      url: url(body.challenge_id),
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+    await res
+      .then
+      // (response) =>
+      // dispatch(CreateTrail.createTrailSuccess(response?.data?.data))
+      ()
+      .catch((error) => dispatch(CreateTrail.createTrailFailure(error)));
+    return res;
+  };
+
+export const down =
+  (
+    type = "talento",
+    body,
+    token = window.localStorage.getItem("token"),
+    url = type === "empresa" ? COMPANY.TRAIL.down : TALENT.TRAIL.down
+  ) =>
+  async (dispatch) => {
+    // dispatch(CreateTrail.createTrailRequest());
+    const res = axios({
+      url: url(body.challenge_id),
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+    await res
+      .then
+      // (response) =>
+      // dispatch(CreateTrail.createTrailSuccess(response?.data?.data))
+      ()
+      .catch((error) => dispatch(CreateTrail.createTrailFailure(error)));
+    return res;
+  };

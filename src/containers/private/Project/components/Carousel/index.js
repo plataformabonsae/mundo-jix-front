@@ -85,7 +85,6 @@ const Carousel = (props) => {
 		setModalFeedback((prev) => !prev)
 	}
 	const handlerDelete = async (material_id) => {
-		console.log("aqui o id", material_id)
 		const req = dispatch(deleteMaterial(usertype, { material_id }))
 		await req
 			.then((res) => window.location.reload())

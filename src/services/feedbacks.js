@@ -86,7 +86,7 @@ export const comment =
 		url = type === "empresa" ? COMPANY.FEEDBACK.comment : TALENT.FEEDBACK.comment
 	) =>
 	async (dispatch) => {
-		// dispatch(FeedbackActions.feedbacksCurrentRequest());
+		dispatch(FeedbackActions.feedbacksCurrentRequest())
 		const formData = new FormData()
 		for (var key in body) {
 			formData.append(key, body[key])

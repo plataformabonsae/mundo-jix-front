@@ -37,6 +37,7 @@ export default function reducer(state = INITIAL_STATE, action) {
 		case Types.FEEDBACKS_CURRENT_REQUEST:
 			return {
 				...state,
+				current: null,
 				loading: true,
 			}
 		case Types.FEEDBACKS_CURRENT_SUCCESS:

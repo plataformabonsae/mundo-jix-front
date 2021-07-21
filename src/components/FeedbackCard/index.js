@@ -226,13 +226,17 @@ const CreateFeedback = (props) => {
 				console.log(res)
 			})
 			.then(() => props.handleModal())
+			.then(() =>
+				dispatch(
+					get(usertype, { challenge_id: challengeId, project_id: projectId })
+				)
+			)
 			.catch((error) => {
 				toast.error("Algum erro ocorreu ao enviar o feedback", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
 				console.log(error)
 			})
-		dispatch(get(usertype, { challenge_id: challengeId, project_id: projectId }))
 	}
 
 	return (

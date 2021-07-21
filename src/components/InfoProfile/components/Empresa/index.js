@@ -107,20 +107,20 @@ const Empresa = ({
   const onSubmit = async (data) => {
     handleEmailModal("close");
     const { phones, emails, socialMedias } = data;
-    let filtered_phones;
-    let filtered_social_media;
+    // let filtered_phones;
+    // let filtered_social_media;
     // for (let i = 0; i < phones?.length; i++) {
     //   filtered_phones = [...phones].filter((phone) => phone.phone);
     // }
-    for (let i = 0; i < socialMedias?.length; i++) {
-      filtered_social_media = [...socialMedias].filter((social) => social.link);
-    }
+    // for (let i = 0; i < socialMedias?.length; i++) {
+    //   filtered_social_media = [...socialMedias].filter((social) => social.link);
+    // }
     console.log({
       ...data,
       ...cepValues,
       phones: JSON.stringify(phones),
       emails: JSON.stringify(emails) || "{}",
-      social_medias: JSON.stringify(filtered_social_media),
+      social_medias: JSON.stringify(socialMedias),
     });
     await dispatch(
       edit(usertype, {
@@ -128,7 +128,7 @@ const Empresa = ({
         ...cepValues,
         phones: JSON.stringify(phones),
         emails: JSON.stringify(emails) || "{}",
-        social_medias: JSON.stringify(filtered_social_media),
+        social_medias: JSON.stringify(socialMedias),
       })
     )
       .then(() => {

@@ -8,7 +8,8 @@ import { ModalPage } from "components/ModalPage";
 import { Card } from "components/Card";
 import { Title, Text } from "components/Text";
 import Button from "components/Button";
-import { Input, InputGroup, Textarea } from "components/Inputs";
+import { File } from "components/Downloads";
+import { Input, InputGroup, Textarea, Checkbox } from "components/Inputs";
 
 import styles from "./styles.module.sass";
 
@@ -135,6 +136,14 @@ const Modal = (props) => {
   const [portfolios, setPortfolios] = useState([]);
   const [experiences, setExperiences] = useState([]);
 
+  const [currentJob, setCurrentJob] = useState([]);
+  const [currentSkills, setCurrentSkills] = useState([]);
+  // const [datesValidation, setDatesValidation] = useState([]);
+
+  // const [portfolios, setPortfolios] = useState([]);
+  // const [experiences, setExperiences] = useState([]);
+  // const [links, setLinks] = useState([]);
+
   const [tels, setTels] = useState([]);
   const [emails, setEmails] = useState([]);
   // const [emailError, setEmailError] = useState();
@@ -145,12 +154,10 @@ const Modal = (props) => {
       setAcademic((prev) => [...prev, tel]);
     };
 
-    if (props.data.academicformations.length) {
+    if (props.data.academicformations?.length) {
       for (let i = 0; i < props.data.academicformations.length; i++) {
         append(props.data.academicformations[i]);
       }
-    } else {
-      append({});
     }
 
     return () => {
@@ -162,7 +169,7 @@ const Modal = (props) => {
     const append = (tel) => {
       setTels((prev) => [...prev, tel]);
     };
-    if (props.data.phones.length) {
+    if (props.data.phones?.length) {
       for (let i = 0; i < props.data.phones.length; i++) {
         append({
           phone: props.data.phones[i].phone,
@@ -170,8 +177,6 @@ const Modal = (props) => {
           id: props.data.phones[i].id,
         });
       }
-    } else {
-      append({});
     }
     return () => {
       setTels([]);
@@ -186,8 +191,6 @@ const Modal = (props) => {
       for (let i = 0; i < props.data.emails.length; i++) {
         append(props.data.emails[i]);
       }
-    } else {
-      append({});
     }
     return () => {
       setEmails([]);
@@ -202,15 +205,11 @@ const Modal = (props) => {
       for (let i = 0; i < props.data.socialMedias.length; i++) {
         append(props.data.socialMedias[i]);
       }
-    } else {
-      append({});
     }
     if (props.data?.social_medias?.length) {
       for (let i = 0; i < props.data.social_medias.length; i++) {
         append(props.data.social_medias[i]);
       }
-    } else {
-      append({});
     }
     return () => {
       setSocials([]);
@@ -222,13 +221,88 @@ const Modal = (props) => {
   };
 
   useEffect(() => {
+    const append = (skill) => setCurrentSkills((prev) => [...prev, skill]);
+    const skills = props.data.skills;
+    for (let i = 0; i < skills.length; i++) {
+      append({ value: skills[i].id, label: skills[i].title });
+    }
+  }, [props.data.skills]);
+
+  useEffect(() => {
+    const append = (xp) => {
+      setExperiences((prev) => [...prev, xp]);
+    };
+    if (props.data.experiences.length) {
+      for (let i = 0; i < props.data.experiences.length; i++) {
+        append(props.data.experiences[i]);
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setExperiences([]);
+    };
+  }, [props.data]);
+
+  useEffect(() => {
+    const append = (link) => {
+      setLinks((prev) => [...prev, link]);
+    };
+    if (props.data.links?.length) {
+      for (let i = 0; i < props.data.links.length; i++) {
+        append(props.data.links[i]);
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setLinks([]);
+    };
+  }, [props.data]);
+
+  useState(() => {
+    const appendCurrentJob = (link) => {
+      setCurrentJob((prev) => [...prev, link]);
+    };
+    if (props.data.experiences.length) {
+      for (let i = 0; i < props.data.experiences.length; i++) {
+        appendCurrentJob({
+          status: props.data.experiences[i].current_job === 1 ? true : false,
+          id: props.data.experiences[i].id,
+        });
+      }
+    } else {
+      appendCurrentJob([]);
+    }
+    return () => {
+      setCurrentJob([]);
+    };
+  }, [props.data]);
+
+  useEffect(() => {
+    const append = (port) => {
+      setPortfolios((prev) => [...prev, port]);
+    };
+    if (props.data.portfolios?.length) {
+      for (let i = 0; i < props.data.portfolios.length; i++) {
+        append(props.data.portfolios[i]);
+      }
+    } else {
+      append({});
+    }
+    return () => {
+      setPortfolios([]);
+    };
+  }, [props.data]);
+
+  useEffect(() => {
     console.log(props.data);
   }, [props]);
 
   return (
     <ModalPage title={"Ver mais"} handleClose={() => props.setModal(null)}>
       <div className={styles.modal__wrapper}>
-        <Card>
+        <Card noShadow={true}>
           <Title style={marginTitulo}>Dados pessoais</Title>
           <div className={styles.profile}>
             <div className={styles.image}>
@@ -236,9 +310,6 @@ const Modal = (props) => {
                 src={props.data.file ? BASEURL + props.data.file : profile}
                 alt={props.data.name}
               />
-              {/* <T.Text weight="bold" size={12} className={styles.location}>
-            {location}º
-          </T.Text> */}
             </div>
           </div>
           <InputGroup>
@@ -259,7 +330,7 @@ const Modal = (props) => {
           </InputGroup>
         </Card>
 
-        <Card>
+        <Card noShadow={true}>
           <Title style={{ marginBottom: 32 }}>Contato</Title>
 
           {tels.map((field, index) => {
@@ -293,7 +364,7 @@ const Modal = (props) => {
             })}
         </Card>
 
-        <Card>
+        <Card noShadow={true}>
           <Title style={{ marginBottom: 32 }}>Redes sociais</Title>
 
           {socials.map((social, index) => {
@@ -312,7 +383,7 @@ const Modal = (props) => {
             Biografia
           </Textarea>
         </Card>
-        <Card>
+        <Card noShadow={true}>
           <Title style={{ marginBottom: 32 }}>Formação acadêmica</Title>
 
           {academic.map((fields, index) => {
@@ -357,6 +428,128 @@ const Modal = (props) => {
                   </Input>
                 </InputGroup>
               </section>
+            );
+          })}
+        </Card>
+        <Card noShadow={true}>
+          <Title style={{ marginBottom: 32 }}>Perspectivas</Title>
+
+          <InputGroup>
+            <Input readOnly value={props.data.current_situation}>
+              Situação atual
+            </Input>
+          </InputGroup>
+
+          <InputGroup>
+            <Input readOnly value={props.data.looking_for}>
+              O que busca?
+            </Input>
+          </InputGroup>
+        </Card>
+
+        <Card noShadow={true}>
+          <Title style={{ marginBottom: 32 }}>Skills</Title>
+          <div className={styles.skill__wrapper}>
+            {currentSkills?.map((item, index) => (
+              <div className={styles.skill__item}>{item.label}</div>
+            ))}
+          </div>
+        </Card>
+
+        <Card noShadow={true}>
+          <Title style={{ marginBottom: 32 }}>Portfolio</Title>
+
+          {portfolios.map((field, index) => {
+            return (
+              <InputGroup>
+                <Input readOnly value={field.link}>
+                  Link
+                </Input>
+                <Input readOnly value={field.platform}>
+                  Plataforma
+                </Input>
+              </InputGroup>
+            );
+          })}
+        </Card>
+
+        <Card noShadow={true}>
+          <Title style={{ marginBottom: 32 }}>Currículo</Title>
+
+          <InputGroup>
+            {props.data.curriculum_file && (
+              <File
+                file={props.data.curriculum_file}
+                name={props.data.curriculum_filename}
+                extension={props.data.curriculum_fileextension}
+              />
+            )}
+          </InputGroup>
+        </Card>
+
+        <Card noShadow={true}>
+          <Title style={{ marginBottom: 32 }}>Experiência Profissional</Title>
+
+          {experiences.map((field, index) => {
+            return (
+              <div key={index}>
+                <InputGroup>
+                  <Input readOnly defaultValue={field.role}>
+                    Cargo
+                  </Input>
+                </InputGroup>
+
+                <InputGroup>
+                  <Input readOnly value={field.company}>
+                    Empresa
+                  </Input>
+                </InputGroup>
+
+                <InputGroup>
+                  <Input readOnly value={field.start_date}>
+                    Início
+                  </Input>
+                  {/* {console.log(currentJob[index].status)} */}
+
+                  <Input
+                    readOnly
+                    value={(currentJob[index].status && " ") || field.end_date}
+                  >
+                    Término
+                  </Input>
+
+                  <div style={{ width: "100%", textAlign: "right" }}>
+                    <Checkbox
+                      readOnly
+                      defaultChecked={field.current_job === 1 ? true : false}
+                    >
+                      Meu Emprego atual
+                    </Checkbox>
+                  </div>
+                </InputGroup>
+
+                <InputGroup>
+                  <Textarea readOnly value={field.main_activities}>
+                    Principais atividades
+                  </Textarea>
+                </InputGroup>
+              </div>
+            );
+          })}
+        </Card>
+
+        <Card noShadow={true}>
+          <Title style={{ marginBottom: 32 }}>Outros links</Title>
+          {links.map((field, index) => {
+            return (
+              <InputGroup key={index}>
+                <Input readOnly value={field.link}>
+                  Link
+                </Input>
+                <Input readOnly value={field.platform}>
+                  Tipo de rede
+                </Input>
+              </InputGroup>
             );
           })}
         </Card>

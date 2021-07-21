@@ -24,15 +24,21 @@ const Trilha = (props) => {
   const { data: usertype } = useSelector((state) => state.usertype);
   const { data } = useSelector((state) => state.challenge);
   const { type, id, trail_type } = useParams();
+  const [controlledTrail, setControlledTrail] = useState([]);
   const [premiumDialog, setPremiumDialog] = useState(false);
   // const { type, id, trail_type, trail_id } = useParams();
   // const [activeTab, setActiveTab] = useState("normal");
 
   useEffect(() => {
     trail_type === "normal" && dispatch(normal(usertype, { challenge_id: id }));
-    trail_type === "premium" &&
-      dispatch(premium(usertype, { challenge_id: id }));
-  }, [dispatch, usertype, id, trail_type]);
+    trail_type === "premium" && data?.user?.pivot?.is_payed
+      ? dispatch(premium(usertype, { challenge_id: id }))
+      : setControlledTrail([]);
+  }, [dispatch, usertype, id, trail_type, data.user.pivot.is_payed]);
+
+  useEffect(() => {
+    setControlledTrail(trail);
+  }, [trail]);
 
   const handlePremumDialog = () => setPremiumDialog((prev) => !prev);
 
@@ -53,7 +59,7 @@ const Trilha = (props) => {
             <Loading />
           ) : (
             <>
-              {trail_type === "premium" && (
+              {trail_type === "premium" && !data?.user?.pivot?.is_payed && (
                 <Banner
                   full
                   Tag={"span"}
@@ -64,7 +70,7 @@ const Trilha = (props) => {
                   onClick={handlePremumDialog}
                 />
               )}
-              {trail?.map((item, index) => (
+              {controlledTrail?.map((item, index) => (
                 <TrilhaItem
                   to={`/meus-desafios/${type}/${id}/trilha/${trail_type}/${
                     item.video_id || item.question_id || item.material_id

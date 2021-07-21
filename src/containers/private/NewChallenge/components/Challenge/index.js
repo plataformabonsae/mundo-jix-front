@@ -85,7 +85,7 @@ const Challenge = ({
       if (data[`materials_${i}`])
         materialsCounter[`materials_${i}`] = data[`materials_${i}`][0];
     }
-    const dataWithMaterials = { ...data, materialsCounter };
+    const dataWithMaterials = { ...data, file: data.file[0], materialsCounter };
     if (hasAvaliation) {
       handleStep("avaliacao", dataWithMaterials);
       console.log("handleStep");
@@ -126,7 +126,7 @@ const Challenge = ({
               control={control}
               accept="image/png, image/gif, image/jpeg"
               errors={errors}
-              errorMessage={errors?.curriculum?.message}
+              errorMessage={errors?.file?.message}
             >
               Capa em JPG ou PNG (limite de 4mb):
             </InputFile>

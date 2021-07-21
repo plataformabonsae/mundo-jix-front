@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import { Title } from "components/Text";
 import Button from "components/Button";
@@ -7,22 +10,29 @@ import {
   Input,
   Textarea,
   InputGroup,
-  InputFile,
+  // InputFile,
   AddGroup,
   RemoveGroup,
 } from "components/Inputs";
 import { Card } from "components/Card";
 
+import { question } from "services/createTrail";
+
 import styles from "./styles.module.sass";
 
 const Question = (props) => {
+  const dispatch = useDispatch();
   const [editable, setEditable] = useState(true);
   const [answers, setAnswers] = useState([{ isCorrect: false }]);
+
+  const { data: usertype } = useSelector((state) => state.usertype);
 
   const { trails, index, handleData, handleCopy, handleDelete } = props;
   const { register, errors, control, handleSubmit } = useForm({
     reValidateMode: "onChange",
   });
+
+  const { id } = useParams();
 
   const handleCorrect = (index) => {
     const array = [...answers];
@@ -37,7 +47,16 @@ const Question = (props) => {
 
   const onSubmit = (data) => {
     handleData(index, data);
-    console.log(data);
+    dispatch(question(usertype, { challenge_id: id, ...data }))
+      .then((res) => {
+        toast.success("Video salvo", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        console.log(res);
+      })
+      .then(() => {
+        setEditable(false);
+      });
     setEditable(false);
   };
   return (
@@ -144,7 +163,6 @@ const Question = (props) => {
           errorMessage="Digite a descrição da pergunta"
           placeholder="Digite a descrição da pergunta"
         ></Textarea>
-        {/* <InputGroup> */}
         <div className={styles.options}>
           {answers.map((item, i) => (
             <div key={i} className={styles.answer}>

@@ -168,12 +168,14 @@ const Challenge = (props) => {
                   Projeto
                 </TabFlat>
               )}
-              <TabFlat
-                to={`/meus-desafios/${type}/${id}/trilha/normal`}
-                color={"white"}
-              >
-                Trilha
-              </TabFlat>
+              {usertype === "talento" && (
+                <TabFlat
+                  to={`/meus-desafios/${type}/${id}/trilha/normal`}
+                  color={"white"}
+                >
+                  Trilha
+                </TabFlat>
+              )}
               <TabFlat
                 to={`/meus-desafios/${type}/${id}/forum`}
                 color={"white"}

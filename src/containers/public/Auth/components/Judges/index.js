@@ -64,7 +64,12 @@ const Judges = (props) => {
           } `}
           desc={"Preencha com seus dados os campos abaixo."}
         />
-        <form noValidate onSubmit={handleSubmit(onSubmit)}>
+        <form
+          noValidate
+          className={styles.form}
+          onSubmit={handleSubmit(onSubmit)}
+          style={{ width: "100%" }}
+        >
           {loading && <Loading />}
           <Card className={styles.card}>
             <Input

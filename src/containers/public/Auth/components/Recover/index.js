@@ -67,7 +67,7 @@ const Recover = ({ type, action }) => {
         ) : (
           <form
             noValidate
-            style={{ padding: "0 15px" }}
+            style={{ padding: "0 15px", width: "100%" }}
             onSubmit={handleSubmit(onSubmit)}
           >
             <Card className={styles.card}>
@@ -113,6 +113,7 @@ const Recover = ({ type, action }) => {
 
 const ChangePassword = (props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [showTooltip, setShowTooltip] = useState(false);
@@ -144,6 +145,11 @@ const ChangePassword = (props) => {
         toast.success("Senha atualizada com sucesso", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
+      })
+      .then(() => {
+        setTimeout(() => {
+          history.push("/auth/talento/login");
+        }, 3000);
       })
       .catch((error) => {
         toast.error("Pin inválido", {

@@ -32,7 +32,12 @@ const ModalPage = (props) => {
   return (
     <>
       <animated.section className={styles.modal} style={animatedStyles}>
-        <Card id="ModalPage" border className={styles.card}>
+        <Card
+          id="ModalPage"
+          border
+          className={styles.card}
+          style={{ ...props.style }}
+        >
           <section className={styles.title}>
             <Title style={{ textTransform: "capitalize" }}>
               {type === "desafio" ? "desafio" : props?.title}

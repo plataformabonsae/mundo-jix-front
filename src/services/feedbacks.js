@@ -21,7 +21,6 @@ export const get =
 		})
 		await res
 			.then((response) => {
-				console.log(response)
 				dispatch(FeedbackActions.feedbacksSuccess(response?.data?.data))
 			})
 			.catch((error) => dispatch(FeedbackActions.feedbacksFailure(error)))
@@ -46,7 +45,6 @@ export const getTalente =
 		})
 		await res
 			.then((response) => {
-				console.log(response)
 				dispatch(FeedbackActions.feedbacksSuccess(response?.data?.data))
 			})
 			.catch((error) => dispatch(FeedbackActions.feedbacksFailure(error)))
@@ -71,7 +69,6 @@ export const getOne =
 		})
 		await res
 			.then((response) => {
-				console.log(response)
 				dispatch(FeedbackActions.feedbacksCurrentSuccess(response?.data?.data))
 			})
 			.catch((error) => dispatch(FeedbackActions.feedbacksCurrentFailure(error)))

@@ -80,10 +80,8 @@ const ProjectEdit = (props) => {
 		const append = (material) => {
 			setMaterials((prev) => [...prev, material])
 		}
-		console.log("unestend", project?.project)
 		if (project?.project?.materials.length) {
 			for (let i = 0; i < project.project.materials.length; i++) {
-				console.log("fila fa puta")
 				append(project.project.materials[i])
 			}
 		} else {
@@ -179,9 +177,8 @@ const ProjectEdit = (props) => {
 					toast.success("Projeto editado com sucesso!", {
 						position: toast.POSITION.BOTTOM_RIGHT,
 					})
-					console.log(res)
 				})
-				.then((res) => dispatch(get(usertype, { challenge_id })))
+				.then(() => dispatch(get(usertype, { challenge_id })))
 				.then(() => props.handleClose())
 				.catch((err) => console.log(err))
 		} else {
@@ -194,8 +191,12 @@ const ProjectEdit = (props) => {
 					file: file[0] || undefined,
 					team_id,
 					description,
-					videos: videos[0] !== "" ? JSON.stringify(videos) : null,
-					links: links[0].link !== "" ? JSON.stringify(links) : null,
+					videos:
+						videos && videos[0] !== undefined ? JSON.stringify(videos) : null,
+					links:
+						links && links[0]?.link !== undefined
+							? JSON.stringify(links)
+							: null,
 					name,
 					resume,
 					...materialsCounter,
@@ -203,15 +204,14 @@ const ProjectEdit = (props) => {
 			)
 			await req
 				.then((res) => {
+					console.log(res)
 					toast.success("Projeto criado com sucesso!", {
 						position: toast.POSITION.BOTTOM_RIGHT,
 					})
-					console.log(res)
 				})
 				.then(() => dispatch(get(usertype, { challenge_id })))
 				.then(() => props.handleClose())
 				.catch((error) => {
-					console.log(error)
 					toast.error("Um erro ocorreu ao criar o projeto, tente novamente.", {
 						position: toast.POSITION.BOTTOM_RIGHT,
 					})
@@ -305,32 +305,26 @@ const ProjectEdit = (props) => {
 			<InputGroup>
 				<div className={styles.label}>
 					<Title size={18}>Pitch</Title>
-					{pitch.length &&
-						pitch?.map((field, index) => {
-							// console.log(errors["videos"]?.[index]?.message)
-							if (!field?.link) return
-							return (
-								<div className={styles.duo}>
-									<Input
-										defaultValue={field?.link}
-										disabled={loading}
-										ref={register({
-											pattern: {
-												value: /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?‌​[\w?‌​=]*)?/,
-												message:
-													"Digite um link do Youtube válido",
-											},
-										})}
-										type="text"
-										name={`videos.${index}`}
-										arrayError={errors["videos"]?.[index]}
-										// errorMessage="Cole o link do youtube do pitch"
-										errorMessage={errors["videos"]?.[index]?.message}
-										placeholder="Cole o link do youtube do pitch"
-									/>
-								</div>
-							)
-						})}
+					{pitch?.map((field, index) => (
+						<div className={styles.duo}>
+							<Input
+								defaultValue={field?.link}
+								disabled={loading}
+								ref={register({
+									pattern: {
+										value: /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?‌​[\w?‌​=]*)?/,
+										message: "Digite um link do Youtube válido",
+									},
+								})}
+								type="text"
+								name={`videos.${index}`}
+								arrayError={errors["videos"]?.[index]}
+								// errorMessage="Cole o link do youtube do pitch"
+								errorMessage={errors["videos"]?.[index]?.message}
+								placeholder="Cole o link do youtube do pitch"
+							/>
+						</div>
+					))}
 					<InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
 						<AddGroup
 							onClick={() => setPitchs((prev) => [...prev, prev++])}
@@ -350,22 +344,17 @@ const ProjectEdit = (props) => {
 			<InputGroup>
 				<div className={styles.label}>
 					<Title size={18}>Materiais</Title>
-					{materials.length &&
-						materials.map((item, index) => {
-							console.log("materiais", item?.filename)
-							if (!item) return
-							return (
-								<InputFile
-									disabled={loading}
-									ref={register()}
-									name={`materials_${index}`}
-									control={control}
-									errors={errors}
-									errorMessage="Descreva sua solução"
-									placeholder="Descreva sua solução"
-								/>
-							)
-						})}
+					{materials.map((item, index) => (
+						<InputFile
+							disabled={loading}
+							ref={register()}
+							name={`materials_${index}`}
+							control={control}
+							errors={errors}
+							errorMessage="Descreva sua solução"
+							placeholder="Descreva sua solução"
+						/>
+					))}
 
 					<InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
 						<AddGroup
@@ -386,36 +375,30 @@ const ProjectEdit = (props) => {
 			<InputGroup>
 				<div className={styles.label}>
 					<Title size={18}>Links</Title>
-					{/* {console.log("links", links)} */}
-					{links?.length &&
-						links.map((field, index) => {
-							// console.log("field", field)
-							if (!field.link) return
-							return (
-								<div className={styles.duo}>
-									<Input
-										defaultValue={field?.link}
-										disabled={loading}
-										ref={register()}
-										type="text"
-										name={`links.${index}.link`}
-										errors={errors}
-										errorMessage="Cole o link"
-										placeholder="Cole o link"
-									/>
-									<SelectInput
-										defaultValue={field?.type}
-										ref={register()}
-										name={`links.${index}.type`}
-										control={control}
-										errors={errors}
-										errorMessage="Selecione a plataforma"
-										placeholder="Selecione a plataforma"
-										options={typeSocial}
-									/>
-								</div>
-							)
-						})}
+					{links.map((field, index) => (
+						<div className={styles.duo}>
+							<Input
+								defaultValue={field?.link}
+								disabled={loading}
+								ref={register()}
+								type="text"
+								name={`links.${index}.link`}
+								errors={errors}
+								errorMessage="Cole o link"
+								placeholder="Cole o link"
+							/>
+							<SelectInput
+								defaultValue={field?.type}
+								ref={register()}
+								name={`links.${index}.type`}
+								control={control}
+								errors={errors}
+								errorMessage="Selecione a plataforma"
+								placeholder="Selecione a plataforma"
+								options={typeSocial}
+							/>
+						</div>
+					))}
 
 					<InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
 						<AddGroup

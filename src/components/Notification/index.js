@@ -36,45 +36,84 @@ const Notification = ({ list, open, isOpen }) => {
     });
   };
 
-  const setTextByType = (type) => {
-    if (type === `App\\Notifications\\UserWantsYouJoiningHisTeam`) {
-      return "joinHisTeam";
+  const setTextByType = (item) => {
+    if (item.type === `App\\Notifications\\UserWantsYouJoiningHisTeam`) {
+      return {
+        title: "Convite para participar de time",
+        desc: `${item.data.guardian_name} te convidou para o time para o seu time ${item.data.team_name}`,
+      };
     }
-    if (type === `App\\Notifications\\UserWantsJoinYourTeam`) {
-      return "joinYourTeam";
+    if (item.type === `App\\Notifications\\UserWantsJoinYourTeam`) {
+      return {
+        title: "Convite para entrar no seu time",
+        desc: `${item.data?.user_name} quer entrar para o seu time ${item.data?.team_name}`,
+      };
     }
-    if (type === `App\\Notifications\\ChallengeEndingInOneDay`) {
-      return "endingOneDay";
+    if (item.type === `App\\Notifications\\ChallengeEndingInOneDay`) {
+      return {
+        title: "Falta 1 dia",
+        desc: `O desafio ${item.data?.challenge_name} irá acabar em 1 dia.`,
+      };
     }
-    if (type === `App\\Notifications\\ChallengeEndingInTwoDays`) {
-      return "endingTwoDays";
+    if (item.type === `App\\Notifications\\ChallengeEndingInTwoDays`) {
+      return {
+        title: "Falta 2 dias",
+        desc: `O desafio ${item.data?.challenge_name} irá acabar em 2 dias.`,
+      };
     }
-    if (type === `App\\Notifications\\ChallengeEndingInThreeDay`) {
-      return "endingThreeDays";
+    if (item.type === `App\\Notifications\\ChallengeEndingInThreeDay`) {
+      return {
+        title: "Falta 3 dias",
+        desc: `O desafio ${item.data?.challenge_name} irá acabar em 3 dias.`,
+      };
     }
-    if (type === `App\\Notifications\\ChallengePurchaseAvailable`) {
-      return "purchaseAvailable";
+    if (item.type === `App\\Notifications\\ChallengePurchaseAvailable`) {
+      return {
+        title: "Disponível para compra",
+        desc: `O desafio ${item.data?.challenge_name} está disponível.`,
+      };
     }
-    if (type === `App\\Notifications\\GuardianAcceptedYourRequest`) {
-      return "guardianAcceptedRequest";
+    if (item.type === `App\\Notifications\\GuardianAcceptedYourRequest`) {
+      return {
+        title: "Aceitou o seu pedido",
+        desc: `O guardião do time ${item.data?.team_name} aceitou o seu pedido.`,
+      };
     }
-    if (type === `App\\Notifications\\GuardianRefusedYourRequest`) {
-      return "guardianRefusedRequest";
+    if (item.type === `App\\Notifications\\GuardianRefusedYourRequest`) {
+      return {
+        title: "Recusou o seu pedido",
+        desc: `O guardião do time ${item.data?.team_name} recusou o seu pedido.`,
+      };
     }
-    if (type === `App\\Notifications\\GuardianSentProject`) {
-      return "guardianSentProject";
+    if (item.type === `App\\Notifications\\GuardianSentProject`) {
+      return {
+        title: "Projeto enviado",
+        desc: `O guardião ${item.data?.guardian_name} enviou o projeto do desafio ${item.data?.challenge_name}.`,
+      };
     }
-    if (type === `App\\Notifications\\PremiumPurchaseFail`) {
-      return "premiumPurchaseFail";
+    if (item.type === `App\\Notifications\\PremiumPurchaseFail`) {
+      return {
+        title: "Problema na compra",
+        desc: `Tivemos um problema com a compra da trilha do desafio ${item.data?.challenge_name}.`,
+      };
     }
-    if (type === `App\\Notifications\\PremiumPurchaseSuccess`) {
-      return "premiumPurchaseSuccess";
+    if (item.type === `App\\Notifications\\PremiumPurchaseSuccess`) {
+      return {
+        title: "Compra efetuado com sucesso",
+        desc: `A compra da trilha do desafio ${item.data?.challenge_name} foi confirmada.`,
+      };
     }
-    if (type === `App\\Notifications\\SubscriptionOff`) {
-      return "subscriptionOff";
+    if (item.type === `App\\Notifications\\SubscriptionOff`) {
+      return {
+        title: "Assinatura cancelada",
+        desc: `A sua assinatura foi cancelada.`,
+      };
     }
-    if (type === `App\\Notifications\\SubscriptionSuccess`) {
-      return "subscriptionSuccess";
+    if (item.type === `App\\Notifications\\SubscriptionSuccess`) {
+      return {
+        title: "Assinatura confirmada",
+        desc: `A sua assinatura foi confirmada.`,
+      };
     }
   };
 
@@ -114,15 +153,9 @@ const Notification = ({ list, open, isOpen }) => {
                   onClick={() => handleRead(item.id)}
                 >
                   <div className={styles.invites__content}>
-                    <Title size={14}>
-                      {setTextByType(item.type) === "joinHisTeam" &&
-                        "Convite para o time:"}{" "}
-                      {item.data.team_name || ""}
-                    </Title>
+                    <Title size={14}>{setTextByType(item).title}</Title>
                     <Text style={{ marginTop: 4 }} size={12}>
-                      {setTextByType(item.type) === "teamInvite" &&
-                        "Convidado por "}
-                      {item.data.guardian_name || ""}
+                      {setTextByType(item).desc}
                     </Text>
                   </div>
                 </div>

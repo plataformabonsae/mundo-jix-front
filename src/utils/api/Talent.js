@@ -51,7 +51,9 @@ const TALENT = {
     update: (id) => `${BASEURL}/project/update/${id}`,
     assessment: (id) => `${BASEURL}/project/${id}/assessment`,
     judgeAssessment: (chalenge_id, project_id) =>
-      `${BASEURL}/mentor/challenge/${chalenge_id}/project/${project_id}/assessment`,
+      `${BASEURL}/judge/challenge/${chalenge_id}/project/${project_id}/assessment`,
+    avaliate: (chalenge_id, project_id) =>
+      `${BASEURL}/judge/challenge/${chalenge_id}/project/${project_id}/assessment/send`,
   },
 
   PROJECTS: {

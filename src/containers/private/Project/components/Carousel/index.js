@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation } from "swiper/core";
 import YouTube from "react-youtube";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 
 import { Card } from "components/Card";
 import { Input, InputGroup, Textarea } from "components/Inputs";
@@ -28,7 +29,7 @@ import * as colors from "utils/styles/Colors";
 
 import { BASEURL } from "utils/api";
 
-import { get as assessment, getAsJudge } from "services/assessment";
+import { get as assessment, getAsJudge, avaliate } from "services/assessment";
 import { get } from "services/project";
 import { deleteMaterial } from "services/deleteMaterial";
 import { kick, leave, transfer } from "services/team";
@@ -51,6 +52,10 @@ const Carousel = (props) => {
   const { data: usertype } = useSelector((state) => state.usertype);
   const { data: project } = useSelector((state) => state.project);
   const { data: challenge } = useSelector((state) => state.challenge);
+  const { register, handleSubmit } = useForm();
+  const { data: judgeAssessment } = useSelector(
+    (state) => state.judgeAssessment
+  );
   const { data } = props;
   const { type, id } = useParams();
 
@@ -69,7 +74,7 @@ const Carousel = (props) => {
   }, [dispatch, usertype, data, currentProject, challenge, user]);
 
   useEffect(() => {
-    const request = usertype == "mentor" ? getMentor : getTalente;
+    const request = usertype === "mentor" ? getMentor : getTalente;
     dispatch(
       request(usertype, {
         challenge_id: id,
@@ -114,6 +119,35 @@ const Carousel = (props) => {
 
   const handleTabs = (tab) => {
     setActiveTab(tab);
+  };
+
+  const submitAssessment = (data) => {
+    const { grade, assessment_id } = data;
+    dispatch(
+      avaliate(usertype, {
+        ...data,
+        grade: JSON.stringify(grade),
+        assessment_id: JSON.stringify(assessment_id),
+      })
+    )
+      .then((res) => {
+        toast.success("Avaliação enviada", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        console.log(res);
+      })
+      .then(() =>
+        dispatch(assessment(usertype, { project_id: data?.project_id }))
+      )
+      .then(() => {
+        handleModalAvaliation();
+      })
+      .catch((error) => {
+        toast.error("Algum erro ocorreu ao enviar a avaliação", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        console.log(error);
+      });
   };
 
   return (
@@ -525,24 +559,6 @@ const Carousel = (props) => {
                     </Card>
                   ))}
                 </section>
-                {/* <section className={styles.avaliacao__total}>
-                  <Title
-                    size={16}
-                    style={{
-                      textAlign: "center",
-                      marginBottom: 24,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Nota do jurado
-                  </Title>
-                  <Title
-                    style={{ textAlign: "center", marginBottom: 24 }}
-                    size={180}
-                  >
-                    {assessments?.final_grades?.final_grade}
-                  </Title>
-                </section> */}
               </section>
             </Card>
           ))}
@@ -561,13 +577,58 @@ const Carousel = (props) => {
           header={"Avaliar projeto"}
           handleClose={handleModalAvaliation}
         >
-          <form action="">
-            <Card className={styles.avaliacao__card} noShadow border>
-              <Title>Materia</Title>
-              <div style={{ maxWidth: 60 }}>
-                <Input></Input>
-              </div>
-            </Card>
+          <form onSubmit={handleSubmit(submitAssessment)}>
+            <input
+              ref={register()}
+              name={`judge_id`}
+              type={"hidden"}
+              value={user?.user.id}
+            />
+            <input
+              ref={register()}
+              name={`project_id`}
+              type={"hidden"}
+              value={currentProject?.project?.id}
+            />
+            <input
+              ref={register()}
+              name={`challenge_id`}
+              type={"hidden"}
+              value={challenge?.challenge?.id}
+            />
+            {judgeAssessment?.assessments?.map((avaliation, index) => (
+              <Card
+                key={avaliation.id}
+                className={styles.avaliacao__card}
+                noShadow
+                border
+              >
+                <input
+                  ref={register()}
+                  name={`assessment_id.${index}`}
+                  type={"hidden"}
+                  value={avaliation.id}
+                />
+                <div className={styles.avaliacao__card__wrapper}>
+                  <Title size={16}>{avaliation.evaluate}</Title>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{ maxWidth: 80 }}>
+                      <Input
+                        ref={register()}
+                        name={`grade.${index}`}
+                        type={"number"}
+                        max={avaliation.max_grade}
+                      ></Input>
+                    </div>
+                    <Title>
+                      <span style={{ opacity: 0.2 }}>
+                        /{avaliation.max_grade}
+                      </span>
+                    </Title>
+                  </div>
+                </div>
+              </Card>
+            ))}
             <InputGroup>
               <label
                 style={{
@@ -579,7 +640,7 @@ const Carousel = (props) => {
                 <Title size={16}>Feedback</Title>
                 <Textarea
                   // disabled={loading}
-                  // ref={register()}
+                  ref={register()}
                   name="feedback"
                   // onChange={handleCountChar}
                   // errors={errors}
@@ -589,7 +650,9 @@ const Carousel = (props) => {
                 />
               </label>
             </InputGroup>
-            <Button type={"green"}>Enviar avaliação</Button>
+            <Button submit Tag={"button"} type={"green"}>
+              Enviar avaliação
+            </Button>
           </form>
         </Dialog>
       )}
@@ -631,7 +694,7 @@ const TeamIntegrant = (props) => {
       })
       .then(() => handleModal())
       .catch((error) => {
-        toast.error("Algum erro ocorreu ao expulsar", {
+        toast.error("Algum erro ocorreu ao transferir guardião.", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       });

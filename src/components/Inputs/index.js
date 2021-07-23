@@ -122,6 +122,7 @@ const Input = React.forwardRef(
       step,
       onFocus,
       readyOnly,
+      max,
       ...rest
     },
     ref
@@ -145,6 +146,7 @@ const Input = React.forwardRef(
         ref={ref}
         onFocus={onFocus}
         step={step}
+        max={max}
         readyOnly={readyOnly}
         {...rest}
       />

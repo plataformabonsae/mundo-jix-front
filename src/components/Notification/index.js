@@ -67,12 +67,6 @@ const Notification = ({ list, open, isOpen }) => {
         desc: `O desafio ${item.data?.challenge_name} irá acabar em 3 dias.`,
       };
     }
-    if (item.type === `App\\Notifications\\ChallengePurchaseAvailable`) {
-      return {
-        title: "Disponível para compra",
-        desc: `O desafio ${item.data?.challenge_name} está disponível.`,
-      };
-    }
     if (item.type === `App\\Notifications\\GuardianAcceptedYourRequest`) {
       return {
         title: "Aceitou o seu pedido",
@@ -91,12 +85,6 @@ const Notification = ({ list, open, isOpen }) => {
         desc: `O guardião ${item.data?.guardian_name} enviou o projeto do desafio ${item.data?.challenge_name}.`,
       };
     }
-    if (item.type === `App\\Notifications\\PremiumPurchaseFail`) {
-      return {
-        title: "Problema na compra",
-        desc: `Tivemos um problema com a compra da trilha do desafio ${item.data?.challenge_name}.`,
-      };
-    }
     if (item.type === `App\\Notifications\\PremiumPurchaseSuccess`) {
       return {
         title: "Compra efetuado com sucesso",
@@ -113,6 +101,18 @@ const Notification = ({ list, open, isOpen }) => {
       return {
         title: "Assinatura confirmada",
         desc: `A sua assinatura foi confirmada.`,
+      };
+    }
+    if (item.type === `App\\Notifications\\GuardianKickedYouOffTheTeam`) {
+      return {
+        title: "Você foi removido do time",
+        desc: `Agora você está cadastrado como individual no desafio ${item.data?.challenge_name}.`,
+      };
+    }
+    if (item.type === `App\\Notifications\\YouAreTheNewGuardianOfTheTeam`) {
+      return {
+        title: "Você é o novo guardiao",
+        desc: `Agora você é o guardião do time ${item.data?.team_name} no desafio ${item.data?.challenge_name}.`,
       };
     }
   };

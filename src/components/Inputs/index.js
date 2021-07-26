@@ -173,6 +173,8 @@ const Textarea = React.forwardRef(
       errors,
       errorMessage,
       readyOnly,
+      validate,
+      arrayError,
       ...props
     },
     ref
@@ -194,7 +196,11 @@ const Textarea = React.forwardRef(
         readyOnly={readyOnly}
         {...props}
       />
-      <div className={styles.error}>{errors?.[name] && errorMessage}</div>
+      <div className={styles.error}>
+        {(errors?.[name] && errorMessage) ||
+          (validate ? validate : null) ||
+          (arrayError && errorMessage)}
+      </div>
     </label>
   )
 );

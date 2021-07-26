@@ -96,6 +96,7 @@ const Trilha = (props) => {
             title={
               "Adquira agora mesmo uma trilha especial com um aprofundamento mais rico deste desafio. "
             }
+            type={"trail"}
             id={data.challenge.id}
           />
         )}

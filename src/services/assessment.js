@@ -41,7 +41,7 @@ export const getAsJudge =
       : TALENT.PROJECT.judgeAssessment
   ) =>
   async (dispatch) => {
-    dispatch(JudgeAssessmentActions.judgeAssessmentRequest());
+    dispatch(AssessmentActions.assessmentRequest());
     const res = axios({
       url: url(body.challenge_id, body.project_id),
       headers: {
@@ -51,13 +51,9 @@ export const getAsJudge =
     });
     await res
       .then((response) =>
-        dispatch(
-          JudgeAssessmentActions.judgeAssessmentSuccess(response?.data?.data)
-        )
+        dispatch(AssessmentActions.assessmentSuccess(response?.data?.data))
       )
-      .catch((error) =>
-        dispatch(JudgeAssessmentActions.judgeAssessmentFailure(error))
-      );
+      .catch((error) => dispatch(AssessmentActions.assessmentFailure(error)));
     return res;
   };
 

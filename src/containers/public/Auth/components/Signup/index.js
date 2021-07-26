@@ -398,13 +398,13 @@ const Email = ({ title, desc, type }) => {
                 />
                 Cadastrar com Facebook
               </Button>
-              <Button
+              {/* <Button
                 Tag="a"
                 href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${process.env.REACT_APP_LINKEDIN_CLIENT_ID}&redirect_uri=${linkedinSettings.redirect_uri}&state=foobar&scope=r_liteprofile%20r_emailaddress`}
                 type="linkedin"
               >
                 Cadastrar com Linkedin
-              </Button>
+              </Button> */}
             </div>
           </>
         )}

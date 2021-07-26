@@ -52,7 +52,7 @@ const Carousel = (props) => {
   const { data: usertype } = useSelector((state) => state.usertype);
   const { data: project } = useSelector((state) => state.project);
   const { data: challenge } = useSelector((state) => state.challenge);
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const { data: judgeAssessment } = useSelector(
     (state) => state.judgeAssessment
   );
@@ -60,11 +60,12 @@ const Carousel = (props) => {
   const { type, id } = useParams();
 
   useEffect(() => {
-    dispatch(assessment(usertype, { project_id: data?.project?.id }));
-  }, [dispatch, usertype, data]);
+    if (!user?.user?.is_judge || !user?.user?.is_mentor)
+      dispatch(assessment(usertype, { project_id: data?.project?.id }));
+  }, [dispatch, usertype, data, user]);
 
   useEffect(() => {
-    if (user?.user?.is_judge)
+    if (user?.user?.is_judge || user?.user?.is_mentor)
       dispatch(
         getAsJudge(usertype, {
           project_id: currentProject?.project?.id,
@@ -74,14 +75,15 @@ const Carousel = (props) => {
   }, [dispatch, usertype, data, currentProject, challenge, user]);
 
   useEffect(() => {
-    const request = usertype === "mentor" ? getMentor : getTalente;
+    const request =
+      user?.user?.is_mentor || user?.user?.is_judge ? getMentor : getTalente;
     dispatch(
       request(usertype, {
         challenge_id: id,
         project_id: data?.project?.id,
       })
     );
-  }, [data?.project?.id, id, dispatch, usertype]);
+  }, [data?.project?.id, id, dispatch, usertype, user]);
 
   const opts = {
     height: "460",
@@ -122,10 +124,11 @@ const Carousel = (props) => {
   };
 
   const submitAssessment = (data) => {
-    const { grade, assessment_id } = data;
+    const { grade, assessment_id, feedback } = data;
     dispatch(
       avaliate(usertype, {
         ...data,
+        feedback: JSON.stringify(feedback),
         grade: JSON.stringify(grade),
         assessment_id: JSON.stringify(assessment_id),
       })
@@ -137,7 +140,12 @@ const Carousel = (props) => {
         console.log(res);
       })
       .then(() =>
-        dispatch(assessment(usertype, { project_id: data?.project_id }))
+        dispatch(
+          getAsJudge(usertype, {
+            project_id: currentProject?.project?.id,
+            challenge_id: challenge.challenge.id,
+          })
+        )
       )
       .then(() => {
         handleModalAvaliation();
@@ -596,7 +604,7 @@ const Carousel = (props) => {
               type={"hidden"}
               value={challenge?.challenge?.id}
             />
-            {judgeAssessment?.assessments?.map((avaliation, index) => (
+            {assessments?.assessments?.map((avaliation, index) => (
               <Card
                 key={avaliation.id}
                 className={styles.avaliacao__card}
@@ -612,12 +620,27 @@ const Carousel = (props) => {
                 <div className={styles.avaliacao__card__wrapper}>
                   <Title size={16}>{avaliation.evaluate}</Title>
                   <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ maxWidth: 80 }}>
+                    <div style={{ maxWidth: 120 }}>
                       <Input
-                        ref={register()}
+                        ref={register({
+                          required: {
+                            value: true,
+                            message: "Obrigatório",
+                          },
+                          max: {
+                            value: avaliation.max_grade,
+                            message: `Até ${avaliation.max_grade}`,
+                          },
+                          min: {
+                            value: 0,
+                            message: `A nota mínima é 0`,
+                          },
+                        })}
                         name={`grade.${index}`}
                         type={"number"}
-                        max={avaliation.max_grade}
+                        errors={errors}
+                        validate={errors.grade?.[index]?.message}
+                        // max={avaliation.max_grade}
                       ></Input>
                     </div>
                     <Title>
@@ -627,29 +650,34 @@ const Carousel = (props) => {
                     </Title>
                   </div>
                 </div>
+                <InputGroup>
+                  <label
+                    style={{
+                      width: "100%",
+                      textAlign: "left",
+                      marginTop: 24,
+                    }}
+                  >
+                    <Title size={16}>Feedback da matéria</Title>
+                    <Textarea
+                      // disabled={loading}
+                      ref={register({ required: true })}
+                      name={`feedback.${index}`}
+                      // onChange={handleCountChar}
+                      errors={errors}
+                      rows="7"
+                      validate={
+                        errors.feedback?.[index] &&
+                        `Escreva um feedback para o projeto`
+                      }
+                      z
+                      placeholder="Escreva um feedback para o projeto"
+                    />
+                  </label>
+                </InputGroup>
               </Card>
             ))}
-            <InputGroup>
-              <label
-                style={{
-                  width: "100%",
-                  textAlign: "left",
-                  marginTop: 24,
-                }}
-              >
-                <Title size={16}>Feedback</Title>
-                <Textarea
-                  // disabled={loading}
-                  ref={register()}
-                  name="feedback"
-                  // onChange={handleCountChar}
-                  // errors={errors}
-                  rows="7"
-                  errorMessage="Escreva um feedback para o projeto"
-                  placeholder="Escreva um feedback para o projeto"
-                />
-              </label>
-            </InputGroup>
+
             <Button submit Tag={"button"} type={"green"}>
               Enviar avaliação
             </Button>

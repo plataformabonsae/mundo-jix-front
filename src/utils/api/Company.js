@@ -1,5 +1,5 @@
 const BASEURL = process.env.REACT_APP_COMPANY_API;
-const BASEURL_TERMS = process.env.REACT_APP_TALENT_API;
+const BASEURL_TALENT = process.env.REACT_APP_TALENT_API;
 
 const COMPANY = {
   API: BASEURL,
@@ -101,7 +101,7 @@ const COMPANY = {
   },
 
   TERMS: {
-    terms: `${BASEURL_TERMS}/terms-of-use`,
+    terms: `${BASEURL_TALENT}/terms-of-use`,
   },
 
   NOTIFICATIONS: {
@@ -115,6 +115,15 @@ const COMPANY = {
     invites: `${BASEURL}/team/my_invites`,
     accept: (id) => `${BASEURL}/team/accept/${id}`,
     refuse: (id) => `${BASEURL}/team/refuse/${id}`,
+  },
+
+  PAYMENT: {
+    incompanyIntent: `${BASEURL_TALENT}/stripe/company-challenge/create-payment`,
+    incompanySuccess: `${BASEURL_TALENT}/stripe/company-challenge/complete-payment`,
+    ultradesafioIntent: `${BASEURL_TALENT}/stripe/company-ultra/create-payment`,
+    ultradesafioSuccess: `${BASEURL_TALENT}/stripe/company-ultra/complete-payment`,
+    usersIntent: `${BASEURL_TALENT}/stripe/company-results/create-payment`,
+    usersSuccess: `${BASEURL_TALENT}/stripe/company-results/complete-payment`,
   },
 };
 

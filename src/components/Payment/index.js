@@ -29,7 +29,17 @@ import { BASEURL } from "utils/api";
 
 import defaultImage from "assets/components/MainImage/image.png";
 
-import { intent, success, subscription } from "services/payment";
+import {
+  intent,
+  success,
+  subscription,
+  incompanyIntent,
+  incompanySuccess,
+  ultradesafioIntent,
+  ultradesafioSuccess,
+  usersIntent,
+  usersSuccess,
+} from "services/payment";
 import { get } from "services/challenges";
 import { get as getUser } from "services/auth";
 
@@ -76,10 +86,15 @@ const Payment = (props) => {
 
   useEffect(() => {
     if (props.id && !props.subscription) {
-      dispatch(intent(usertype, { challenge_id: props.id }));
+      const type =
+        (props.type === "in_company" && incompanyIntent) ||
+        (props.type === "ultradesafio" && ultradesafioIntent) ||
+        (props.type === "trail" && intent) ||
+        (props.type === "users" && usersIntent);
+      dispatch(type(usertype, { challenge_id: props.id }));
       console.log(props.id);
     }
-  }, [dispatch, usertype, props.id, props.subscription]);
+  }, [dispatch, usertype, props.id, props.subscription, props.type]);
 
   useEffect(() => {
     payment &&
@@ -110,7 +125,11 @@ const Payment = (props) => {
                 handleClose={props.handleClose}
               />
             ) : (
-              <PaymentForm data={stripeInfo} handleClose={props.handleClose} />
+              <PaymentForm
+                data={stripeInfo}
+                handleClose={props.handleClose}
+                type={props.type}
+              />
             )}
           </div>
         </div>
@@ -144,6 +163,11 @@ const PaymentForm = (props) => {
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
+    const type =
+      (props.type === "in_company" && incompanySuccess) ||
+      (props.type === "ultradesafio" && ultradesafioSuccess) ||
+      (props.type === "trail" && success) ||
+      (props.type === "users" && usersSuccess);
     setProcessing(true);
     const payload = await stripe.confirmCardPayment(data.client_secret, {
       payment_method: {
@@ -158,7 +182,7 @@ const PaymentForm = (props) => {
       setProcessing(false);
       setSucceeded(payload);
       dispatch(
-        success(usertype, {
+        type(usertype, {
           payment_id: payload.paymentIntent.id,
           challenge_id: challenge?.challenge?.id,
         })

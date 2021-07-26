@@ -146,7 +146,7 @@ export const up =
   async (dispatch) => {
     // dispatch(CreateTrail.createTrailRequest());
     const res = axios({
-      url: url(body.challenge_id),
+      url: url(body.trail_id),
       method: "post",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -154,11 +154,15 @@ export const up =
       },
     });
     await res
-      .then
-      // (response) =>
-      // dispatch(CreateTrail.createTrailSuccess(response?.data?.data))
-      ()
-      .catch((error) => dispatch(CreateTrail.createTrailFailure(error)));
+      .then(
+        // (response) =>
+        // dispatch(CreateTrail.createTrailSuccess(response?.data?.data))
+        (res) => console.log(res)
+      )
+      .catch((error) => {
+        dispatch(CreateTrail.createTrailFailure(error));
+        console.log(error);
+      });
     return res;
   };
 
@@ -172,18 +176,23 @@ export const down =
   async (dispatch) => {
     // dispatch(CreateTrail.createTrailRequest());
     const res = axios({
-      url: url(body.challenge_id),
+      url: url(body.trail_id),
       method: "post",
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
       },
     });
+    console.log(body);
     await res
-      .then
-      // (response) =>
-      // dispatch(CreateTrail.createTrailSuccess(response?.data?.data))
-      ()
-      .catch((error) => dispatch(CreateTrail.createTrailFailure(error)));
+      .then(
+        // (response) =>
+        // dispatch(CreateTrail.createTrailSuccess(response?.data?.data))
+        (res) => console.log(res)
+      )
+      .catch((error) => {
+        dispatch(CreateTrail.createTrailFailure(error));
+        console.log(error);
+      });
     return res;
   };

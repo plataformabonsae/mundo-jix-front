@@ -19,6 +19,7 @@ const Avaliation = ({
 }) => {
   const [assessments, setAssessments] = useState([]);
   const [judges, setJudges] = useState([]);
+  const [password, setPassword] = useState([]);
 
   const { loading } = useSelector((state) => state.cep);
   const { register, errors, control, handleSubmit } = useForm({
@@ -96,30 +97,41 @@ const Avaliation = ({
               <InputGroup key={index}>
                 <div style={{ width: "50%" }}>
                   <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
-                    Nome do Jurado {index + 1}
+                    Nome do jurado {index + 1}
                   </Title>
-
                   <Input
-                    defaultValue={""}
-                    ref={register({ required: true })}
+                    defaultValue={social.link}
+                    ref={register({
+                      required: { value: true, message: "Obrigatório" },
+                    })}
                     errors={errors}
-                    errorMessage="Nome do jurado"
+                    validate={errors?.judges?.[index]?.name?.message}
                     name={`judges.${index}.name`}
-                    placeholder="Nome do jurado"
+                    placeholder="Nome do mentor"
                   ></Input>
                 </div>
                 <div style={{ width: "50%" }}>
                   <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
-                    E-mail do Jurado {index + 1}
+                    E-mail do jurado {index + 1}
                   </Title>
                   <Input
-                    defaultValue={""}
-                    ref={register({ required: true })}
+                    defaultValue={social.platform}
+                    ref={register({
+                      required: {
+                        value: true,
+                        message: "Obrigatório",
+                      },
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: "Digite um e-mail válido",
+                      },
+                    })}
                     name={`judges.${index}.email`}
                     control={control}
                     errors={errors}
-                    errorMessage="E-mail do jurado"
-                    placeholder="E-mail do jurado"
+                    validate={errors?.judges?.[index]?.email?.message}
+                    errorMessage="E-mail do mentor"
+                    placeholder="E-mail do mentor"
                   ></Input>
                 </div>
                 <div style={{ width: "50%" }}>
@@ -128,11 +140,26 @@ const Avaliation = ({
                   </Title>
                   <Input
                     defaultValue={""}
-                    ref={register({ required: true })}
+                    ref={register({
+                      required: {
+                        value: true,
+                        message: "Obrigatório",
+                      },
+                      minLength: {
+                        value: 8,
+                        message: "Digite pelo menos 8 caracteres.",
+                      },
+                    })}
                     errors={errors}
-                    errorMessage="Repita a senha"
+                    onChange={(e) =>
+                      setPassword((prev) => {
+                        prev[index] = `${e.target.value}`;
+                        return prev;
+                      })
+                    }
+                    validate={errors?.judges?.[index]?.password?.message}
                     name={`judges.${index}.password`}
-                    placeholder="Repita a senha"
+                    placeholder="Insira a senha"
                   ></Input>
                 </div>
                 <div style={{ width: "50%" }}>
@@ -140,11 +167,20 @@ const Avaliation = ({
                     Repita a senha do jurado {index + 1}
                   </Title>
                   <Input
-                    defaultValue={social.platform}
-                    ref={register({ required: true })}
+                    defaultValue={""}
                     name={`judges.${index}.repeat_password`}
                     control={control}
                     errors={errors}
+                    ref={register({
+                      required: {
+                        value: true,
+                        message: "Obrigatório",
+                      },
+                      validate: (val) =>
+                        password[index] === val ||
+                        "As senhas precisam ser iguais.",
+                    })}
+                    validate={errors?.judges?.[index]?.repeat_password?.message}
                     errorMessage="Repita a senha"
                     placeholder="Repita a senha"
                   ></Input>
@@ -155,13 +191,19 @@ const Avaliation = ({
 
           <InputGroup style={{ flexWrap: "nowrap", width: "100%" }}>
             <AddGroup
-              onClick={() => setJudges((prev) => [...prev, prev++])}
-              text="Adicionar jurado"
+              onClick={() => {
+                setJudges((prev) => [...prev, prev++]);
+                setPassword((prev) => [...prev, ""]);
+              }}
+              text="Adicionar mentor"
             />
             {judges?.length > 1 && (
               <RemoveGroup
-                onClick={() => setJudges((state) => [...state].slice(0, -1))}
-                text="Remover jurado"
+                onClick={() => {
+                  setJudges((state) => [...state].slice(0, -1));
+                  setPassword((prev) => [...prev].slice(0, -1));
+                }}
+                text="Remover mentor"
               />
             )}
           </InputGroup>

@@ -254,82 +254,104 @@ const Challenge = (props) => {
         </ModalPage>
       )}
       {owned && !!data?.challenge && (page === "inicio" || !page) && (
-        <section className={`${styles.challenge}`}>
-          <MainImage data={data.challenge} />
-          {usertype === "empresa" && <Counters data={data.challenge} />}
-          {!!user?.user?.is_subscribed && (
-            <>
-              <Presentation
-                handleClickToSubscribe={handleClickToSubscribe}
-                data={data.challenge}
-                buttonContent={false}
+        <>
+          <section className={`${styles.challenge}`}>
+            <MainImage data={data.challenge} />
+            {usertype === "empresa" && <Counters data={data.challenge} />}
+            {!!user?.user?.is_subscribed && (
+              <>
+                <Presentation
+                  handleClickToSubscribe={handleClickToSubscribe}
+                  data={data.challenge}
+                  buttonContent={false}
+                  isModal={props.isModal}
+                />
+              </>
+            )}
+            {!!data.challenge.materials.length && (
+              <Downloads
+                data={data.challenge.materials || ""}
                 isModal={props.isModal}
               />
-            </>
-          )}
-          {!!data.challenge.materials.length && (
-            <Downloads
-              data={data.challenge.materials || ""}
-              isModal={props.isModal}
+            )}
+            {/* {!props.isModal && ( */}
+            <Infos data={data.challenge} />
+            {/* )} */}
+            {!props.isModal && !!(data?.team?.users?.length > 0) && (
+              <div className={styles.section}>
+                <Title size={24}>Equipe</Title>
+                <div className={styles.container}>
+                  {data?.team?.users.map((item) => (
+                    <ProfileCard
+                      border
+                      key={item.id}
+                      data={item}
+                      keeper={item?.pivot?.is_guardian}
+                    ></ProfileCard>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!props.isModal && !data?.team && usertype === "talento" && (
+              <div className={styles.section}>
+                <Title size={24}>Individual</Title>
+                <div className={styles.container}>
+                  <ProfileCard border data={data?.user}></ProfileCard>
+                </div>
+              </div>
+            )}
+            {data?.mentors && !!(data.mentors.length > 0) && (
+              <div
+                className={
+                  props.isModal ? styles.section : styles.section__border
+                }
+                style={{ textAlign: props.isModal ? "left" : "auto" }}
+              >
+                <Title size={24}>Mentores</Title>
+                <div className={styles.container}>
+                  {data?.mentors?.map((item, index) => (
+                    <ProfileCard border data={item} key={item.id} small />
+                  ))}
+                </div>
+              </div>
+            )}
+            {data?.judges && !!(data.judges.length > 0) && (
+              <div
+                className={
+                  props.isModal ? styles.section : styles.section__border
+                }
+                style={{ textAlign: props.isModal ? "left" : "auto" }}
+              >
+                <Title size={24}>Jurados</Title>
+                <div className={styles.container}>
+                  {data?.judges?.map((item, index) => (
+                    <ProfileCard border data={item} key={item.id} small />
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+          {!data?.challenge?.payed_for && (
+            <Payment
+              price={
+                data?.challenge?.challenge_type === "ultradesafio"
+                  ? "7.000,00"
+                  : "2.997,00"
+              }
+              title={"Efetue o pagamento para liberar o desafio"}
+              desc={
+                data?.challenge?.challenge_type === "ultradesafio"
+                  ? "Os Ultradesafios permitem com que você avalie o máximo de Talentos possíveis, sejam em projetos individuais ou em grupo. Use esta oportunidade para melhor aprender sobre eles."
+                  : "Os desafios In Company são a melhor forma de você aprender sobre um Talento. Utilize-os para identificar as pessoas que melhor atendem suas expectativas. "
+              }
+              // typeOfPayment={"por desafio"}
+              id={data?.challenge?.id}
+              type={data?.challenge?.challenge_type}
+              isOpen={data?.challenge?.payed_for}
+              currentChallenge={data?.challenge}
             />
           )}
-          {/* {!props.isModal && ( */}
-          <Infos data={data.challenge} />
-          {/* )} */}
-          {!props.isModal && !!(data?.team?.users?.length > 0) && (
-            <div className={styles.section}>
-              <Title size={24}>Equipe</Title>
-              <div className={styles.container}>
-                {data?.team?.users.map((item) => (
-                  <ProfileCard
-                    border
-                    key={item.id}
-                    data={item}
-                    keeper={item?.pivot?.is_guardian}
-                  ></ProfileCard>
-                ))}
-              </div>
-            </div>
-          )}
-          {!props.isModal && !data?.team && usertype === "talento" && (
-            <div className={styles.section}>
-              <Title size={24}>Individual</Title>
-              <div className={styles.container}>
-                <ProfileCard border data={data?.user}></ProfileCard>
-              </div>
-            </div>
-          )}
-          {data?.mentors && !!(data.mentors.length > 0) && (
-            <div
-              className={
-                props.isModal ? styles.section : styles.section__border
-              }
-              style={{ textAlign: props.isModal ? "left" : "auto" }}
-            >
-              <Title size={24}>Mentores</Title>
-              <div className={styles.container}>
-                {data?.mentors?.map((item, index) => (
-                  <ProfileCard border data={item} key={item.id} small />
-                ))}
-              </div>
-            </div>
-          )}
-          {data?.judges && !!(data.judges.length > 0) && (
-            <div
-              className={
-                props.isModal ? styles.section : styles.section__border
-              }
-              style={{ textAlign: props.isModal ? "left" : "auto" }}
-            >
-              <Title size={24}>Jurados</Title>
-              <div className={styles.container}>
-                {data?.judges?.map((item, index) => (
-                  <ProfileCard border data={item} key={item.id} small />
-                ))}
-              </div>
-            </div>
-          )}
-        </section>
+        </>
       )}
       {!owned && currentChallenge && (
         <section className={`${styles.challenge}`}>
@@ -385,6 +407,7 @@ const Challenge = (props) => {
           )}
         </section>
       )}
+
       {paymentModal && currentChallenge.id && (
         <Payment
           subscription
@@ -399,7 +422,6 @@ const Challenge = (props) => {
           currentChallenge={currentChallenge}
         />
       )}
-      {console.log("cheguei", currentChallenge, paymentModal)}
       {!!data && (page === "projeto" || !page) && <Project data={data} />}
       {!!data && (page === "projetos" || !page) && <Projects data={data} />}
       {!!data && (page === "trilha" || !page) && <Trilha />}

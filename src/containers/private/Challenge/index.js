@@ -24,13 +24,13 @@ import { Downloads } from "./components/Downloads";
 import { Infos } from "./components/Infos";
 import { Counters } from "./components/Counters";
 import { ChallengeEdit } from "./components/ChallengeEdit";
+import { Job } from "./components/Job";
 
 import { all, get } from "services/challenges";
 import { get as getProject } from "services/project";
 import { project as getProjectAsMentor } from "services/projects";
 
 import styles from "./styles.module.sass";
-import { render } from "@testing-library/react";
 
 const Challenge = (props) => {
   const [currentChallenge, setCurrentChallenge] = useState();
@@ -38,6 +38,7 @@ const Challenge = (props) => {
   const [owned, setOwned] = useState(false);
   const [notGuardianModal, setNotGuardianModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState(false);
+  const [jobModal, setJobModal] = useState(false);
   const [editChallengeModal, setEditChallengeModal] = useState(false);
   const dispatch = useDispatch();
   const { data: usertype } = useSelector((state) => state.usertype);
@@ -57,12 +58,12 @@ const Challenge = (props) => {
 
   useEffect(() => {
     const data = challenges?.data;
-    data &&
+    if (data)
       Array.isArray(data) &&
-      setCurrentChallenge(
-        [...data].filter((item) => item.id === parseInt(id))[0]
-      );
-  }, [challenges?.data, id]);
+        setCurrentChallenge(
+          [...data].filter((item) => item.id === parseInt(id))[0]
+        );
+  }, [challenges.data, id]);
 
   useEffect(() => {
     data?.team?.id && window.localStorage.setItem("current_team", data.team.id);
@@ -81,7 +82,7 @@ const Challenge = (props) => {
 
   // Mentor, jurado
   useEffect(() => {
-    if (!!user?.user?.is_mentor || !!user?.user?.is_judge)
+    if (!!user.user.is_mentor || !!user.user.is_judge)
       dispatch(
         getProjectAsMentor(usertype, {
           challenge_id: id,
@@ -92,20 +93,16 @@ const Challenge = (props) => {
         .catch((err) => {
           console.log(err);
         });
-    else
+  }, [dispatch, usertype, id, trail_type, user]);
+
+  useEffect(() => {
+    if (!user?.user?.is_mentor || !user?.user?.is_judge)
       dispatch(getProject(usertype, { challenge_id: id }))
         .then((res) => {})
         .catch((err) => {
           console.log(err);
         });
-  }, [
-    dispatch,
-    usertype,
-    id,
-    trail_type,
-    user?.user?.is_mentor,
-    user?.user?.is_judge,
-  ]);
+  }, [dispatch, usertype, id, trail_type, user]);
 
   const handleEditChallenge = (props) => setEditChallengeModal((prev) => !prev);
 
@@ -120,6 +117,10 @@ const Challenge = (props) => {
     } else {
       setButtonContent((prev) => !prev);
     }
+  };
+
+  const handleJobModal = () => {
+    setJobModal((prev) => !prev);
   };
 
   const handleCloseBackdrop = (e) => {
@@ -253,6 +254,15 @@ const Challenge = (props) => {
           />
         </ModalPage>
       )}
+      {jobModal && (
+        <ModalPage
+          title={"Sobre a vaga"}
+          data={data?.challenge || data}
+          handleClose={handleJobModal}
+        >
+          <Job data={data?.challenge} handleClose={handleJobModal} />
+        </ModalPage>
+      )}
       {owned && !!data?.challenge && (page === "inicio" || !page) && (
         <>
           <section className={`${styles.challenge}`}>
@@ -266,6 +276,17 @@ const Challenge = (props) => {
                   buttonContent={false}
                   isModal={props.isModal}
                 />
+                {data.challenge.challenge_type === "in_company" && (
+                  <div style={{ margin: "0 32px" }}>
+                    <Button
+                      Tag="span"
+                      type="secondary"
+                      onClick={() => handleJobModal()}
+                    >
+                      Sobre a vaga
+                    </Button>
+                  </div>
+                )}
               </>
             )}
             {!!data.challenge.materials.length && (
@@ -408,7 +429,7 @@ const Challenge = (props) => {
         </section>
       )}
 
-      {paymentModal && currentChallenge.id && (
+      {/* {paymentModal && !!currentChallenge.id && (
         <Payment
           subscription
           title={"Assine para poder participar de todos os Autodesafios"}
@@ -421,12 +442,14 @@ const Challenge = (props) => {
           price={"27,90"}
           currentChallenge={currentChallenge}
         />
-      )}
+      )} */}
       {!!data && (page === "projeto" || !page) && <Project data={data} />}
       {!!data && (page === "projetos" || !page) && <Projects data={data} />}
       {!!data && (page === "trilha" || !page) && <Trilha />}
       {!!data && (page === "forum" || !page) && <Forum />}
-      {!!data && (page === "participantes" || !page) && <Users />}
+      {!!data &&
+        usertype === "empresa" &&
+        (page === "participantes" || !page) && <Users />}
     </>
   );
 };

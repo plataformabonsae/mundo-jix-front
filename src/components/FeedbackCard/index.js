@@ -9,7 +9,13 @@ import { Title, Text } from "components/Text";
 // import { Dot } from "components/Dot";
 import Button from "components/Button";
 import { InputGroup, Textarea } from "components/Inputs";
-import { comment, getOne, create, get, reset } from "services/feedbacks";
+import {
+  comment,
+  getOne,
+  create,
+  getAsMentor as get,
+  reset,
+} from "services/feedbacks";
 
 import { ModalPage } from "components/ModalPage";
 

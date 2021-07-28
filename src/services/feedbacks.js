@@ -3,14 +3,17 @@ import { Creators as FeedbackActions } from "store/ducks/Feedbacks";
 import { TALENT, COMPANY } from "utils/api";
 import axios from "axios";
 
-export const get =
+export const getAsMentor =
   (
     type = "talento",
     body,
     token = window.localStorage.getItem("token"),
-    url = type === "empresa" ? COMPANY.FEEDBACK.get : TALENT.FEEDBACK.get
+    url = type === "empresa"
+      ? COMPANY.FEEDBACK.get
+      : TALENT.FEEDBACK.getAsMentor
   ) =>
   async (dispatch) => {
+    console.log(body);
     dispatch(FeedbackActions.feedbacksRequest());
     const res = axios({
       url: url(body.challenge_id, body.project_id),
@@ -27,12 +30,14 @@ export const get =
     return res;
   };
 
-export const getTalente =
+export const getAsTalent =
   (
     type = "talento",
     body,
     token = window.localStorage.getItem("token"),
-    url = type === "empresa" ? COMPANY.FEEDBACK.get : TALENT.FEEDBACK.getTalente
+    url = type === "empresa"
+      ? COMPANY.FEEDBACK.get
+      : TALENT.FEEDBACK.getAsTalent
   ) =>
   async (dispatch) => {
     dispatch(FeedbackActions.feedbacksRequest());

@@ -93,9 +93,9 @@ const TALENT = {
       `${BASEURL}/mentor/challenge/${challenge_id}/project/${project_id}/feedback/comment`,
     create: (challenge_id, project_id) =>
       `${BASEURL}/mentor/challenge/${challenge_id}/project/${project_id}/feedback/send`,
-    get: (challenge_id, project_id) =>
+    getAsMentor: (challenge_id, project_id) =>
       `${BASEURL}/mentor/challenge/${challenge_id}/project/${project_id}/feedbacks`,
-    getTalente: (challenge_id) => `${BASEURL}/feedbacks/${challenge_id}`,
+    getAsTalent: (challenge_id) => `${BASEURL}/feedbacks/${challenge_id}`,
     getOne: (challenge_id, feedback_id) =>
       `${BASEURL}/mentor/feedback/${challenge_id}/${feedback_id}`,
   },

@@ -8,9 +8,9 @@ import { toast } from "react-toastify";
 
 import { validationSchema } from "utils/etc";
 
-import { Job } from "../../../NewChallenge/components/Job";
-import { Avaliation } from "../../../NewChallenge/components/Avaliation";
-import { Challenge } from "../../../NewChallenge/components/Challenge";
+import { Job } from "./components/Job";
+import { Avaliation } from "./components/Avaliation";
+import { Challenge } from "./components/Challenge";
 
 import { Text, Title } from "components/Text";
 import { Layout } from "components/Layout";

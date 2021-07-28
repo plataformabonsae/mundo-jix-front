@@ -23,7 +23,7 @@ const TeamCard = (props) => {
       <div className={styles.guardian}>
         <img src={shield} alt="Guardião" />
         Guardião:{" "}
-        {data.users.filter((item) => item.pivot.is_guardian === 1)[0].name}
+        {data.users.filter((item) => item.pivot.is_guardian === 1)[0]?.name}
       </div>
       <div className={styles.button}>
         <Button

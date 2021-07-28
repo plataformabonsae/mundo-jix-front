@@ -33,7 +33,7 @@ import { get as assessment, getAsJudge, avaliate } from "services/assessment";
 import { get } from "services/project";
 import { deleteMaterial } from "services/deleteMaterial";
 import { kick, leave, transfer } from "services/team";
-import { get as getMentor, getTalente } from "services/feedbacks";
+import { getAsMentor, getAsTalent } from "services/feedbacks";
 
 import styles from "./styles.module.sass";
 
@@ -57,33 +57,43 @@ const Carousel = (props) => {
     (state) => state.judgeAssessment
   );
   const { data } = props;
-  const { type, id } = useParams();
+  const { type, id, trail_type } = useParams();
 
-  useEffect(() => {
-    if (!user?.user?.is_judge || !user?.user?.is_mentor)
-      dispatch(assessment(usertype, { project_id: data?.project?.id }));
-  }, [dispatch, usertype, data, user]);
+  console.log(useParams());
 
+  // useEffect(() => {
+  //   if (!user?.user?.is_judge || !user?.user?.is_mentor)
+  // }, [dispatch, usertype, data, user]);
+
+  // Assets
   useEffect(() => {
-    if (user?.user?.is_judge || user?.user?.is_mentor)
+    if (user.user && (currentProject || project)) {
+      const request =
+        user?.user?.is_mentor || user?.user?.is_judge || usertype === "empresa"
+          ? getAsJudge
+          : assessment;
       dispatch(
-        getAsJudge(usertype, {
-          project_id: currentProject?.project?.id,
-          challenge_id: challenge.challenge.id,
+        request(usertype, {
+          project_id: trail_type,
+          challenge_id: id,
         })
       );
-  }, [dispatch, usertype, data, currentProject, challenge, user]);
+    }
+  }, [dispatch, usertype, data, currentProject, id, user, project, trail_type]);
 
+  // Feedbacks
   useEffect(() => {
     const request =
-      user?.user?.is_mentor || user?.user?.is_judge ? getMentor : getTalente;
+      user?.user?.is_mentor || user?.user?.is_judge || usertype === "empresa"
+        ? getAsMentor
+        : getAsTalent;
     dispatch(
       request(usertype, {
         challenge_id: id,
-        project_id: data?.project?.id,
+        project_id: trail_type,
       })
     );
-  }, [data?.project?.id, id, dispatch, usertype, user]);
+  }, [data?.project?.id, id, dispatch, usertype, user, trail_type]);
 
   const opts = {
     height: "460",
@@ -308,14 +318,15 @@ const Carousel = (props) => {
               }
               `}
             </style>
-            {data?.project?.videos?.length ? (
+            {!!data?.project?.videos?.length ||
+            !!currentProject?.project?.videos?.length ? (
               <Swiper
                 navigation
                 observer={activeTab}
                 spaceBetween={0}
                 slidesPerView={1}
               >
-                {data?.project?.videos?.map(
+                {(data?.project?.videos || currentProject?.project?.videos).map(
                   (item) =>
                     item.link && (
                       <SwiperSlide key={item.id}>
@@ -341,15 +352,23 @@ const Carousel = (props) => {
               </Title>
               <div className={styles.desc__title}>Descrição</div>
               <div className={styles.forcefont}>
-                {data?.project?.description &&
-                  parse(data?.project?.description)}
+                {(data?.project?.description ||
+                  currentProject?.project?.description) &&
+                  parse(
+                    data?.project?.description ||
+                      currentProject?.project?.description
+                  )}
               </div>
             </section>
             <section className={styles.downloads}>
               <Title size={18}>Materiais anexados</Title>
               <div className={styles.downloads__wrapper}>
-                {data?.project?.materials?.length > 0 &&
-                  data?.project?.materials.map((item) => (
+                {(data?.project?.materials?.length > 0 ||
+                  currentProject?.project?.materials?.length > 0) &&
+                  (
+                    data?.project?.materials ||
+                    currentProject?.project?.materials
+                  ).map((item) => (
                     <div className={styles.file__wrapper}>
                       <a
                         href={BASEURL + item.file}
@@ -370,26 +389,32 @@ const Carousel = (props) => {
                       )}
                     </div>
                   ))}
-                {data?.project?.materials?.length === 0 &&
+                {(data?.project?.materials?.length === 0 ||
+                  currentProject?.project?.materials?.length === 0) &&
                   "Sem materiais cadastrados"}
               </div>
               <Title style={{ marginTop: 32 }} size={18}>
                 Links anexados
               </Title>
               <div className={styles.downloads__wrapper}>
-                {data?.project?.links?.length > 0 &&
-                  data?.project?.links.map((item) => (
-                    <a
-                      href={item.link}
-                      rel="noreferrer"
-                      target={"_blank"}
-                      className={styles.downloads__material}
-                    >
-                      <img src={link} alt="Link" />
-                      {item.link}
-                    </a>
-                  ))}
-                {data?.project?.links?.length === 0 && "Sem links cadastrados"}
+                {(data?.project?.links?.length > 0 ||
+                  currentProject?.project?.links?.length > 0) &&
+                  (data?.project?.links || currentProject?.project?.links).map(
+                    (item) => (
+                      <a
+                        href={item.link}
+                        rel="noreferrer"
+                        target={"_blank"}
+                        className={styles.downloads__material}
+                      >
+                        <img src={link} alt="Link" />
+                        {item.link}
+                      </a>
+                    )
+                  )}
+                {(data?.project?.links?.length === 0 ||
+                  currentProject?.project?.links?.length === 0) &&
+                  "Sem links cadastrados"}
               </div>
             </section>
           </div>
@@ -456,7 +481,7 @@ const Carousel = (props) => {
             />
           ))}
           {feedbacks?.feedbacks?.length === 0 && (
-            <Text>Seu projeto ainda não tem feeedback do mentor.</Text>
+            <Text>O projeto ainda não tem feeedback do mentor.</Text>
           )}
         </section>
       )}
@@ -518,7 +543,7 @@ const Carousel = (props) => {
               </section>
             </Card>
           ) : (
-            <Text>Seu projeto ainda não foi avaliado.</Text>
+            <Text>O projeto ainda não foi avaliado.</Text>
           )}
           {assessments?.judges?.map((item) => (
             <Card noShadow border>
@@ -575,8 +600,8 @@ const Carousel = (props) => {
       {modalFeedback && (
         <CreateFeedback
           handleModal={handleModalFeedback}
-          challengeId={data?.challenge?.id}
-          projectId={data?.project?.id}
+          challengeId={data?.challenge?.id | currentProject?.challenge?.id}
+          projectId={data?.project?.id || currentProject?.project?.id}
         />
       )}
       {modalAvaliation && (

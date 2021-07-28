@@ -43,6 +43,7 @@ const COMPANY = {
     feedback: (id) => `${BASEURL}/feedback/${id}`,
     users: (id) => `${BASEURL}/challenge/users/${id}`,
     create: `${BASEURL}/challenge/store`,
+    update: (challenge_id) => `${BASEURL}/challenge/update/${challenge_id}`,
     deleteMaterial: (id) => `${BASEURL}/material/delete/${id}`,
   },
 
@@ -50,6 +51,8 @@ const COMPANY = {
     edit: (id) => `${BASEURL}/project/edit/${id}`,
     store: `${BASEURL}/project/store`,
     update: (id) => `${BASEURL}/project/update/${id}`,
+    assessment: (challenge_id, project_id) =>
+      `${BASEURL}/challenge/${challenge_id}/project/${project_id}/assessment`,
     project: (id, project_id) =>
       `${BASEURL}/challenge/project/${id}/${project_id}`,
   },
@@ -95,7 +98,7 @@ const COMPANY = {
     create: (challenge_id, project_id) =>
       `${BASEURL}/mentor/challenge/${challenge_id}/project/${project_id}/feedback/send`,
     get: (challenge_id, project_id) =>
-      `${BASEURL}/mentor/challenge/${challenge_id}/project/${project_id}/feedbacks`,
+      `${BASEURL}/challenge/project/${challenge_id}/${project_id}/feedbacks`,
     getOne: (challenge_id, feedback_id) =>
       `${BASEURL}/mentor/feedback/${challenge_id}/${feedback_id}`,
   },

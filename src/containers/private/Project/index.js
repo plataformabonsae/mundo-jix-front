@@ -51,14 +51,18 @@ const Project = (props) => {
         .catch((err) => {
           //setHasProject(false)
         });
-  }, [
-    dispatch,
-    usertype,
-    id,
-    trail_type,
-    user?.user?.is_mentor,
-    user?.user?.is_judge,
-  ]);
+  }, [dispatch, usertype, id, trail_type, user]);
+
+  useEffect(() => {
+    if (!user?.user?.is_mentor || !user?.user?.is_judge)
+      dispatch(
+        getProject(usertype, { challenge_id: id, project_id: trail_type })
+      )
+        .then((res) => {})
+        .catch((err) => {
+          //setHasProject(false)
+        });
+  }, [dispatch, usertype, id, trail_type, user]);
 
   useEffect(() => {
     setHasProject(!!mentorProject?.project || !!data?.project);
@@ -78,18 +82,21 @@ const Project = (props) => {
             <Carousel data={data || mentorProject} modal={handleEditModal} />
           </section>
         )}
-      {!hasProject && (!loading || !mentorLoading) && (
-        <ModalPage
-          title={"Cadastrar projeto"}
-          close={removeLastPath(location.pathname)}
-        >
-          <ProjectEdit
-            team={data?.team?.id}
-            user={data?.user?.id}
-            handleClose={handleEditModal}
-          />
-        </ModalPage>
-      )}
+      {!hasProject &&
+        (!!data?.team?.pivot?.is_guardian ||
+          user?.user?.id === data?.user?.id) &&
+        (!loading || !mentorLoading) && (
+          <ModalPage
+            title={"Cadastrar projeto"}
+            close={removeLastPath(location.pathname)}
+          >
+            <ProjectEdit
+              team={data?.team?.id}
+              user={data?.user?.id}
+              handleClose={handleEditModal}
+            />
+          </ModalPage>
+        )}
       {modalEditProject && data?.project && (
         <ModalPage
           title={"Editar projeto"}

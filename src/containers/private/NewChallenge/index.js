@@ -132,13 +132,8 @@ const NewChallenge = (props) => {
       {/* {!(step === "convidar") && ( */}
       <TitleAndBack
         backText={"Voltar"}
-        handleGoBack={handleGoBack}
-        to={
-          (step === "tipo" && `novo-desafio`) ||
-          (step === "vaga" && `vaga`) ||
-          (step === "desafio" && `desafio`) ||
-          (step === "avaliacao" && `avaliacao`)
-        }
+        // handleGoBack={handleGoBack}
+        to={"/dashboard"}
       />
       {/* )} */}
       <div className={styles.title__container}>

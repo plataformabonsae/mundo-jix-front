@@ -2,6 +2,9 @@ const Types = {
   NEWCHALLENGE_REQUEST: "newChallenge/REQUEST",
   NEWCHALLENGE_SUCCESS: "newChallenge/SUCCESS",
   NEWCHALLENGE_FAILURE: "newChallenge/FAILURE",
+  UPDATECHALLENGE_REQUEST: "updateChallenge/REQUEST",
+  UPDATECHALLENGE_SUCCESS: "updateChallenge/SUCCESS",
+  UPDATECHALLENGE_FAILURE: "updateChallenge/FAILURE",
 };
 
 const INITIAL_STATE = {
@@ -28,6 +31,25 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         data: null,
+        loading: false,
+        error: action.payload,
+      };
+    case Types.UPDATECHALLENGE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case Types.UPDATECHALLENGE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: action.payload,
+      };
+    case Types.UPDATECHALLENGE_FAILURE:
+      return {
+        ...state,
+        data: null,
+        loading: false,
         error: action.payload,
       };
     default:
@@ -46,6 +68,17 @@ export const Creators = {
   }),
   newChallengeFailure: (payload) => ({
     type: Types.NEWCHALLENGE_FAILURE,
+    payload,
+  }),
+  updateChallengeRequest: () => ({
+    type: Types.UPDATECHALLENGE_REQUEST,
+  }),
+  updateChallengeSuccess: (payload) => ({
+    type: Types.UPDATECHALLENGE_SUCCESS,
+    payload,
+  }),
+  updateChallengeFailure: (payload) => ({
+    type: Types.UPDATECHALLENGE_FAILURE,
     payload,
   }),
 };

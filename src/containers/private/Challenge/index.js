@@ -35,6 +35,7 @@ import styles from "./styles.module.sass";
 const Challenge = (props) => {
   const [currentChallenge, setCurrentChallenge] = useState();
   const [buttonContent, setButtonContent] = useState();
+  const [showModalCompany, setShowModalCompany] = useState(false);
   const [owned, setOwned] = useState(false);
   const [notGuardianModal, setNotGuardianModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState(false);
@@ -82,7 +83,7 @@ const Challenge = (props) => {
 
   // Mentor, jurado
   useEffect(() => {
-    if (!!user.user.is_mentor || !!user.user.is_judge)
+    if (!!user?.user?.is_mentor || !!user?.user?.is_judge)
       dispatch(
         getProjectAsMentor(usertype, {
           challenge_id: id,
@@ -96,7 +97,7 @@ const Challenge = (props) => {
   }, [dispatch, usertype, id, trail_type, user]);
 
   useEffect(() => {
-    if (!user?.user?.is_mentor || !user?.user?.is_judge)
+    if (!user?.user?.is_mentor && !user?.user?.is_judge)
       dispatch(getProject(usertype, { challenge_id: id }))
         .then((res) => {})
         .catch((err) => {
@@ -104,12 +105,18 @@ const Challenge = (props) => {
         });
   }, [dispatch, usertype, id, trail_type, user]);
 
+  useEffect(() => {
+    if (!data?.challenge?.payed_for) setShowModalCompany(true);
+  }, [data]);
+
   const handleEditChallenge = (props) => setEditChallengeModal((prev) => !prev);
 
   const handlePaymentModal = () => {
     setPaymentModal((prev) => !prev);
     handleCloseBackdrop();
   };
+
+  const handleCloseModalCompany = () => setShowModalCompany(false);
 
   const handleClickToSubscribe = (props) => {
     if (currentChallenge.challenge_type === "autodesafio") {
@@ -352,7 +359,7 @@ const Challenge = (props) => {
               </div>
             )}
           </section>
-          {!data?.challenge?.payed_for && (
+          {showModalCompany && (
             <Payment
               price={
                 data?.challenge?.challenge_type === "ultradesafio"
@@ -366,6 +373,7 @@ const Challenge = (props) => {
                   : "Os desafios In Company são a melhor forma de você aprender sobre um Talento. Utilize-os para identificar as pessoas que melhor atendem suas expectativas. "
               }
               // typeOfPayment={"por desafio"}
+              handleClose={handleCloseModalCompany}
               id={data?.challenge?.id}
               type={data?.challenge?.challenge_type}
               isOpen={data?.challenge?.payed_for}
@@ -429,7 +437,7 @@ const Challenge = (props) => {
         </section>
       )}
 
-      {/* {paymentModal && !!currentChallenge.id && (
+      {paymentModal && !!currentChallenge.id && (
         <Payment
           subscription
           title={"Assine para poder participar de todos os Autodesafios"}
@@ -442,7 +450,7 @@ const Challenge = (props) => {
           price={"27,90"}
           currentChallenge={currentChallenge}
         />
-      )} */}
+      )}
       {!!data && (page === "projeto" || !page) && <Project data={data} />}
       {!!data && (page === "projetos" || !page) && <Projects data={data} />}
       {!!data && (page === "trilha" || !page) && <Trilha />}

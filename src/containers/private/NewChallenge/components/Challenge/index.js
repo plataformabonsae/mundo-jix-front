@@ -97,6 +97,7 @@ const Challenge = ({
   };
 
   const onSubmit = (data) => {
+    console.log(data);
     const materialsCounter = {};
     for (let i = 0; i < 10; i++) {
       if (data[`materials_${i}`])
@@ -192,7 +193,7 @@ const Challenge = ({
           </Title>
           <InputGroup>
             <InputWithMask
-              defaultValue={""}
+              // defaultValue={""}
               disabled={loading}
               control={control}
               ref={register()}
@@ -205,7 +206,7 @@ const Challenge = ({
                   isValid: (val) =>
                     handleDate(val) || "Insira um deadline válido",
                 },
-                valueAsDate: true,
+                // valueAsDate: true,
               }}
               name="deadline"
               errors={errors}
@@ -253,7 +254,7 @@ const Challenge = ({
           </Title>
           <InputGroup>
             <Input
-              defaultValue={""}
+              // defaultValue={""}
               disabled={loading}
               ref={register({
                 pattern: {

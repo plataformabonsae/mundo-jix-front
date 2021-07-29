@@ -459,7 +459,8 @@ const Pessoal = ({
                       pattern: {
                         value:
                           /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
-                        message: "Digite um link valido",
+                        message:
+                          "Copie a URL completa. Ex.: https://mundojix.com/",
                       },
                     })}
                     validate={`${

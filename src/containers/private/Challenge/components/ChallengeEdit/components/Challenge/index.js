@@ -107,6 +107,11 @@ const Challenge = ({ noShadow = true, handleClose }) => {
         materialsCounter[`materials_${i}`] = data[`materials_${i}`][0];
     }
     const dataWithMaterials = { ...data, file: data.file[0], materialsCounter };
+    console.log("Enviando", {
+      _method: "PUT",
+      ...dataWithMaterials,
+      challenge_id: challenge.challenge.id,
+    });
     dispatch(
       updateChallenge(usertype, {
         _method: "PUT",
@@ -118,7 +123,7 @@ const Challenge = ({ noShadow = true, handleClose }) => {
         toast.success("Desafio atualizado", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
-        // console.log(res);
+        console.log("resposta", res);
       })
       .then(() =>
         dispatch(get(usertype, { challenge_id: challenge.challenge.id }))

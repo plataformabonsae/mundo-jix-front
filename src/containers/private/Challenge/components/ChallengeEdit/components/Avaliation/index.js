@@ -32,7 +32,11 @@ const Avaliation = ({ noShadow = true, handleClose }) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log("Enviando", {
+      _method: "PUT",
+      ...data,
+      challenge_id: challenge.challenge.id,
+    });
     dispatch(
       updateChallenge(usertype, {
         _method: "PUT",
@@ -44,7 +48,7 @@ const Avaliation = ({ noShadow = true, handleClose }) => {
         toast.success("Desafio atualizado com sucesso", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
-        // console.log(res);
+        console.log("resposta", res);
       })
       .then(() =>
         dispatch(get(usertype, { challenge_id: challenge.challenge.id }))
@@ -159,7 +163,7 @@ const Avaliation = ({ noShadow = true, handleClose }) => {
                       errors={errors}
                       validate={errors?.judges?.[index]?.name?.message}
                       name={`judges.${index}.name`}
-                      placeholder="Nome do mentor"
+                      placeholder="Nome do jurado"
                     ></Input>
                   </div>
                   <div style={{ width: "50%" }}>
@@ -182,8 +186,8 @@ const Avaliation = ({ noShadow = true, handleClose }) => {
                       control={control}
                       errors={errors}
                       validate={errors?.judges?.[index]?.email?.message}
-                      errorMessage="E-mail do mentor"
-                      placeholder="E-mail do mentor"
+                      errorMessage="E-mail do jurado"
+                      placeholder="E-mail do jurado"
                     ></Input>
                   </div>
                   <div style={{ width: "50%" }}>
@@ -249,7 +253,7 @@ const Avaliation = ({ noShadow = true, handleClose }) => {
                   setJudges((prev) => [...prev, prev++]);
                   setPassword((prev) => [...prev, ""]);
                 }}
-                text="Adicionar mentor"
+                text="Adicionar jurado"
               />
               {judges?.length > 1 && (
                 <RemoveGroup
@@ -257,7 +261,7 @@ const Avaliation = ({ noShadow = true, handleClose }) => {
                     setJudges((state) => [...state].slice(0, -1));
                     setPassword((prev) => [...prev].slice(0, -1));
                   }}
-                  text="Remover mentor"
+                  text="Remover jurado"
                 />
               )}
             </InputGroup>

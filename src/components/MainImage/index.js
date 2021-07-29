@@ -27,8 +27,8 @@ const MainImage = (props) => {
       <div style={{ textAlign: props.logoPosition }} className={styles.logo}>
         <img
           src={
-            props.data.company_photo_file
-              ? BASEURL + data.company_photo_file
+            props.data.company?.file
+              ? BASEURL + data.company?.file
               : defaultLogo
           }
           alt={data?.name}

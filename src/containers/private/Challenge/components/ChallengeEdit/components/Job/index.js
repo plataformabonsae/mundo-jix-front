@@ -58,7 +58,12 @@ const Job = ({ noShadow = true, handleClose }) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log("Enviando", {
+      _method: "PUT",
+      ...data,
+      ...cepValues,
+      challenge_id: challenge.challenge.id,
+    });
     dispatch(
       updateChallenge(usertype, {
         _method: "PUT",
@@ -71,7 +76,7 @@ const Job = ({ noShadow = true, handleClose }) => {
         toast.success("Desafio atualizado com sucesso", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
-        // console.log(res);
+        console.log("resposta", res);
       })
       .then(() =>
         dispatch(get(usertype, { challenge_id: challenge.challenge.id }))

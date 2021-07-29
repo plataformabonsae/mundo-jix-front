@@ -379,7 +379,7 @@ const Modal = (props) => {
               </InputGroup>
             );
           })}
-          <Textarea readyOnly value={props.data.description}>
+          <Textarea readOnly value={props.data.description}>
             Biografia
           </Textarea>
         </Card>
@@ -390,40 +390,40 @@ const Modal = (props) => {
             return (
               <section key={index} style={{ marginTop: 24 }}>
                 <InputGroup>
-                  <Input readyOnly value={fields.level_of_education}>
+                  <Input readOnly value={fields.level_of_education}>
                     Nível de escolaridade
                   </Input>
                 </InputGroup>
 
                 <InputGroup>
-                  <Input readyOnly value={fields.degree}>
+                  <Input readOnly value={fields.degree}>
                     Grau
                   </Input>
                 </InputGroup>
 
                 <InputGroup>
-                  <Input readyOnly value={fields.status}>
+                  <Input readOnly value={fields.status}>
                     Status
                   </Input>
                 </InputGroup>
 
                 <InputGroup>
-                  <Input readyOnly value={fields.institution}>
+                  <Input readOnly value={fields.institution}>
                     Instituição
                   </Input>
                 </InputGroup>
 
                 <InputGroup>
-                  <Input readyOnly value={fields.course}>
+                  <Input readOnly value={fields.course}>
                     Curso
                   </Input>
                 </InputGroup>
 
                 <InputGroup>
-                  <Input readyOnly value={fields.start_date}>
+                  <Input readOnly value={fields.start_date}>
                     Início
                   </Input>
-                  <Input readyOnly value={fields.end_date}>
+                  <Input readOnly value={fields.end_date}>
                     Término
                   </Input>
                 </InputGroup>

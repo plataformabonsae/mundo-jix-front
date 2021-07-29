@@ -293,9 +293,9 @@ const Job = ({ noShadow = true, handleClose }) => {
             </Title>
             <InputGroup>
               <Input
-                defaultValue={challenge.challenge.address_id}
+                defaultValue={challenge.challenge.number}
                 ref={register()}
-                name="address_id"
+                name="number"
                 errors={errors}
                 errorMessage="Digite a número da empresa"
                 placeholder="Digite o número"

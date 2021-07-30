@@ -37,7 +37,7 @@ const Downloads = (props) => {
       <Title>Materiais</Title>
       <section className={styles.wrapper}>
         {data?.map((item) => (
-          <File data={item} />
+          <File key={item.id} data={item} />
         ))}
       </section>
     </section>

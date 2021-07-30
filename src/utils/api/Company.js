@@ -81,8 +81,16 @@ const COMPANY = {
     createVideo: (id) => `${BASEURL}/challenge/trail/${id}/video`,
     createQuestion: (id) => `${BASEURL}/challenge/trail/${id}/question`,
     createMaterial: (id) => `${BASEURL}/challenge/trail/${id}/material`,
+    updateVideo: (challenge_id, trail_id) =>
+      `${BASEURL}/challenge/trail/${challenge_id}/video/update/${trail_id}`,
+    updateQuestion: (challenge_id, trail_id) =>
+      `${BASEURL}/challenge/trail/${challenge_id}/question/update/${trail_id}`,
+    updateMaterial: (challenge_id, trail_id) =>
+      `${BASEURL}/challenge/trail/${challenge_id}/material/update/${trail_id}`,
     up: (id) => `${BASEURL}/trail-up/${id}`,
     down: (id) => `${BASEURL}/trail-down/${id}`,
+    get: (challenge_id) => `${BASEURL}/challenge/${challenge_id}/trail`,
+    delete: (trail_id) => `${BASEURL}/delete-trail/${trail_id}`,
   },
 
   FORUM: {

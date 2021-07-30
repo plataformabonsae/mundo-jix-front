@@ -194,6 +194,10 @@ const PaymentForm = (props) => {
         })
         .then(() => {
           dispatch(get(usertype, { challenge_id: challenge?.challenge?.id }));
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log(err?.message);
         });
     }
   };

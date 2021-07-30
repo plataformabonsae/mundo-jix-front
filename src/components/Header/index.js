@@ -41,14 +41,16 @@ const Header = ({ name, invites, user }) => {
           </Text>
         </div>
       </div>
-      <div className={styles.points}>
-        <Text size={16} weight={"bold"} className={styles.text}>
-          {dashboard?.finished_challenges?.points}
-        </Text>
-        <Text size={10} weight={"bold"} className={styles.text}>
-          pontos
-        </Text>
-      </div>
+      {usertype === "talent" && (
+        <div className={styles.points}>
+          <Text size={16} weight={"bold"} className={styles.text}>
+            {dashboard?.finished_challenges?.points}
+          </Text>
+          <Text size={10} weight={"bold"} className={styles.text}>
+            pontos
+          </Text>
+        </div>
+      )}
       <div className={styles.alerts}>
         {usertype === "talento" && <Invites isOpen={open} open={handleOpen} />}
         <Notification isOpen={open} open={handleOpen} />

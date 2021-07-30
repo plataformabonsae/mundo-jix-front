@@ -228,6 +228,7 @@ const Challenge = (props) => {
             Tag={"span"}
             onClick={() => handleEditChallenge()}
             type={"secondary"}
+            disabled={loading}
           >
             Editar desafio
           </Button>
@@ -275,27 +276,27 @@ const Challenge = (props) => {
           <section className={`${styles.challenge}`}>
             <MainImage data={data.challenge} />
             {usertype === "empresa" && <Counters data={data.challenge} />}
-            {!!user?.user?.is_subscribed && (
-              <>
-                <Presentation
-                  handleClickToSubscribe={handleClickToSubscribe}
-                  data={data.challenge}
-                  buttonContent={false}
-                  isModal={props.isModal}
-                />
-                {data.challenge.challenge_type === "in_company" && (
-                  <div style={{ margin: "0 32px" }}>
-                    <Button
-                      Tag="span"
-                      type="secondary"
-                      onClick={() => handleJobModal()}
-                    >
-                      Sobre a vaga
-                    </Button>
-                  </div>
-                )}
-              </>
-            )}
+            {/* {!!user?.user?.is_subscribed && ( */}
+            <>
+              <Presentation
+                handleClickToSubscribe={handleClickToSubscribe}
+                data={data.challenge}
+                buttonContent={false}
+                isModal={props.isModal}
+              />
+              {data.challenge.challenge_type === "in_company" && (
+                <div style={{ margin: "0 32px" }}>
+                  <Button
+                    Tag="span"
+                    type="secondary"
+                    onClick={() => handleJobModal()}
+                  >
+                    Sobre a vaga
+                  </Button>
+                </div>
+              )}
+            </>
+            {/* )} */}
             {!!data.challenge.materials.length && (
               <Downloads
                 data={data.challenge.materials || ""}

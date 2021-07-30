@@ -1,80 +1,82 @@
-import React, { useEffect, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import { toast, ToastContainer } from "react-toastify"
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import { useParams, useHistory, useLocation } from "react-router-dom";
+import { TrailType } from "./components/TrailType";
+import { Trail } from "./components/Trail";
+import { TitleAndBack } from "components/TitleAndBack";
+import { Title, Text } from "components/Text";
 
-import { useParams, useHistory, useLocation } from "react-router-dom"
-// import { useForm, useFieldArray } from "react-hook-form";
+import styles from "./styles.module.sass";
 
-import { TrailType } from "./components/TrailType"
-import { Trail } from "./components/Trail"
-// import { Avaliation } from "./components/Avaliation";
-
-/* import { Steps, Step } from "components/Steps";
-import { Layout } from "components/Layout";
-import { ButtonGroup } from "components/ButtonGroup";
-import Button from "components/Button"; */
-import { TitleAndBack } from "components/TitleAndBack"
-import { Title, Text } from "components/Text"
-// import { Dialog } from "components/Dialog";
-
-import styles from "./styles.module.sass"
-
-import { get } from "services/challenges"
+import { get } from "services/challenges";
+import { get as getTrail } from "services/createTrail";
 
 const CreateTrail = (props) => {
-	const history = useHistory()
-	const location = useLocation()
-	const dispatch = useDispatch()
+  const history = useHistory();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-	const [trails, setTrails] = useState([])
+  const [savedTrails, setSavedTrails] = useState([]);
+  const [trails, setTrails] = useState([]);
 
-	const { data: usertype } = useSelector((state) => state.usertype)
-	const { data } = useSelector((state) => state.challenge)
+  const { data: usertype } = useSelector((state) => state.usertype);
+  const { data } = useSelector((state) => state.challenge);
+  const { trail, loading } = useSelector((state) => state.createTrail);
 
-	const { step: stepUrl, id, type } = useParams()
+  const { step: stepUrl, id, type } = useParams();
 
-	useEffect(() => {
-		handleTrails(type)
-	}, [type])
+  useEffect(() => {
+    handleTrails(type);
+  }, [type]);
 
-	useEffect(() => {
-		dispatch(get(usertype, { challenge_id: id }))
-	}, [dispatch, usertype, id, stepUrl])
+  useEffect(() => {
+    dispatch(get(usertype, { challenge_id: id }));
+  }, [dispatch, usertype, id, stepUrl]);
 
-	const handleTrails = (trail) => {
-		setTrails((prev) => [...prev, { type: trail }])
-	}
+  useEffect(() => {
+    setSavedTrails(trail?.trail?.trails.sort((a, b) => a.order - b.order));
+  }, [trail, loading]);
 
-	return (
-		<section className={styles.wrapper}>
-			{/* {!(step === "convidar") && ( */}
-			<TitleAndBack
-				backText={"Voltar"}
-				to={`/meus-desafios/${data?.challenge.challenge_type}/${data?.challenge.id}`}
-			/>
-			{/* )} */}
-			<div className={styles.title__container}>
-				<Title size={28} className={styles.title}>
-					{stepUrl === "trilha" &&
-						"Qual tipo de conteúdo você deseja adicionar?"}
-					{stepUrl === "trilha-livre" && "Trilha Livre"}
-				</Title>
-			</div>
+  useEffect(() => {
+    dispatch(getTrail(usertype, { challenge_id: id }));
+  }, [dispatch, usertype, id, stepUrl]);
 
-			{stepUrl === "trilha" && <TrailType handleTrails={handleTrails} />}
+  const handleTrails = (trail) => {
+    setTrails((prev) => [...prev, { type: trail }]);
+  };
 
-			{stepUrl === "trilha-livre" && (
-				<Trail
-					handleTrails={handleTrails}
-					setTrails={setTrails}
-					trails={trails}
-				/>
-			)}
+  return (
+    <section className={styles.wrapper}>
+      {/* {!(step === "convidar") && ( */}
+      <TitleAndBack
+        backText={"Voltar"}
+        to={`/meus-desafios/${data?.challenge.challenge_type}/${data?.challenge.id}`}
+      />
+      {/* )} */}
+      <div className={styles.title__container}>
+        <Title size={28} className={styles.title}>
+          {stepUrl === "trilha" &&
+            "Qual tipo de conteúdo você deseja adicionar?"}
+          {stepUrl === "trilha-livre" && "Trilha Livre"}
+        </Title>
+      </div>
 
-			<ToastContainer />
-			{/* </form> */}
-		</section>
-	)
-}
+      {stepUrl === "trilha" && <TrailType handleTrails={handleTrails} />}
 
-export { CreateTrail }
+      {stepUrl === "trilha-livre" && (
+        <Trail
+          handleTrails={handleTrails}
+          setTrails={setTrails}
+          savedTrails={savedTrails}
+          trails={trails}
+        />
+      )}
+
+      <ToastContainer />
+      {/* </form> */}
+    </section>
+  );
+};
+
+export { CreateTrail };

@@ -35,12 +35,12 @@ const CreateTrail = (props) => {
   }, [dispatch, usertype, id, stepUrl]);
 
   useEffect(() => {
-    setSavedTrails(trail?.trail?.trails.sort((a, b) => a.order - b.order));
-  }, [trail, loading]);
-
-  useEffect(() => {
     dispatch(getTrail(usertype, { challenge_id: id }));
   }, [dispatch, usertype, id, stepUrl]);
+
+  useEffect(() => {
+    setSavedTrails(trail?.trail?.trails.sort((a, b) => a.order - b.order));
+  }, [trail, loading]);
 
   const handleTrails = (trail) => {
     setTrails((prev) => [...prev, { type: trail }]);
@@ -48,12 +48,10 @@ const CreateTrail = (props) => {
 
   return (
     <section className={styles.wrapper}>
-      {/* {!(step === "convidar") && ( */}
       <TitleAndBack
         backText={"Voltar"}
-        to={`/meus-desafios/${data?.challenge.challenge_type}/${data?.challenge.id}`}
+        to={`/meus-desafios/${trail?.trail?.challenge_type}/${trail?.trail?.id}`}
       />
-      {/* )} */}
       <div className={styles.title__container}>
         <Title size={28} className={styles.title}>
           {stepUrl === "trilha" &&
@@ -72,9 +70,6 @@ const CreateTrail = (props) => {
           trails={trails}
         />
       )}
-
-      <ToastContainer />
-      {/* </form> */}
     </section>
   );
 };

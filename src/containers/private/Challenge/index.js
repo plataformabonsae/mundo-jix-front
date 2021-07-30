@@ -224,14 +224,23 @@ const Challenge = (props) => {
           }}
         >
           <Title color="white">{data?.challenge?.name}</Title>
-          <Button
-            Tag={"span"}
-            onClick={() => handleEditChallenge()}
-            type={"secondary"}
-            disabled={loading}
-          >
-            Editar desafio
-          </Button>
+          <div>
+            <Button
+              to={`/editar-trilha/trilha-livre/${data?.challenge?.id}`}
+              type={"gray"}
+              style={{ marginRight: 12 }}
+            >
+              Editar trilha
+            </Button>
+            <Button
+              Tag={"span"}
+              onClick={() => handleEditChallenge()}
+              type={"secondary"}
+              disabled={loading}
+            >
+              Editar desafio
+            </Button>
+          </div>
         </SubHeader>
       )}
       {notGuardianModal && (

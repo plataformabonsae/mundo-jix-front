@@ -51,7 +51,10 @@ const Video = (props) => {
     if (data) setExpand(false);
   }, [data]);
 
-  const handleEdit = () => setEditable((prev) => !prev);
+  const handleEdit = () => {
+    setEditable((prev) => !prev);
+    setExpand(true);
+  };
 
   const onSubmit = async (formData) => {
     // handleData(index, data);

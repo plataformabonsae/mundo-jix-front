@@ -92,9 +92,7 @@ export const updateQuestion =
     type = "talento",
     body,
     token = window.localStorage.getItem("token"),
-    url = type === "empresa"
-      ? COMPANY.TRAIL.updateQuestion
-      : TALENT.TRAIL.createQuestion
+    url = COMPANY.TRAIL.updateQuestion
   ) =>
   async (dispatch) => {
     const formData = new FormData();

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Button from "components/Button";
 import { Text, Title } from "components/Text";
+import { Loading } from "components/Loading";
 
 import { Material } from "./components/Material";
 import { Video } from "./components/Video";
@@ -12,6 +13,7 @@ import styles from "./styles.module.sass";
 
 const Trail = (props) => {
   const { handleTrails, setTrails, trails, savedTrails } = props;
+  const { loading, trail } = useSelector((state) => state.createTrail);
 
   const handleData = (index, data) => {
     const array = [...trails];
@@ -32,6 +34,7 @@ const Trail = (props) => {
   return (
     <section className={styles.wrapper}>
       <section className={styles.trails}>
+        {loading && <Loading />}
         {savedTrails?.map((item, index) => {
           if (item.type === "material")
             return (
@@ -138,13 +141,11 @@ const Trail = (props) => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <Text>Deseja finalizar a trilha?</Text>
+        <Text>Deseja finalizar a trilha? Você poderá editar depois.</Text>
         <div className={styles.buttons__wrapper}>
           <Button
-            disabled={!trails?.length}
-            Tag={"span"}
             type={"green"}
-            onClick={() => (window.location.href = "/dashboard")}
+            to={`/meus-desafios/${trail?.trail?.challenge_type}/${trail?.trail?.id}`}
           >
             Finalizar
           </Button>

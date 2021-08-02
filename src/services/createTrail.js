@@ -296,7 +296,7 @@ export const up =
     type = "talento",
     body,
     token = window.localStorage.getItem("token"),
-    url = type === "empresa" ? COMPANY.TRAIL.up : TALENT.TRAIL.up
+    url = type === "empresa" ? COMPANY.TRAIL.down : TALENT.TRAIL.up
   ) =>
   async (dispatch) => {
     // dispatch(CreateTrail.createTrailRequest());
@@ -326,7 +326,7 @@ export const down =
     type = "talento",
     body,
     token = window.localStorage.getItem("token"),
-    url = type === "empresa" ? COMPANY.TRAIL.down : TALENT.TRAIL.down
+    url = type === "empresa" ? COMPANY.TRAIL.up : TALENT.TRAIL.down
   ) =>
   async (dispatch) => {
     // dispatch(CreateTrail.createTrailRequest());

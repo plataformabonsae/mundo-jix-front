@@ -31,7 +31,7 @@ const Question = (props) => {
   const dispatch = useDispatch();
   const [editable, setEditable] = useState(true);
   const [expand, setExpand] = useState(true);
-  const [answers, setAnswers] = useState([{ isCorrect: false }]);
+  const [answers, setAnswers] = useState([]);
 
   const { data: usertype } = useSelector((state) => state.usertype);
 
@@ -49,12 +49,37 @@ const Question = (props) => {
     if (data) setExpand(false);
   }, [data]);
 
+  useEffect(() => {
+    const append = (link) => {
+      setAnswers((prev) => [...prev, link]);
+    };
+    if (defaultData?.question?.options) {
+      for (let i = 0; i <= defaultData.question.options.length; i++) {
+        append({
+          description: defaultData.question.options[i]?.description,
+          comment: defaultData.question.options[i]?.comment,
+          isCorrect: defaultData.question.options[i]?.is_correct,
+        });
+      }
+    } else if (data?.question?.options) {
+      for (let i = 0; i < data.question.options.length; i++) {
+        append({
+          description: data.question.options[i]?.description,
+          comment: data.question.options[i]?.comment,
+          isCorrect: data.question.options[i]?.is_correct,
+        });
+      }
+    } else if (!data?.question?.options && !defaultData?.question?.options) {
+      append({ name: "", description: "", isCorrect: true });
+    }
+  }, [defaultData?.question, data?.question]);
+
   const { id } = useParams();
 
   const handleCorrect = (index) => {
     const array = [...answers];
-    const map = array.map((item) => ({ isCorrect: false }));
-    map[index].isCorrect = true;
+    const map = array.map((item) => ({ isCorrect: 0 }));
+    map[index].isCorrect = 1;
 
     setAnswers(map);
   };
@@ -85,6 +110,12 @@ const Question = (props) => {
 
   const onSubmit = (formData) => {
     const { options } = formData;
+    console.log({
+      ...formData,
+      trail_id: data?.id,
+      challenge_id: id,
+      options: JSON.stringify(options),
+    });
     if (!!data) {
       Promise.all([
         dispatch(
@@ -99,13 +130,13 @@ const Question = (props) => {
         .then(() => dispatch(get(usertype, { challenge_id: id })))
 
         .then((res) => {
-          toast.success("Questão salva", {
+          toast.success("Questão editada", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
         })
 
         .catch((error) => {
-          toast.error("Questão salva", {
+          toast.error("Erro ao editar questão", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
           console.log(error);
@@ -267,28 +298,28 @@ const Question = (props) => {
                     stroke="#FF445A"
                     stroke-width="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M7 9V15"
                     stroke="#FF445A"
                     stroke-width="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M11 9V15"
                     stroke="#FF445A"
                     stroke-width="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M6 5V2C6 1.73478 6.10536 1.48043 6.29289 1.29289C6.48043 1.10536 6.73478 1 7 1H11C11.2652 1 11.5196 1.10536 11.7071 1.29289C11.8946 1.48043 12 1.73478 12 2V5M2 5L3 17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19H13C13.5304 19 14.0391 18.7893 14.4142 18.4142C14.7893 18.0391 15 17.5304 15 17L16 5H2Z"
                     stroke="#FF445A"
                     stroke-width="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </span>
@@ -309,28 +340,28 @@ const Question = (props) => {
                     stroke="#FF445A"
                     stroke-width="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M7 9V15"
                     stroke="#FF445A"
                     stroke-width="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M11 9V15"
                     stroke="#FF445A"
                     stroke-width="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M6 5V2C6 1.73478 6.10536 1.48043 6.29289 1.29289C6.48043 1.10536 6.73478 1 7 1H11C11.2652 1 11.5196 1.10536 11.7071 1.29289C11.8946 1.48043 12 1.73478 12 2V5M2 5L3 17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19H13C13.5304 19 14.0391 18.7893 14.4142 18.4142C14.7893 18.0391 15 17.5304 15 17L16 5H2Z"
                     stroke="#FF445A"
                     stroke-width="2"
                     strokeLinecap="round"
-                    stroke-linejoin="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </span>
@@ -383,7 +414,9 @@ const Question = (props) => {
             </Title>
             <InputGroup>
               <Input
-                defaultValue={trails[index]?.data?.name}
+                defaultValue={
+                  defaultData?.question?.name || data?.question?.name
+                }
                 ref={register({ required: true })}
                 errors={errors}
                 disabled={!editable}
@@ -396,7 +429,10 @@ const Question = (props) => {
               Descrição da pergunta
             </Title>
             <Textarea
-              defaultValue={trails[index]?.data?.description}
+              defaultValue={
+                defaultData?.question?.description ||
+                data?.question?.description
+              }
               ref={register({ required: true })}
               errors={errors}
               disabled={!editable}
@@ -412,7 +448,8 @@ const Question = (props) => {
                     ref={register()}
                     className={styles.radio}
                     type="radio"
-                    checked={item.isCorrect}
+                    readOnly
+                    checked={!!item.isCorrect}
                     id={`options[${i}].is_correct`}
                     name={`options[${i}].is_correct`}
                   />
@@ -425,12 +462,13 @@ const Question = (props) => {
                   <div style={{ flex: 1 }}>
                     <div>
                       <Title size={14} style={{ marginLeft: 6, marginTop: 12 }}>
-                        Opção {item.isCorrect}
+                        Opção
                       </Title>
                       <Input
+                        defaultValue={item.description}
                         disabled={!editable}
                         ref={register()}
-                        name={`options[${i}].name`}
+                        name={`options[${i}].description`}
                         control={control}
                         errors={errors}
                         errorMessage="Digite a opção de resposta"
@@ -442,9 +480,10 @@ const Question = (props) => {
                         Descrição
                       </Title>
                       <Input
+                        defaultValue={item.comment}
                         disabled={!editable}
                         ref={register()}
-                        name={`options[${i}].description`}
+                        name={`options[${i}].comment`}
                         control={control}
                         errors={errors}
                         errorMessage="Explique sobre essa resposta"

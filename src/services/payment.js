@@ -190,6 +190,7 @@ export const incompanyIntent =
     await res
       .then((response) => {
         dispatch(PaymentActions.paymentSuccess(response?.data?.data));
+        console.log(response);
       })
       .catch((error) => dispatch(PaymentActions.paymentFailure(error)));
     return res;

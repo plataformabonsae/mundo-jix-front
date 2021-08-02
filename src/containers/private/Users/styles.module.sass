@@ -14,15 +14,16 @@
     bottom: 16px
 
 .row
+  transition: 300ms ease
   display: flex
   border:
     top: 1px solid rgba(188, 195, 198, 1.0)
     bottom: 1px solid rgba(188, 195, 198, 1.0)
-  
+
   &:hover
     cursor: pointer
-    background: #e9e9e9
-    
+    background: rgba(#e9e9e9, .2)
+
 .block
   overflow: auto
   height: 50px
@@ -54,6 +55,12 @@
 
   &:last-child
     border: none
+
+.buttons
+  display: flex
+  padding: 24px 12px
+  justify-content: center
+  align-items: center
 
 .modal
   &__wrapper

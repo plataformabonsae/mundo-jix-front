@@ -87,13 +87,12 @@ const Invites = (props) => {
           users.map((item, index) => (
             <InviteCard key={item.id} data={item}>
               <Button
-                disabled={invites.includes(item.id)}
                 Tag="span"
-                type={"tertiary"}
+                type={invites.includes(item.id) ? `gray` : `tertiary`}
                 onClick={() => handleInvites(item.id)}
-                onPointerOver={() =>
-                  invites.includes(item.id) && setAddedText("Remover?")
-                }
+                // onPointerOver={() =>
+                //   invites.includes(item.id) && setAddedText("Remover?")
+                // }
                 onPointerOut={() =>
                   invites.includes(item.id) && setAddedText("Adicionado")
                 }

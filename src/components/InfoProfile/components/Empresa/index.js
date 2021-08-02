@@ -33,9 +33,6 @@ import { cep, cepReset } from "services/adress";
 // import history from "utils/history";
 // import { isRejected } from "@reduxjs/toolkit";
 
-// TODO
-// errors in masked inputs
-
 const Empresa = ({
   type,
   noShadow,
@@ -77,8 +74,21 @@ const Empresa = ({
   }, [cepData, data]);
 
   useEffect(() => {
-    console.log(cepValues);
-  }, [cepValues]);
+    const append = (link) => {
+      setSocials((prev) => [...prev, link]);
+    };
+    if (data?.socialMedias?.length) {
+      for (let i = 0; i <= data.socialMedias.length; i++) {
+        append({
+          link: data.socialMedias[i]?.link,
+          platform: data.socialMedias[i]?.platform,
+        });
+      }
+    }
+    return () => {
+      setSocials([]);
+    };
+  }, [data?.socialMedias]);
 
   useEffect(() => {
     const append = (tel) => {

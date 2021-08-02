@@ -106,8 +106,9 @@ const Challenge = (props) => {
   }, [dispatch, usertype, id, trail_type, user]);
 
   useEffect(() => {
-    if (!data?.challenge?.payed_for) setShowModalCompany(true);
-  }, [data]);
+    const companyPayed = !!data?.challenge?.payed_for;
+    if (data && usertype === "empresa") setShowModalCompany(!companyPayed);
+  }, [data, usertype]);
 
   const handleEditChallenge = (props) => setEditChallengeModal((prev) => !prev);
 
@@ -408,21 +409,22 @@ const Challenge = (props) => {
               // isModal={props.isModal}
             />
           )}
-          {currentChallenge?.mentors > 1 && (
-            <div
-              className={
-                props.isModal ? styles.section : styles.section__border
-              }
-              style={{ textAlign: props.isModal ? "left" : "auto" }}
-            >
-              <Title size={24}>Mentores</Title>
-              <div className={styles.container}>
-                {currentChallenge?.mentors?.map((item, index) => (
-                  <ProfileCard border data={item} key={item.id} small />
-                ))}
+          {currentChallenge?.mentors &&
+            !!(currentChallenge.mentors.length > 0) && (
+              <div
+                className={
+                  props.isModal ? styles.section : styles.section__border
+                }
+                style={{ textAlign: props.isModal ? "left" : "auto" }}
+              >
+                <Title size={24}>Mentores</Title>
+                <div className={styles.container}>
+                  {currentChallenge?.mentors?.map((item, index) => (
+                    <ProfileCard border data={item} key={item.id} small />
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
           {currentChallenge?.judges && !!(currentChallenge.judges.length > 0) && (
             <div
               className={

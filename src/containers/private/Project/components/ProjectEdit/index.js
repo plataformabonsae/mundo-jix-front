@@ -135,13 +135,14 @@ const ProjectEdit = (props) => {
 			user_id,
 			team_id,
 		} = data
-
-		const ext = file[0].name.split(".")[1]
-		if (ext != "png" && ext != "jpeg" && ext != "jpg") {
-			toast.error("Formato de imagem não suportada", {
-				position: toast.POSITION.BOTTOM_RIGHT,
-			})
-			return new Error()
+		if (file[0] && file[0].name) {
+			const ext = file[0].name.split(".")[1]
+			if (ext != "png" && ext != "jpeg" && ext != "jpg") {
+				toast.error("Formato de imagem não suportada", {
+					position: toast.POSITION.BOTTOM_RIGHT,
+				})
+				return new Error()
+			}
 		}
 		const materialsCounter = {}
 		for (let i = 0; i < 10; i++) {

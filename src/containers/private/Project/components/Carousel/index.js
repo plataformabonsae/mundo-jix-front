@@ -756,7 +756,7 @@ const Carousel = (props) => {
 									Cancelar
 								</Button>
 								<Button submit Tag={"button"} type={"green"}>
-									Comfirmar
+									Confirmar
 								</Button>
 							</div>
 						</Dialog>

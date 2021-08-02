@@ -135,6 +135,14 @@ const ProjectEdit = (props) => {
 			user_id,
 			team_id,
 		} = data
+
+		const ext = file[0].name.split(".")[1]
+		if (ext != "png" && ext != "jpeg" && ext != "jpg") {
+			toast.error("Formato de imagem não suportada", {
+				position: toast.POSITION.BOTTOM_RIGHT,
+			})
+			return new Error()
+		}
 		const materialsCounter = {}
 		for (let i = 0; i < 10; i++) {
 			if (data[`materials_${i}`])
@@ -181,7 +189,6 @@ const ProjectEdit = (props) => {
 				.then(() => dispatch(get(usertype, { challenge_id })))
 				.then(() => props.handleClose())
 				.catch((err) => console.log(err))
-			console.log("editei caralho")
 		} else {
 			const req = dispatch(
 				post(usertype, {
@@ -219,8 +226,6 @@ const ProjectEdit = (props) => {
 						position: toast.POSITION.BOTTOM_RIGHT,
 					})
 				})
-
-			console.log("criei caralho")
 		}
 	}
 

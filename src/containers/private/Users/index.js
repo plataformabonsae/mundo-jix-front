@@ -249,7 +249,6 @@ const Modal = (props) => {
 			setLinks((prev) => [...prev, link])
 		}
 		if (props.data.links?.length) {
-			console.log("testes", props.data)
 			for (let i = 0; i < props.data.links.length; i++) {
 				append(props.data.links[i])
 			}
@@ -284,10 +283,10 @@ const Modal = (props) => {
 		const append = (port) => {
 			setPortfolios((prev) => [...prev, port])
 		}
-		console.log("portfolio", props.data)
-		if (props.data.portfolios?.length) {
-			for (let i = 0; i < props.data.portfolios.length; i++) {
-				append(props.data.portfolios[i])
+
+		if (props.data.links?.length) {
+			for (let i = 0; i < props.data.links.length; i++) {
+				append(props.data.links[i])
 			}
 		} else {
 			append({})
@@ -296,10 +295,6 @@ const Modal = (props) => {
 			setPortfolios([])
 		}
 	}, [props.data])
-
-	useEffect(() => {
-		console.log("prop", props.data)
-	}, [props])
 
 	return (
 		<ModalPage title={"Ver mais"} handleClose={() => props.setModal(null)}>
@@ -519,7 +514,6 @@ const Modal = (props) => {
 									<Input readOnly value={field.start_date}>
 										Início
 									</Input>
-									{/* {console.log(currentJob[index].status)} */}
 
 									<Input
 										readOnly
@@ -555,7 +549,6 @@ const Modal = (props) => {
 
 				<Card noShadow={true}>
 					<Title style={{ marginBottom: 32 }}>Outros links</Title>
-					{console.log("links", links)}
 					{links.map((field, index) => {
 						return (
 							<InputGroup key={index}>

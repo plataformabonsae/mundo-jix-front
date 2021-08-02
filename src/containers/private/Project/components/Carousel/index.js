@@ -56,7 +56,7 @@ const Carousel = (props) => {
 	const { data: judgeAssessment } = useSelector((state) => state.judgeAssessment)
 	const { data } = props
 	const { type, id, trail_type } = useParams()
-
+	const [modalAvaliationComfirmation, setModalAvaliationComfirmation] = useState(false)
 	// useEffect(() => {
 	//   if (!user?.user?.is_judge || !user?.user?.is_mentor)
 	// }, [dispatch, usertype, data, user]);
@@ -159,6 +159,7 @@ const Carousel = (props) => {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
 			})
+		setModalAvaliationComfirmation(false)
 	}
 
 	return (
@@ -241,7 +242,6 @@ const Carousel = (props) => {
 								)}
 							</>
 					  )}
-				{console.log("avaliaçao", user?.user)}
 				{!!user?.user?.is_judge && activeTab === "avaliacao" ? (
 					<Button
 						Tag="span"
@@ -624,12 +624,12 @@ const Carousel = (props) => {
 				/>
 			)}
 			{modalAvaliation && (
-				<Dialog
-					style={{ minWidth: 600 }}
-					header={"Avaliar projeto"}
-					handleClose={handleModalAvaliation}
-				>
-					<form onSubmit={handleSubmit(submitAssessment)}>
+				<form onSubmit={handleSubmit(submitAssessment)}>
+					<Dialog
+						style={{ minWidth: 600 }}
+						header={"Avaliar projeto"}
+						handleClose={handleModalAvaliation}
+					>
 						<input
 							ref={register()}
 							name={`judge_id`}
@@ -724,11 +724,44 @@ const Carousel = (props) => {
 							</Card>
 						))}
 
-						<Button submit Tag={"button"} type={"green"}>
+						<Button
+							onClick={() => {
+								setModalAvaliationComfirmation(true)
+							}}
+							Tag={"span"}
+							type={"green"}
+						>
 							Enviar avaliação
 						</Button>
-					</form>
-				</Dialog>
+					</Dialog>
+					{modalAvaliationComfirmation && (
+						<Dialog
+							title="Tem certeza que deseja enviar a Avaliação?"
+							desc=" Após o envio da avalição, você não poderá editá-la."
+						>
+							<div
+								style={{
+									marginTop: 10,
+									display: "flex",
+									justifyContent: "space-between",
+								}}
+							>
+								<Button
+									onClick={() => {
+										setModalAvaliationComfirmation(false)
+									}}
+									Tag={"span"}
+									type={"gray"}
+								>
+									Cancelar
+								</Button>
+								<Button submit Tag={"button"} type={"green"}>
+									Comfirmar
+								</Button>
+							</div>
+						</Dialog>
+					)}
+				</form>
 			)}
 		</section>
 	)
@@ -757,16 +790,16 @@ const TeamIntegrant = (props) => {
 		const fetch = dispatch(
 			transfer(usertype, { team_id: props.teamId, user_id: data.id })
 		)
-		const update = dispatch(get(usertype, { challenge_id: challengeId }))
 		fetch
-			.then(() => update)
-			.then((res) => {
+			.then(() => dispatch(get(usertype, { challenge_id: challengeId })))
+			.then(() => {
 				toast.success(`${data.name} agora é guardião`, {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
+				handleModal()
 			})
-			.then(() => handleModal())
 			.catch((error) => {
+				console.log(error)
 				toast.error("Algum erro ocorreu ao transferir guardião.", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
@@ -777,9 +810,8 @@ const TeamIntegrant = (props) => {
 		const fetch = dispatch(
 			kick(usertype, { team_id: props.teamId, user_id: data.id })
 		)
-		const update = dispatch(get(usertype, { challenge_id: challengeId }))
 		fetch
-			.then(() => update)
+			.then(() => dispatch(get(usertype, { challenge_id: challengeId })))
 			.then((res) => {
 				toast.success("Usuário expulso com sucesso", {
 					position: toast.POSITION.BOTTOM_RIGHT,
@@ -797,9 +829,8 @@ const TeamIntegrant = (props) => {
 		const fetch = dispatch(
 			leave(usertype, { team_id: props.teamId, user_id: data.id })
 		)
-		const update = dispatch(get(usertype, { challenge_id: challengeId }))
 		fetch
-			.then(() => update)
+			.then(() => dispatch(get(usertype, { challenge_id: challengeId })))
 			.then((res) => {
 				toast.success("Saiu da equipe com sucesso", {
 					position: toast.POSITION.BOTTOM_RIGHT,
@@ -870,7 +901,7 @@ const TeamIntegrant = (props) => {
 				<Dialog header={"Informações do integrante"} handleClose={handleModal}>
 					{!kickIntegrant && !leaveIntegrant && !transferIntegrant && (
 						<>
-							<div style={{ overflow: "initial" }}>
+							<div style={{ overflow: "initial", marginTop: 60 }}>
 								<ProfileCard
 									keeper={props.keeper}
 									data={data}

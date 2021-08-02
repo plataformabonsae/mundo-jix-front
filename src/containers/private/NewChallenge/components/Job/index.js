@@ -82,7 +82,7 @@ const Job = ({ noShadow = true, handleStep, handleGoBack }) => {
               errorMessage="Digite a remuneração"
               name="remuneration"
               placeholder="Em reais"
-              step={0.01}
+              // step={0.01}
               // type={"number"}
             ></Input>
           </InputGroup>

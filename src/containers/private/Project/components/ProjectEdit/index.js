@@ -181,6 +181,7 @@ const ProjectEdit = (props) => {
 				.then(() => dispatch(get(usertype, { challenge_id })))
 				.then(() => props.handleClose())
 				.catch((err) => console.log(err))
+			console.log("editei caralho")
 		} else {
 			const req = dispatch(
 				post(usertype, {
@@ -204,18 +205,22 @@ const ProjectEdit = (props) => {
 			)
 			await req
 				.then((res) => {
-					console.log(res)
 					toast.success("Projeto criado com sucesso!", {
 						position: toast.POSITION.BOTTOM_RIGHT,
 					})
 				})
 				.then(() => dispatch(get(usertype, { challenge_id })))
-				.then(() => props.handleClose())
+				.then(() => {
+					window.location.reload()
+					props.handleClose()
+				})
 				.catch((error) => {
 					toast.error("Um erro ocorreu ao criar o projeto, tente novamente.", {
 						position: toast.POSITION.BOTTOM_RIGHT,
 					})
 				})
+
+			console.log("criei caralho")
 		}
 	}
 

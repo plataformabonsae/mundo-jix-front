@@ -5,6 +5,7 @@ import { Title, Text } from "components/Text"
 import { Card } from "components/Card"
 import { Loading } from "components/Loading"
 import Button from "components/Button"
+import { useHistory } from "react-router-dom"
 
 import { invites, accept, refuse } from "services/invites"
 
@@ -15,6 +16,7 @@ import arrow from "assets/components/Notification/arrow.svg"
 
 const Invites = ({ open, isOpen }) => {
 	const dispatch = useDispatch()
+	const history = useHistory()
 	const { data, loading } = useSelector((state) => state.invites)
 	const { data: usertype } = useSelector((state) => state.usertype)
 
@@ -30,8 +32,10 @@ const Invites = ({ open, isOpen }) => {
 		dispatch(refuse(usertype, { team_id })).then(() => dispatch(invites(usertype)))
 	}
 
-	const handleAccept = (team_id) => {
+	const handleAccept = (team_id, challenge_id) => {
+		console.log(team_id, challenge_id)
 		dispatch(accept(usertype, { team_id })).then(() => dispatch(invites(usertype)))
+		history.push(`/meus-desafios/ultradesafio/${challenge_id}`)
 	}
 
 	return (
@@ -58,10 +62,13 @@ const Invites = ({ open, isOpen }) => {
 							!loading &&
 							data.invites.map((item) => (
 								<div className={styles.invites__card}>
+									{console.log(item.challenge)}
 									{/* <img className={styles.invites__card__image} src="" alt="" /> */}
 									<div className={styles.invites__content}>
 										<Title style={{ lineHeigth: 1.5 }} size={14}>
-											Convite para equipe <br /> {item.name}
+											Convite para equipe <br /> {item.name} desafio
+											<br />
+											<strong>{item.challenge.name}</strong>
 										</Title>
 										{/* <Text size={12}>Desafio X na equipe Y</Text> */}
 									</div>
@@ -90,7 +97,10 @@ const Invites = ({ open, isOpen }) => {
 										<Button
 											Tag={"span"}
 											onClick={() =>
-												handleAccept(item.pivot.team_id)
+												handleAccept(
+													item.pivot.team_id,
+													item.challenge_id
+												)
 											}
 											style={{
 												margin: 4,

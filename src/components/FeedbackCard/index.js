@@ -161,7 +161,7 @@ const Modal = (props) => {
 						name={"user_id"}
 						value={user?.user?.id}
 					/>
-					{!user?.badges[0].pivot.company_id && (
+					{!user?.badges[0]?.pivot?.company_id && (
 						<InputGroup>
 							<label className={styles.label}>
 								<Title size={18}>Comente o feedback</Title>
@@ -221,13 +221,13 @@ const CreateFeedback = (props) => {
 	// const { data: usertype } = useSelector(state => state.usertype)
 
 	const onSubmit = async (data) => {
-		console.log("ids", challengeId, projectId)
+		console.log(challengeId, projectId)
 		await dispatch(create(usertype, data))
 			.then((res) => {
 				toast.success("Feedback enviado", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
-				console.log("resposta", res)
+				console.log(res)
 			})
 			.then(() => props.handleModal())
 			.then(() =>

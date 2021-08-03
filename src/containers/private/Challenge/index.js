@@ -322,7 +322,6 @@ const Challenge = (props) => {
 							<div className={styles.section}>
 								<Title size={24}>Equipe</Title>
 								<div className={styles.container}>
-									{console.log("time", data?.team?.users)}
 									{data?.team?.users.map((item) => (
 										<ProfileCard
 											border

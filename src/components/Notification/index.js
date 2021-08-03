@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
 import { Title, Text } from "components/Text"
@@ -40,7 +40,7 @@ const Notification = ({ list, open, isOpen }) => {
 		if (item.type === `App\\Notifications\\UserWantsYouJoiningHisTeam`) {
 			return {
 				title: "Convite para participar de time",
-				desc: `${item.data.guardian_name} te convidou para o time para o seu time ${item.data.team_name}`,
+				desc: `${item.data.guardian_name} te convidou para o seu time ${item.data.team_name}`,
 			}
 		}
 		if (item.type === `App\\Notifications\\UserWantsJoinYourTeam`) {

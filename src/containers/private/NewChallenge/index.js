@@ -109,6 +109,7 @@ const NewChallenge = (props) => {
         assessments: JSON.stringify(assessments),
         mentors: JSON.stringify(mentors),
         skills: JSON.stringify(skills),
+        badge: JSON.stringify(badge),
       })
     );
     await req

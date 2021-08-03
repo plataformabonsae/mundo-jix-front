@@ -103,7 +103,11 @@ const Challenge = ({
       if (data[`materials_${i}`])
         materialsCounter[`materials_${i}`] = data[`materials_${i}`][0];
     }
-    const dataWithMaterials = { ...data, file: data.file[0], materialsCounter };
+    const dataWithMaterials = {
+      ...data,
+      file: data.file[0],
+      ...materialsCounter,
+    };
     if (hasAvaliation) {
       handleStep("avaliacao", dataWithMaterials);
     } else {

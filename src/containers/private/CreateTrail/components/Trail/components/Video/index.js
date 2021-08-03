@@ -56,20 +56,28 @@ const Video = (props) => {
   };
 
   const onSubmit = async (formData) => {
-    // handleData(index, data);
+    const { description, link, name } = formData;
     const materialsCounter = {};
     for (let i = 0; i < 10; i++) {
       if (formData[`materials_${i}`])
         materialsCounter[`materials_${i}`] = formData[`materials_${i}`][0];
     }
+    console.log({
+      // _method: "PUT",
+      ...formData,
+      challenge_id: id,
+      trail_id: data?.id,
+      ...materialsCounter,
+    });
     if (!!data) {
       Promise.all([
         dispatch(
           updateVideo(usertype, {
             // _method: "PUT",
+            ...formData,
             challenge_id: id,
             trail_id: data?.id,
-            ...formData,
+            ...materialsCounter,
           })
         ),
       ])
@@ -87,7 +95,14 @@ const Video = (props) => {
         });
     } else {
       Promise.all([
-        dispatch(video(usertype, { challenge_id: id, ...formData })),
+        dispatch(
+          video(usertype, {
+            ...formData,
+            challenge_id: id,
+            trail_id: data?.id,
+            ...materialsCounter,
+          })
+        ),
       ])
         .then(() => dispatch(get(usertype, { challenge_id: id })))
         .then((res) => {
@@ -183,7 +198,7 @@ const Video = (props) => {
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <header className={styles.header}>
           <Title onClick={() => handleExpand()} style={{ cursor: "pointer" }}>
-            {Number.isInteger(index) && index + 1 + ")"} {data?.id} Videoaula{" "}
+            {Number.isInteger(index) && index + 1 + ")"} Videoaula{" "}
             {!!data && (
               <svg
                 width="20"
@@ -429,13 +444,14 @@ const Video = (props) => {
                   Materiais
                 </Title>
                 <div className={styles.files}>
-                  {data?.video?.file && (
+                  {data?.video?.materials?.map((item, index) => (
                     <File
-                      file={data?.material?.file}
-                      name={data?.material?.filename}
-                      extension={data?.material?.fileextension}
+                      key={item.id}
+                      file={item.file}
+                      name={item.filename}
+                      extension={item.fileextension}
                     />
-                  )}
+                  ))}
                 </div>
                 {materials.map((item, index) => (
                   <InputFile

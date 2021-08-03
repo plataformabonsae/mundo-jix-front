@@ -29,7 +29,7 @@ const Counters = (props) => {
           Participantes
         </Text>
         <Button
-          disabled={expired}
+          disabled={!expired}
           to={
             !expired &&
             `/meus-desafios/${props.data.challenge_type}/${props.data.id}/participantes`

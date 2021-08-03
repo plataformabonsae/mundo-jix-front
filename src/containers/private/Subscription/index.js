@@ -12,13 +12,14 @@ import { TeamSearch } from "./components/TeamSearch";
 import { Invites } from "./components/Invites";
 
 import { TitleAndBack } from "components/TitleAndBack";
-import { Title } from "components/Text";
+import { Title, Text } from "components/Text";
 import { Input, InputGroup } from "components/Inputs";
 import { Dialog } from "components/Dialog";
 // import { BlueCard, BlueCardContainer } from "components/BlueCard";
 import Button from "components/Button";
 
-import { all, subscribe } from "services/challenges";
+import { all, subscribe, get } from "services/challenges";
+import { invites as getInvites, accept, refuse } from "services/invites";
 import { invite } from "services/team";
 
 import styles from "./styles.module.sass";
@@ -28,6 +29,10 @@ const Subscription = (props) => {
   const { data: usertype } = useSelector((state) => state.usertype);
   const subscribed = useSelector((state) => state.subscribeChallenge);
   const { data, loading } = useSelector((state) => state.challenges);
+  const { data: challenge } = useSelector((state) => state.challenge);
+  const { data: invites, loading: loadingInvite } = useSelector(
+    (state) => state.invites
+  );
   const { control, register, errors, handleSubmit } = useForm();
   // const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
   const { fields, append } = useFieldArray({
@@ -41,6 +46,7 @@ const Subscription = (props) => {
   const { id, step } = useParams();
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [aloneDialog, setAloneDialog] = useState(false);
+  const [hasInvite, setHasInvite] = useState(false);
   const [newTeamDialog, setNewTeamDialog] = useState(false);
   // const [newTeamData, setNewTeamData] = useState(false);
 
@@ -57,11 +63,35 @@ const Subscription = (props) => {
       );
   }, [data, id]);
 
+  useEffect(() => {
+    dispatch(get(usertype, { challenge_id: id }));
+  }, [dispatch, usertype, id]);
+
   // keep the team id stored
   useEffect(() => {
     subscribed?.data?.data?.id &&
       window.localStorage.setItem("current_team", subscribed.data.data.id);
   }, [subscribed?.data?.data?.id]);
+
+  useEffect(() => {
+    if (invites?.invites?.length)
+      for (let i = 0; invites?.invites?.length > i; i++) {
+        if (invites?.invites?.[i]?.challenge_id === parseInt(id))
+          setHasInvite(invites?.invites?.[i]);
+      }
+  }, [invites, id]);
+
+  const handleRefuse = (team_id) => {
+    dispatch(refuse(usertype, { team_id })).then(() =>
+      dispatch(getInvites(usertype)).then(() => history.push(`/desafios/`))
+    );
+  };
+
+  const handleAccept = (team_id, challenge_id) => {
+    dispatch(accept(usertype, { team_id })).then(() =>
+      dispatch(getInvites(usertype)).then(() => history.push(`/meus-desafios/`))
+    );
+  };
 
   const handleAloneDialog = (props) => {
     setAloneDialog((prev) => !prev);
@@ -92,7 +122,6 @@ const Subscription = (props) => {
         )
       )
     )
-      .then((res) => console.log(res, "enviado"))
       .then(() =>
         toast.success("Os convites foram enviados", {
           position: toast.POSITION.BOTTOM_RIGHT,
@@ -100,7 +129,10 @@ const Subscription = (props) => {
       )
       .then(() =>
         history.push(
-          `/meus-desafios/${currentChallenge?.challenge_type}/${currentChallenge?.id}`
+          `/meus-desafios/${
+            currentChallenge?.challenge_type ||
+            challenge?.challenge?.challenge_type
+          }/${currentChallenge?.id || challenge?.challenge?.id}`
         )
       )
       .catch((err) => console.log(err));
@@ -146,96 +178,141 @@ const Subscription = (props) => {
         }
       />
       {/* )} */}
-      <div className={styles.title__container}>
-        <Title size={28} className={styles.title}>
-          {step === "1" && "Como será sua participação?"}
-          {step === "2" && "Como será sua participação?"}
-          {step === "equipes" && "Em que equipe você quer participar?"}
-          {step === "convidar" && "Quem você quer convidar para sua equipe?"}
-        </Title>
-      </div>
-      <form noValidate onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="hidden"
-          name="challenge_id"
-          value={id}
-          ref={register({ required: true })}
-        />
-        {step === "1" && (
-          <>
-            <AloneOrTeam
-              handleStep={handleStep}
-              handleSelection={handleAloneOrTeam}
-              handleAloneDialog={handleAloneDialog}
-              currentChallenge={currentChallenge}
-              loading={loading}
+
+      {hasInvite ? (
+        <Dialog
+          style={{ minWidth: 300 }}
+          header={"Convite pendente"}
+          handleClose={() => history.push("/desafios")}
+        >
+          <Title>
+            Antes de entrar no desafio, você deve responder seu convite pendente
+          </Title>
+          <Text style={{ marginTop: 12 }}>
+            Deseja participar do time {hasInvite?.name} do desafio{" "}
+            {hasInvite?.challenge?.name}{" "}
+          </Text>
+          <div
+            style={{
+              marginTop: 24,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button
+              // style={{ minWidth: 120 }}
+              disabled={loadingInvite}
+              Tag="button"
+              type="gray"
+              onClick={() => handleRefuse(hasInvite?.pivot.team_id)}
+            >
+              Recusar
+            </Button>
+            <Button
+              // style={{ minWidth: 100 }}
+              disabled={loadingInvite}
+              submit
+              Tag="button"
+              type={"tertiary"}
+              onClick={() => handleAccept(hasInvite?.pivot.team_id)}
+            >
+              Aceitar
+            </Button>
+          </div>
+        </Dialog>
+      ) : (
+        <>
+          <div className={styles.title__container}>
+            <Title size={28} className={styles.title}>
+              {step === "1" && "Como será sua participação?"}
+              {step === "2" && "Como será sua participação?"}
+              {step === "equipes" && "Em que equipe você quer participar?"}
+              {step === "convidar" &&
+                "Quem você quer convidar para sua equipe?"}
+            </Title>
+          </div>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <input
+              type="hidden"
+              name="challenge_id"
+              value={id}
+              ref={register({ required: true })}
             />
-            {aloneDialog && (
-              <Dialog
-                title={"Tem certeza?"}
-                handleClose={handleAloneDialog}
-                desc={
-                  "Não será possível participar de uma equipe após confirmar esta opção."
-                }
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                  }}
-                >
-                  <Button
-                    style={{ minWidth: 120 }}
-                    Tag="button"
-                    type="gray"
-                    onClick={() => handleAloneDialog()}
+            {step === "1" && (
+              <>
+                <AloneOrTeam
+                  handleStep={handleStep}
+                  handleSelection={handleAloneOrTeam}
+                  handleAloneDialog={handleAloneDialog}
+                  currentChallenge={currentChallenge}
+                  loading={loading}
+                />
+                {aloneDialog && (
+                  <Dialog
+                    title={"Tem certeza?"}
+                    handleClose={handleAloneDialog}
+                    desc={
+                      "Não será possível participar de uma equipe após confirmar esta opção."
+                    }
                   >
-                    Cancelar
-                  </Button>
-                  <Button submit Tag="button" type={"tertiary"}>
-                    Confirmar
-                  </Button>
-                </div>
-              </Dialog>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                      }}
+                    >
+                      <Button
+                        style={{ minWidth: 120 }}
+                        Tag="button"
+                        type="gray"
+                        onClick={() => handleAloneDialog()}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button submit Tag="button" type={"tertiary"}>
+                        Confirmar
+                      </Button>
+                    </div>
+                  </Dialog>
+                )}
+              </>
             )}
-          </>
-        )}
-        {step === "2" && (
-          <>
-            <TeamFormation
-              handleStep={handleStep}
-              handleSelection={handleAloneOrTeam}
-              handleNewTeamDialog={handleNewTeamDialog}
-            />
-            {newTeamDialog && (
-              <Dialog
-                style={{ minWidth: 300 }}
-                header={"Criar uma equipe"}
-                handleClose={handleNewTeamDialog}
-              >
-                {fields.map((field, index) => {
-                  return (
-                    <input
-                      type="hidden"
-                      key={field.id} // important to include key with field's id
-                      defaultValue={field.value} // make sure to include defaultValue
-                      ref={register()}
-                      name={`team[invites][${index}]`}
-                    />
-                  );
-                })}
-                {/* <InputGroup> */}
-                <Input
-                  ref={register({ required: true })}
-                  errors={errors}
-                  errorMessage={"Digite o nome da equipe para continuar"}
-                  placeholder={"Digite o nome da equipe"}
-                  name={"team[name]"}
-                >
-                  Nome do time
-                </Input>
-                {/* </InputGroup> */}
-                {/* <InputGroup>
+            {step === "2" && (
+              <>
+                <TeamFormation
+                  handleStep={handleStep}
+                  handleSelection={handleAloneOrTeam}
+                  handleNewTeamDialog={handleNewTeamDialog}
+                />
+                {newTeamDialog && (
+                  <Dialog
+                    style={{ minWidth: 300 }}
+                    header={"Criar uma equipe"}
+                    handleClose={handleNewTeamDialog}
+                  >
+                    {fields.map((field, index) => {
+                      return (
+                        <input
+                          type="hidden"
+                          key={field.id} // important to include key with field's id
+                          defaultValue={field.value} // make sure to include defaultValue
+                          ref={register()}
+                          name={`team[invites][${index}]`}
+                        />
+                      );
+                    })}
+                    {/* <InputGroup> */}
+                    <Input
+                      ref={register({ required: true })}
+                      errors={errors}
+                      errorMessage={"Digite o nome da equipe para continuar"}
+                      placeholder={"Digite o nome da equipe"}
+                      name={"team[name]"}
+                    >
+                      Nome do time
+                    </Input>
+                    {/* </InputGroup> */}
+                    {/* <InputGroup>
                   <InputFile
                   // ref={register({required: true})}
                   // errors={errors}
@@ -244,57 +321,59 @@ const Subscription = (props) => {
                     Capa da equipe
                   </InputFile>
                 </InputGroup> */}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Button
-                    style={{ minWidth: 120 }}
-                    Tag="button"
-                    type="gray"
-                    onClick={() => handleNewTeamDialog()}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    // disabled={!(newTeamData?.team?.name?.length > 3)}
-                    style={{ minWidth: 100 }}
-                    submit
-                    Tag="button"
-                    type={"tertiary"}
-                    // onClick={() =>
-                    //   newTeamData?.team?.name?.length > 3 &&
-                    //   handleStep("convidar")
-                    // }
-                  >
-                    Confirmar
-                  </Button>
-                </div>
-              </Dialog>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Button
+                        style={{ minWidth: 120 }}
+                        Tag="button"
+                        type="gray"
+                        onClick={() => handleNewTeamDialog()}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        // disabled={!(newTeamData?.team?.name?.length > 3)}
+                        style={{ minWidth: 100 }}
+                        submit
+                        Tag="button"
+                        type={"tertiary"}
+                        // onClick={() =>
+                        //   newTeamData?.team?.name?.length > 3 &&
+                        //   handleStep("convidar")
+                        // }
+                      >
+                        Confirmar
+                      </Button>
+                    </div>
+                  </Dialog>
+                )}
+              </>
             )}
-          </>
-        )}
-        {step === "equipes" && (
-          <>
-            <TeamSearch
-              usertype={usertype}
-              currentChallenge={currentChallenge}
-            />
-          </>
-        )}
-        {step === "convidar" && (
-          <>
-            <Invites
-              handleAppendInvite={handleAppendInvite}
-              usertype={usertype}
-              id={window.localStorage.getItem("current_team")}
-            />
-          </>
-        )}
-        <ToastContainer />
-      </form>
+            {step === "equipes" && (
+              <>
+                <TeamSearch
+                  usertype={usertype}
+                  currentChallenge={currentChallenge}
+                />
+              </>
+            )}
+            {step === "convidar" && (
+              <>
+                <Invites
+                  handleAppendInvite={handleAppendInvite}
+                  usertype={usertype}
+                  id={window.localStorage.getItem("current_team")}
+                />
+              </>
+            )}
+            <ToastContainer />
+          </form>
+        </>
+      )}
     </section>
   );
 };

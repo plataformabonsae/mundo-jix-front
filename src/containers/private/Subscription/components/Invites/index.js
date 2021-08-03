@@ -124,7 +124,7 @@ const Invites = (props) => {
             type={"green"}
             style={{ marginLeft: 12 }}
           >
-            Finalizar Inscrição
+            Enviar convites
           </Button>
         </section>
       )}

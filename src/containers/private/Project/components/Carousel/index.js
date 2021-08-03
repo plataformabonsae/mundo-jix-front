@@ -70,7 +70,7 @@ const Carousel = (props) => {
 					: assessment
 			dispatch(
 				request(usertype, {
-					project_id: trail_type,
+					project_id: data.project.id,
 					challenge_id: id,
 				})
 			)

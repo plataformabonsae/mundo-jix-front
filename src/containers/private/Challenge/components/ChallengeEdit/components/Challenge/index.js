@@ -121,7 +121,6 @@ const Challenge = ({ noShadow = true, handleClose }) => {
 				toast.success("Desafio atualizado", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
-				console.log("resposta", res)
 			})
 			.then(() => dispatch(get(usertype, { challenge_id: challenge.challenge.id })))
 			.catch((error) => {

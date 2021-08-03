@@ -212,7 +212,10 @@ const Carousel = (props) => {
 						Enviar feedback
 					</Button>
 				) : null}
-				{user?.user?.is_mentor || user?.user?.is_judge || usertype === "empresa"
+				{user?.user?.is_mentor ||
+				user?.user?.is_judge ||
+				data?.guardian?.id !== user?.user?.id ||
+				usertype === "empresa"
 					? null
 					: activeTab === "meu-projeto" &&
 					  (isKeeper || !data?.team) && (
@@ -380,7 +383,7 @@ const Carousel = (props) => {
 												{item.filename}
 											</a>
 											{project?.guardian?.id === user?.user?.id ||
-												(!project?.team && (
+												(!project?.team?.id && (
 													<span
 														className={styles.file__delete}
 														onClick={() =>

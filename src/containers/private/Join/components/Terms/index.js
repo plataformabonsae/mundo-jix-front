@@ -49,7 +49,6 @@ const Terms = ({ children, type, id = 1 }) => {
 			.then(() => setAccept(data.accepted_terms))
 			.then(() => window.localStorage.setItem("accepted_terms", accepted))
 			.catch((error) => {
-				console.log(error.response.data)
 				toast.error(
 					"Um erro ocorreu ao tentar enviar os dados. Tente novamente",
 					{

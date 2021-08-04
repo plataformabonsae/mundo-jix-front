@@ -85,13 +85,11 @@ const Modal = (props) => {
 	}, [data?.id, usertype, challengeId, dispatch])
 
 	const onSubmit = async (data) => {
-		console.log(challengeId, projectId, data.feedback_id)
 		Promise.all([dispatch(comment(usertype, data))])
 			.then((res) => {
 				toast.success("Comentário enviado", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
-				console.log(res)
 			})
 			.then(() =>
 				dispatch(
@@ -105,7 +103,6 @@ const Modal = (props) => {
 				toast.error("Algum erro ocorreu ao enviar o comentário", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
-				console.log(error)
 			})
 	}
 
@@ -221,13 +218,11 @@ const CreateFeedback = (props) => {
 	// const { data: usertype } = useSelector(state => state.usertype)
 
 	const onSubmit = async (data) => {
-		console.log(challengeId, projectId)
 		await dispatch(create(usertype, data))
 			.then((res) => {
 				toast.success("Feedback enviado", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
-				console.log(res)
 			})
 			.then(() => props.handleModal())
 			.then(() =>
@@ -239,7 +234,6 @@ const CreateFeedback = (props) => {
 				toast.error("Algum erro ocorreu ao enviar o feedback", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
-				console.log(error)
 			})
 	}
 

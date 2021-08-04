@@ -73,7 +73,6 @@ const RecommendedChallenges = () => {
 					</div>
 				)}
 			</header>
-			{console.log(challengeType)}
 			{challengeType?.length ? (
 				<article className={styles.slider}>
 					<Swiper

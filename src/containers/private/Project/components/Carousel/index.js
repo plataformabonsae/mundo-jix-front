@@ -43,6 +43,7 @@ const Carousel = (props) => {
 	const { width } = WindowSize()
 	const dispatch = useDispatch()
 	const [activeTab, setActiveTab] = useState("meu-projeto")
+	const [hasAvaliate, sethasAvaliate] = useState(false)
 	const [modalFeedback, setModalFeedback] = useState(false)
 	const [modalAvaliation, setModalAvaliation] = useState(false)
 	const { data: feedbacks } = useSelector((state) => state.feedbacks)
@@ -70,13 +71,28 @@ const Carousel = (props) => {
 					: assessment
 			dispatch(
 				request(usertype, {
-					project_id: data.project.id,
+					project_id: data.project?.id ? data.project?.id : trail_type,
 					challenge_id: id,
 				})
 			)
 		}
 	}, [dispatch, usertype, data, currentProject, id, user, project, trail_type])
 
+	useEffect(() => {
+		const judges = assessments?.judges.filter((el) => el.judge.id == user?.user.id)
+		const avaliate = assessments?.assessments?.length
+		if (judges?.length && !!avaliate) {
+			sethasAvaliate(true)
+		} else {
+			sethasAvaliate(false)
+		}
+		/* if (!!avaliate) {
+			console.log("on", assessments?.assessments)
+			sethasAvaliate(false)
+		} else {
+			sethasAvaliate(true)
+		} */
+	}, [assessments?.judges, user?.user])
 	// Feedbacks
 	useEffect(() => {
 		const request =
@@ -212,9 +228,10 @@ const Carousel = (props) => {
 						Enviar feedback
 					</Button>
 				) : null}
+				{console.log("teste", user?.user)}
 				{user?.user?.is_mentor ||
 				user?.user?.is_judge ||
-				data?.guardian?.id !== user?.user?.id ||
+				data?.team?.guardian_id !== user?.user?.id ||
 				usertype === "empresa"
 					? null
 					: activeTab === "meu-projeto" &&
@@ -229,7 +246,7 @@ const Carousel = (props) => {
 					  )}
 				{user?.user?.is_mentor ||
 				user?.user?.is_judge ||
-				data?.guardian?.id !== user?.user?.id
+				data?.team?.guardian_id !== user?.user?.id
 					? null
 					: activeTab === "equipe" && (
 							<>
@@ -245,7 +262,7 @@ const Carousel = (props) => {
 								)}
 							</>
 					  )}
-				{!!user?.user?.is_judge && activeTab === "avaliacao" ? (
+				{!hasAvaliate && !!user?.user?.is_judge && activeTab === "avaliacao" ? (
 					<Button
 						Tag="span"
 						type={"tertiary"}
@@ -511,7 +528,7 @@ const Carousel = (props) => {
 									{assessments?.final_grades?.assessments?.map(
 										(item) => (
 											<Card
-												key={item.assessment_id}
+												key={item?.assessment_id}
 												className={styles.avaliacao__card}
 												noShadow
 												border
@@ -522,13 +539,13 @@ const Carousel = (props) => {
 													}
 												>
 													<Title size={16}>
-														{item.assessment.evaluate}
+														{item?.assessment?.evaluate}
 													</Title>
 													<Title>
 														{item.grade}
 														<span style={{ opacity: 0.15 }}>
 															/
-															{item.assessment.max_grade *
+															{item?.assessment?.max_grade *
 																assessments?.judges
 																	?.length}
 														</span>
@@ -588,12 +605,16 @@ const Carousel = (props) => {
 												}
 											>
 												<Title size={16}>
-													{avaliation.assessment.evaluate}
+													{avaliation?.assessment?.evaluate}
 												</Title>
 												<Title>
-													{avaliation.grade}
+													{avaliation?.grade}
 													<span style={{ opacity: 0.2 }}>
-														/{avaliation.assessment.max_grade}
+														/
+														{
+															avaliation?.assessment
+																?.max_grade
+														}
 													</span>
 												</Title>
 											</div>
@@ -610,7 +631,7 @@ const Carousel = (props) => {
 											>
 												Feedback do jurado
 											</Title>
-											<Text>{avaliation.feedback}</Text>
+											<Text>{avaliation?.feedback}</Text>
 										</Card>
 									))}
 								</section>
@@ -802,7 +823,6 @@ const TeamIntegrant = (props) => {
 				handleModal()
 			})
 			.catch((error) => {
-				console.log(error)
 				toast.error("Algum erro ocorreu ao transferir guardião.", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})

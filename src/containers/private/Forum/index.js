@@ -184,7 +184,6 @@ const NewPost = (props) => {
 			.then(() => props.handleClose())
 			.then(() => dispatch(forum(usertype, { challenge_id: id })))
 			.catch((error) => {
-				console.log(error.response.data)
 				toast.error("Tente novamente", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})

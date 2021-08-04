@@ -76,7 +76,6 @@ const Trilha = (props) => {
 										onClick={handlePremumDialog}
 									/>
 								))}
-							{console.log("trilha", controlledTrail)}
 							{controlledTrail?.map((item, index) => (
 								<TrilhaItem
 									to={`/meus-desafios/${type}/${id}/trilha/${trail_type}/${

@@ -54,7 +54,6 @@ const Avaliation = ({ noShadow = true, handleClose }) => {
 				toast.error("Algum erro ocorreu ao atualizar o desafio", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
-				console.log(error)
 			})
 	}
 

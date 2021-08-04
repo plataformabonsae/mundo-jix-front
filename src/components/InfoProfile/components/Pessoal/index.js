@@ -135,7 +135,6 @@ const Pessoal = ({ type, noShadow, finalRoute, hasPassword, redirect, dontRedire
 			.then(() => handleCancelSubscriptionModal())
 			.then(() => dispatch(get(usertype)))
 			.catch((error) => {
-				console.log(error.response.data)
 				toast.error(
 					"Ocorreu um erro ao cancelar assunatura, tente novamente ou entre em contato conosco.",
 					{
@@ -185,7 +184,6 @@ const Pessoal = ({ type, noShadow, finalRoute, hasPassword, redirect, dontRedire
 			)
 			.then(() => exit && history.push("/dashboard"))
 			.catch((error) => {
-				console.log(error.response.data)
 				toast.error(
 					error.response.data.errors.email[0] ===
 						"This email is already taken." &&
@@ -246,7 +244,6 @@ const Pessoal = ({ type, noShadow, finalRoute, hasPassword, redirect, dontRedire
 				toast.error("Algum erro ocorreu, por favor tente novamente", {
 					position: toast.POSITION.BOTTOM_RIGHT,
 				})
-				console.log(error)
 			})
 	}
 
@@ -468,7 +465,6 @@ const Pessoal = ({ type, noShadow, finalRoute, hasPassword, redirect, dontRedire
 										name={`socialMedias.${index}.link`}
 										placeholder="Link da rede social"
 									>
-										{console.log(errors)}
 										Cole aqui{" "}
 										{errors?.socialMedias?.[index]?.link?.message}
 									</Input>

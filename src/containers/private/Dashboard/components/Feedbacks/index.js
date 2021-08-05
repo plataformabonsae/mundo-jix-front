@@ -18,13 +18,14 @@ const Feedbacks = (props) => {
   const [feedbacks, setFeedbacks] = useState([]);
 
   useEffect(() => {
-    dashboard?.feedbacks && setFeedbacks([...dashboard?.feedbacks]);
+    dashboard?.feedbacks?.original?.data &&
+      setFeedbacks([...dashboard?.feedbacks?.original?.data]);
   }, [dashboard?.feedbacks]);
 
   const handleSearchButton = () => setSearchToggle((prev) => !prev);
   const handleSearch = (e) =>
     setFeedbacks((state) =>
-      [...dashboard?.feedbacks].filter(
+      [...dashboard?.feedbacks?.original?.data].filter(
         (feedback) =>
           feedback.challenge
             .toLowerCase()

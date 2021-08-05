@@ -18,6 +18,8 @@ const MeusDesafios = ({
   locked,
   desafio,
   item,
+  index,
+  status,
 }) => {
   const setBg = (current) => {
     const status = maxValue / 3;
@@ -58,8 +60,11 @@ const MeusDesafios = ({
         </div>
 
         <article className={styles.error}>
-          <Text size={14} color={colors.ERROR}>
-            {currentValue < 50 ? "Projeto pendente!" : <br />}
+          <Text
+            size={14}
+            color={!status?.[index] ? colors.ERROR : colors.SUCCESS}
+          >
+            {!status?.[index] ? "Projeto pendente" : "Projeto enviado"}
           </Text>
         </article>
       </Card>

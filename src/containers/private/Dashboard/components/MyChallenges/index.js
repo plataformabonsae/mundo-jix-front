@@ -22,11 +22,11 @@ const MyChallenges = () => {
   const [activeTab, setActiveTab] = useState("todos");
 
   useEffect(() => {
-    data?.my_challenges && setChallengeType(data.my_challenges);
+    data?.my_challenges?.[0] && setChallengeType(data.my_challenges?.[0]);
   }, [data?.my_challenges]);
 
   const handleFilter = (filterTo) => {
-    const challenges = data?.my_challenges;
+    const challenges = data?.my_challenges?.[0];
     setActiveTab(filterTo);
     if (filterTo !== "todos") {
       setChallengeType(() =>
@@ -87,12 +87,13 @@ const MyChallenges = () => {
                 <Chip
                   key={index}
                   item={item}
+                  index={index}
                   meusDesafios
                   title={`Nome do desafio`}
                   desc={"Autodesafio"}
                   maxValue={100}
                   currentValue={item.percentage?.toFixed(1)}
-                  // currenty
+                  status={data?.my_challenges?.[1]}
                 />
               </SwiperSlide>
             ))}

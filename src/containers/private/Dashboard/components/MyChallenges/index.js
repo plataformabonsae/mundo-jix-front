@@ -85,7 +85,7 @@ const MyChallenges = () => {
             {challengeType.map((item, index) => (
               <SwiperSlide>
                 <Chip
-                  key={item.id}
+                  key={index}
                   item={item}
                   meusDesafios
                   title={`Nome do desafio`}

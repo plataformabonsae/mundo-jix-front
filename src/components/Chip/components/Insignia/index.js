@@ -63,9 +63,9 @@ const Insignia = ({
     )}
     <article className={styles.content}>
       <Title size={16}>{title}</Title>
-      <Text size={14} color={colors.DARK_GRAY}>
+      <span size={14} style={{ color: colors.DARK_GRAY, fontSize: 14 }}>
         {parse(desc)}
-      </Text>
+      </span>
     </article>
   </Card>
 );

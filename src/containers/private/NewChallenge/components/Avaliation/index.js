@@ -48,9 +48,13 @@ const Avaliation = ({
                   </Title>
                   <Input
                     // defaultValue={social.link}
-                    ref={register({ required: true })}
-                    errors={errors}
-                    errorMessage="Digite o critério que deseja avaliar"
+                    ref={register({
+                      required: {
+                        value: true,
+                        message: "Digite o que deseja avaliar",
+                      },
+                    })}
+                    validate={errors?.assessments?.[index]?.evaluate?.message}
                     name={`assessments.${index}.evaluate`}
                     placeholder="Digite o critério que deseja avaliar"
                   ></Input>
@@ -61,11 +65,16 @@ const Avaliation = ({
                   </Title>
                   <Input
                     // defaultValue={social.platform}
-                    ref={register({ required: true })}
+                    ref={register({
+                      required: {
+                        value: true,
+                        message: "Digite a nota máxima",
+                      },
+                    })}
+                    validate={errors?.assessments?.[index]?.max_grade?.message}
                     name={`assessments.${index}.max_grade`}
                     control={control}
                     errors={errors}
-                    errorMessage="Nota máxima"
                     placeholder="Digite a nota máxima"
                   ></Input>
                 </div>

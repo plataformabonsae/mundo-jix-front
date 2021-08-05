@@ -6,6 +6,7 @@ import { Title, Text } from "components/Text";
 import { TabFlat } from "components/Tabs";
 import { Downloads } from "components/Downloads";
 import { SubHeader } from "components/Header";
+import { File } from "components/Downloads";
 import { TrilhaItem } from "components/TrilhaItem";
 
 import { Video } from "./components/Video";
@@ -153,6 +154,16 @@ const TrilhaWatch = (props) => {
                 </Title>
                 <Text>{trailPreviewData?.video.description}</Text>
                 {/* <Downloads data={} /> */}
+                <div className={styles.files}>
+                  {trailPreviewData?.video?.materials?.map((item, index) => (
+                    <File
+                      key={item.id}
+                      file={item.file}
+                      name={item.filename}
+                      extension={item.fileextension}
+                    />
+                  ))}
+                </div>
               </>
             )}
           </div>

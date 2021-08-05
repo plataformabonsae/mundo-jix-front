@@ -91,7 +91,7 @@ const Payment = (props) => {
         (props.type === "ultradesafio" && ultradesafioIntent) ||
         (props.type === "trail" && intent) ||
         (props.type === "users" && usersIntent);
-      dispatch(type(usertype, { challenge_id: props.id }));
+      dispatch(type(usertype, { challenge_id: props.id, people_amount: 100 }));
       console.log(props.id);
     }
   }, [dispatch, usertype, props.id, props.subscription, props.type]);

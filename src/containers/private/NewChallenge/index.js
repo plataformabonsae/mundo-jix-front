@@ -55,14 +55,6 @@ const NewChallenge = (props) => {
     setTrails((prev) => [...prev, { type: trail }]);
   };
 
-  const handleGoToTrail = () => {
-    setSuccess(false);
-    const url = location.pathname;
-    const removeCurrentStep = url.split("/");
-    removeCurrentStep.pop();
-    history.push(removeCurrentStep.join("/") + "/trilha");
-  };
-
   const handleHasAvaliation = (data) => setHasAvaliation(data);
 
   const handleStep = (step, data) => {

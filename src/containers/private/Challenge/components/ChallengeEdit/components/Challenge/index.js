@@ -375,7 +375,7 @@ const Challenge = ({ noShadow = true, handleClose }) => {
 						</Title>
 						<InputGroup>
 							<Input
-								defaultValue={challenge.challenge.badges.title}
+								defaultValue={challenge?.challenge?.badges[0]?.title}
 								errors={errors}
 								ref={register({
 									required: {
@@ -393,7 +393,9 @@ const Challenge = ({ noShadow = true, handleClose }) => {
 						</Title>
 						<InputGroup>
 							<Input
-								defaultValue={challenge.challenge.badges.description}
+								defaultValue={
+									challenge?.challenge?.badges[0]?.description
+								}
 								ref={register({
 									required: {
 										value: true,

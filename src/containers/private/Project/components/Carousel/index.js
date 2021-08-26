@@ -228,10 +228,9 @@ const Carousel = (props) => {
 						Enviar feedback
 					</Button>
 				) : null}
-				{console.log("teste", user?.user)}
 				{user?.user?.is_mentor ||
 				user?.user?.is_judge ||
-				data?.team?.guardian_id !== user?.user?.id ||
+				(data?.team && data?.team?.guardian_id !== user?.user?.id) ||
 				usertype === "empresa"
 					? null
 					: activeTab === "meu-projeto" &&

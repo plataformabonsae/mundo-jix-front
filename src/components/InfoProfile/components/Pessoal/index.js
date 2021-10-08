@@ -302,6 +302,7 @@ const Pessoal = ({ type, noShadow, finalRoute, hasPassword, redirect, dontRedire
 								placeholder="Somente números"
 								control={control}
 								mask={`999.999.999-99`}
+								disabled
 							>
 								CPF
 							</InputWithMask>

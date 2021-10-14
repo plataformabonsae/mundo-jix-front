@@ -90,11 +90,12 @@ export const loginFetch =
 
 export const logoutFetch =
 	(
-		type = window.localStorage.getItem("talento"),
+		type = window.localStorage.getItem("usertype"),
 		token = window.localStorage.getItem("token"),
-		url = type === "empresa" ? COMPANY.AUTH.logout : TALENT.AUTH.logout
+		url = type == "empresa" ? COMPANY.AUTH.logout : TALENT.AUTH.logout
 	) =>
 	async (dispatch) => {
+		console.log(url)
 		dispatch(UserActions.logoutRequest())
 		const res = axios({
 			url,
